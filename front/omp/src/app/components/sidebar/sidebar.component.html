@@ -1,0 +1,52 @@
+<div class="sidebar" [ngClass]="{'collapsed': isCollapsed}">
+  <div class="brand">
+    <img src="assets/images/logo-EY-reversed.png" alt="EY Logo" class="logo">
+  </div>
+  
+  <nav class="menu">
+    <ul>
+      <!-- User dropdown as a menu item -->
+      <li class="user-dropdown-container">
+        <div class="user-item" (click)="toggleDropdown($event)">
+          <div class="user-avatar initials-circle">
+            {{ userInitials }}
+          </div>
+          <div class="user-name" *ngIf="!isCollapsed">
+            <span>{{ currentUser?.prenom }} {{ currentUser?.nom }}</span>
+            <span class="dropdown-icon">▾</span>
+          </div>
+        </div>
+        <div class="dropdown-menu" [ngClass]="{'show': isDropdownOpen}">
+          <a href="#" class="dropdown-item">
+            <i class="material-icons">person</i>
+            <span>Profil</span>
+          </a>
+          <a href="#" class="dropdown-item">
+            <i class="material-icons">settings</i>
+            <span>Paramètres</span>
+          </a>
+          <div class="divider"></div>
+          <a href="javascript:void(0)" class="dropdown-item" (click)="logout()">
+            <i class="material-icons">exit_to_app</i>
+            <span>Déconnexion</span>
+          </a>
+        </div>
+      </li>      <!-- Categorized menu items -->
+      <ng-container *ngFor="let category of getFilteredMenuCategories()">
+        <!-- Only show admin categories if user is admin -->
+        <ng-container *ngIf="!category.adminOnly || isAdmin()">
+          <li class="menu-category" *ngIf="!isCollapsed">
+            <span class="category-title">{{category.name}}</span>
+          </li>          <li *ngFor="let item of getFilteredAdminItems(category)">
+            <ng-container *ngIf="hasPermissionForItem(item) | async">
+              <a [routerLink]="item.path" routerLinkActive="active" [title]="isCollapsed ? item.title : ''">
+                <i class="material-icons">{{item.icon}}</i>
+                <span *ngIf="!isCollapsed">{{item.title}}</span>
+              </a>
+            </ng-container>
+          </li>
+        </ng-container>
+      </ng-container>
+    </ul>
+  </nav>
+</div>

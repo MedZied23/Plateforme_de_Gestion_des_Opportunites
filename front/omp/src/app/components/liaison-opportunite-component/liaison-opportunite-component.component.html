@@ -1,0 +1,20 @@
+<div class="opportunity-controls">
+  @if (!isLinkedToOpportunity) {
+    <button class="btn-link" (click)="openOpportunityDialog()">
+      <i class="material-icons">link</i>
+      Lier à une opportunité
+    </button>
+  } @else {
+    <div class="linked-opportunity">      <span class="linked-label">Lié à:</span>
+      <span class="opportunity-name" [title]="getOpportunityName()">{{ getOpportunityName() }}</span>
+      <button class="btn-modify" (click)="openOpportunityDialog()">
+        <i class="material-icons">edit</i>
+        Modifier
+      </button>
+      <button class="btn-unlink" (click)="unlinkOpportunity()">
+        <i class="material-icons">link_off</i>
+        Délier
+      </button>
+    </div>
+  }
+</div>

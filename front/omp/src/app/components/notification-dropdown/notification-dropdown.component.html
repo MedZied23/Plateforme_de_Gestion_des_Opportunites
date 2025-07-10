@@ -1,0 +1,56 @@
+<div class="notification-dropdown" [class.open]="isOpen">
+  <div class="dropdown-header">
+    <h3>Notifications</h3>
+    <button class="close-btn" (click)="closeDropdown()" aria-label="Fermer">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+
+  <div class="dropdown-content">
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement des notifications...</p>
+    </div>
+
+    <!-- Notifications list -->
+    <div *ngIf="!isLoading && notifications.length > 0" class="notifications-list">
+      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-item"
+        [class.unread]="!notification.read"
+        (click)="onNotificationClick(notification)"
+      >
+        <div class="notification-indicator" [class.unread]="!notification.read"></div>
+        <div class="notification-content">
+          <div class="notification-title">{{ notification.title }}</div>
+          <div class="notification-body">{{ truncateText(notification.body) }}</div>
+          <div class="notification-time">{{ getTimeSince(notification.dateSent) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && notifications.length === 0" class="empty-state">
+      <i class="material-icons">notifications_none</i>
+      <p>Aucune notification</p>
+    </div>
+  </div>
+
+  <div class="dropdown-footer">
+    <a 
+      [routerLink]="['/layout/notifications']" 
+      class="view-all-btn"
+      (click)="viewAllNotifications()"
+    >
+      Voir toutes les notifications
+    </a>
+  </div>
+</div>
+
+<!-- Backdrop to close dropdown when clicking outside -->
+<div 
+  *ngIf="isOpen" 
+  class="dropdown-backdrop" 
+  (click)="closeDropdown()"
+></div>

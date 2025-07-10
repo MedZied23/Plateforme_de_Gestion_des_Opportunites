@@ -1,0 +1,93 @@
+<div class="reference-display-container" *ngIf="referenceId && !loading" #referenceContainer>
+  <div class="cv-actions no-print">
+    <button class="download-pdf-btn" (click)="generatePDF()">
+      <i class="fas fa-file-pdf"></i> Télécharger PDF
+    </button>
+  </div>
+
+  <div class="reference-section" *ngIf="reference">
+    <!-- Header row with name and country -->
+    <div class="header-row">
+      <div class="reference-name">{{ reference.nom }}</div>
+      <div class="reference-country">{{ reference.country }}</div>
+    </div>
+
+    <!-- Offre row -->
+    <div class="offre-row">
+      <div class="reference-offre">{{ reference.offre }}</div>
+    </div>
+
+    <!-- Info row -->
+    <div class="info-row">
+      <div class="info-item">
+        <span class="info-label">Client:</span>
+        <span class="info-value">{{ reference.client }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Début:</span>
+        <span class="info-value">{{ formatDate(reference.dateDebut) }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Fin:</span>
+        <span class="info-value">{{ formatDate(reference.dateFin) }}</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Budget:</span>
+        <span class="info-value">{{ formatCurrency(reference.budget) }}</span>
+      </div>
+    </div>
+
+    <!-- Content columns -->
+    <div class="content-row">
+      <div class="description-column">
+        <div class="section-title">Description</div>
+        <div class="description-content">
+          {{ reference.description }}
+        </div>
+      </div>
+      <div class="team-column">
+        <div class="section-title">Équipe</div>
+        <div class="team-content">
+          <div class="team-member" *ngFor="let member of teamMembers">
+            <span class="member-name">{{ member.user.prenom }} {{ member.user.nom }}</span>
+            <span class="member-role" *ngIf="member.role">- {{ member.role }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services section -->
+    <div class="services-section" *ngIf="reference.services && objectKeys(reference.services).length > 0">
+      <div class="section-title">Services rendus</div>
+      <div class="services-content">
+        <div class="service-category" *ngFor="let category of objectKeys(reference.services); let i = index">
+          <div class="category-name">Phase {{ i + 1 }} : {{ category }}</div>
+          <div class="category-items" *ngFor="let subCategory of objectKeys(reference.services[category])">
+            <div class="subcategory-name">{{ subCategory }}</div>
+            <ul class="service-list">
+              <li *ngFor="let service of reference.services[category][subCategory]">
+                {{ service }}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="loading">
+    <span class="spinner"></span>
+    Chargement de la référence...
+  </div>
+
+  <!-- Error state -->
+  <div class="error-state" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!reference && !loading && !error">
+    Aucune référence sélectionnée.
+  </div>
+</div>

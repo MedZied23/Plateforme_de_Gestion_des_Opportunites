@@ -1,0 +1,153 @@
+.financial-nav-container {
+  width: 240px;
+  height: 100%;
+  background-color: #f8f9fa;
+  border-right: 1px solid #e9ecef;
+  box-shadow: 2px 0 8px rgba(46, 46, 56, 0.08);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: fixed;
+  left: 260px; /* Changed from 64px to 260px to match the expanded sidebar width */
+  top: 64px; /* Position below the header */
+  z-index: 10;
+  transition: left 0.3s ease-out; /* Add transition for smooth movement */
+}
+
+/* Style for when sidebar is collapsed */
+:host-context(.sidebar-collapsed) .financial-nav-container {
+  left: 70px; /* Match the collapsed sidebar width */
+}
+
+.nav-title {
+  padding: 0 20px 16px;
+  margin-bottom: 8px;
+}
+
+.title-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2E2E38;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-family: 'Dylan', sans-serif;
+}
+
+/* Focus states for accessibility */
+.nav-item:focus {
+  outline: 2px solid #FFE600;
+  outline-offset: 2px;
+}
+
+.title-underline {
+  height: 2px;
+  width: 40px;
+  background-color: #FFE600;
+}
+
+.nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-item {
+  position: relative;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 230, 0, 0.1);
+  transform: translateX(2px);
+}
+
+.nav-item:hover .nav-icon mat-icon {
+  color: #2E2E38;
+}
+
+.nav-item:hover .nav-name {
+  color: #2E2E38;
+  font-weight: 500;
+}
+
+.nav-item.active {
+  background-color: rgba(255, 230, 0, 0.15);
+  border-left: 4px solid #FFE600;
+}
+
+.item-container {
+  display: flex;
+  padding: 16px 20px;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .item-container {
+  padding-left: 16px; /* Adjust for the border */
+}
+
+.nav-icon {
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-icon mat-icon {
+  color: #6c757d;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.nav-item.active .nav-icon mat-icon {
+  color: #2E2E38;
+}
+
+.nav-content {
+  flex: 1;
+}
+
+.nav-name {
+  font-size: 16px;
+  font-weight: 400;
+  color: #2E2E38;
+  margin-bottom: 4px;
+  font-family: 'Dylan', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.nav-item.active .nav-name {
+  color: #2E2E38;
+  font-weight: 500;
+}
+
+.nav-description {
+  font-size: 12px;
+  color: #6c757d;
+  transition: color 0.2s ease;
+}
+
+.nav-item:hover .nav-description {
+  color: #2E2E38;
+}
+
+.active-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: #FFE600;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Ensure content is pushed to the right */
+:host {
+  display: block;
+  min-width: 240px;
+}

@@ -1,0 +1,233 @@
+<div class="main-container">
+  <!-- Financial Navigation Sidebar -->
+  <app-financial-navigation [propositionId]="propositionId" [activeSheet]="1"></app-financial-navigation>
+  
+  <div class="feuil-one-container">
+    <div class="header-container">
+      <button class="back-button" (click)="goBackToOffre()">
+        <span class="material-icons">arrow_back</span> Retour
+      </button>
+      <h1>Proposition Financière</h1>
+      <button class="download-button" (click)="exportToPdf()" [disabled]="isExportingPdf">
+        <span class="material-icons">download</span> 
+        <span *ngIf="!isExportingPdf">Télécharger PDF</span>
+        <span *ngIf="isExportingPdf">Génération...</span>
+      </button>
+    </div>
+    
+    <!-- Loading and error messages -->
+    <div class="message-container" *ngIf="isLoading || errorMessage">
+      <div class="loading-message" *ngIf="isLoading">
+        <span class="material-icons">hourglass_empty</span> Chargement des données...
+      </div>
+      <div class="error-message" *ngIf="errorMessage">
+        <span class="material-icons">error_outline</span> {{ errorMessage }}
+      </div>
+    </div>
+    
+    <!-- Main content with ID for PDF export -->
+    <div id="feuilOneContent" class="feuil-one-content" *ngIf="!isLoading && !errorMessage">
+      <div class="proposition-info" *ngIf="propositionDetails">
+        <p *ngIf="propositionDetails.description">{{ propositionDetails.description }}</p>
+      </div>
+      
+      <!-- Matrix table display -->
+      <div class="matrix-display" *ngIf="matrixData && matrixData.length > 0">
+        <h3><span class="material-icons">grid_on</span> Distribution des HJ par profils/livrables</h3>
+        
+        <div class="table-container">
+          <table class="matrix-table">
+            <thead>
+              <!-- Phase headers -->
+              <tr class="phase-header-row">
+                <th class="profile-header" rowspan="2">Profile</th>
+                <ng-container *ngFor="let phaseGroup of groupedPhases; trackBy: trackByPhaseId">
+                  <th class="phase-header" [attr.colspan]="phaseGroup.colSpan">
+                    {{ phaseGroup.phase.nom || 'Phase ' + phaseGroup.phase.numero }}
+                  </th>
+                </ng-container>
+              </tr>
+              
+              <!-- Livrable headers -->
+              <tr class="livrable-header-row">
+                <ng-container *ngFor="let phaseGroup of groupedPhases">
+                  <ng-container *ngFor="let livrable of phaseGroup.livrables; trackBy: trackById">
+                    <th class="livrable-header">
+                      <div class="livrable-name">{{ livrable.nom }}</div>
+                      <div class="livrable-days" *ngIf="livrable.duration">{{ livrable.duration * 5 }} HJ</div>
+                    </th>
+                  </ng-container>
+                </ng-container>
+              </tr>
+            </thead>
+            
+            <tbody>
+              <tr *ngFor="let profileRow of matrixData; let profileIndex = index">
+                <td class="profile-name">{{ profiles[profileIndex].nomPrenom || 'Profile ' + (profileIndex + 1) }}</td>
+                
+                <!-- Directly display each cell from the matrix -->
+                <td class="days-cell" *ngFor="let cellValue of profileRow; let colIndex = index">
+                  {{ cellValue || 0 }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Modified table for livrable totals and percentages - without phase column -->
+        <div class="livrable-totals-container" *ngIf="livrables && livrables.length > 0">
+          <h3><span class="material-icons">assessment</span> Totaux par livrable et pourcentages</h3>
+          
+          <div class="table-container">
+            <table class="livrable-totals-table">
+              <thead>
+                <tr>
+                  <th class="livrable-name-header">Livrable</th>
+                  <th class="livrable-total-header">Total (HJ)</th>
+                  <th class="livrable-percentage-header">Pourcentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let phaseGroup of groupedPhases">
+                  <ng-container *ngFor="let livrable of phaseGroup.livrables; trackBy: trackById">
+                    <tr class="livrable-row">
+                      <td class="livrable-name-cell">{{ livrable.nom }}</td>
+                      <td class="livrable-total-cell">{{ formatTotal(livrable.totalParLivrable) }}</td>
+                      <td class="livrable-percentage-cell">{{ formatPercentage(livrable.pourcentage) }}</td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Modified table for phase totals and percentages - now horizontal -->
+        <div class="phase-totals-container" *ngIf="phases && phases.length > 0">
+          <h3><span class="material-icons">timeline</span> Totaux par phase et pourcentages</h3>
+          
+          <div class="table-container">
+            <table class="phase-totals-table">
+              <thead>
+                <tr>
+                  <th class="measure-header"></th>
+                  <ng-container *ngFor="let phase of phases; trackBy: trackById">
+                    <th class="phase-header-cell">{{ phase.nom || 'Phase ' + phase.numero }}</th>
+                  </ng-container>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Total par phase row -->
+                <tr class="phase-total-row">
+                  <td class="measure-label">Total (HJ)</td>
+                  <ng-container *ngFor="let phase of phases; trackBy: trackById">
+                    <td class="phase-total-cell">{{ formatTotal(phase.totalParPhase) }}</td>
+                  </ng-container>
+                </tr>
+                
+                <!-- Pourcentage row -->
+                <tr class="phase-percentage-row">
+                  <td class="measure-label">Pourcentage</td>
+                  <ng-container *ngFor="let phase of phases; trackBy: trackById">
+                    <td class="phase-percentage-cell">{{ formatPercentage(phase.pourcentage) }}</td>
+                  </ng-container>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- New table for profile information -->
+        <div class="profile-totals-container" *ngIf="profiles && profiles.length > 0">
+          <h3><span class="material-icons">people</span> Détails par profil</h3>
+          
+          <div class="table-container">
+            <table class="profile-totals-table">
+              <thead>
+                <tr>
+                  <th class="profile-name-header">Nom du profil</th>
+                  <th class="profile-tjm-header">TJM</th>
+                  <th class="profile-total-header">Total (HJ)</th>
+                  <th class="profile-cost-header">Coût total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let profile of profiles; trackBy: trackById" class="profile-row">
+                  <td class="profile-name-cell">{{ profile.nomPrenom || 'Profil ' + profile.numero }}</td>
+                  <td class="profile-tjm-cell">{{ profile.tjm || '-' }}</td>
+                  <td class="profile-total-cell">{{ formatTotal(profile.totalParProfil) }}</td>
+                  <td class="profile-cost-cell">{{ formatTotal(profile.totalCostParProfil) }}</td>
+                </tr>
+                <!-- Average TJM and Total Cost in the same row -->
+                <tr class="summary-row">
+                  <td class="average-label-cell">TJM moyen</td>
+                  <td class="average-tjm-value-cell">{{ formatCurrency(averageTJM) }}</td>
+                  <td class="total-cost-label-cell">Coût Total</td>
+                  <td class="total-cost-value-cell">{{ totalCost || '-' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- New table for entity information with embedded pie charts -->
+        <div class="entity-totals-container" *ngIf="entitiesData && entitiesData.length > 0">
+          <h3><span class="material-icons">business</span> Détails par entité</h3>
+          
+          <div class="table-container">
+            <table class="entity-totals-table">
+              <thead>
+                <tr>
+                  <th class="entity-name-header" rowspan="2">Entité</th>
+                  <th class="entity-hj-header" colspan="2">HJ</th>
+                  <th class="entity-budget-header" colspan="2">Budget</th>
+                </tr>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Pourcentage</th>
+                  <th>Montant</th>
+                  <th>Pourcentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Entity data rows -->
+                <tr *ngFor="let entity of entitiesData; trackBy: trackById" class="entity-row">
+                  <td class="entity-name-cell">{{ entity.name }}</td>
+                  <td class="entity-hj-cell">{{ formatTotal(entity.nombreHJ) }}</td>
+                  <td class="entity-percentage-hj-cell">{{ formatPercentage(entity.pourcentHJ) }}</td>
+                  <td class="entity-budget-cell">{{ formatTotal(entity.budget) }}</td>
+                  <td class="entity-percentage-budget-cell">{{ formatPercentage(entity.pourcentBudget) }}</td>
+                </tr>
+                
+                <!-- Pie charts row -->
+                <tr class="entity-charts-row">
+                  <td class="entity-title-cell">Répartition</td>
+                  <td colspan="2" class="entity-chart-cell">
+                    <div class="chart-container-table">
+                      <canvas id="hjChartCanvas"></canvas>
+                    </div>
+                  </td>
+                  <td colspan="2" class="entity-chart-cell">
+                    <div class="chart-container-table">
+                      <canvas id="budgetChartCanvas"></canvas>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>        <!-- Total main d'oeuvre display inside the downloadable content -->
+        <div class="total-cost-container" *ngIf="totalCost !== null">
+          <span class="total-cost-label">Total main d'oeuvre:</span>
+          <span class="total-cost-value">{{ totalCost | number:'1.0-0' }}</span>
+        </div>
+      </div>
+      
+      <div class="no-matrix" *ngIf="!matrixData || matrixData.length === 0">
+        <span class="material-icons">info</span>
+        <p>Aucune donnée de matrice disponible pour cette proposition.</p>
+        <p>Proposition ID: {{ propositionId }}</p>
+      </div>
+    </div>
+  </div>
+</div>

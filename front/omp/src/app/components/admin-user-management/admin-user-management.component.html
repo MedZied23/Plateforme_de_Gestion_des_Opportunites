@@ -1,0 +1,253 @@
+<div class="admin-user-management">
+  <div class="header">
+    <h2>Gestion des Utilisateurs</h2>
+    <button class="btn btn-primary" (click)="showCreateUserForm()" [disabled]="loading">
+      <i class="fas fa-plus"></i> Ajouter un Utilisateur
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="loading" class="loading">
+    <i class="fas fa-spinner fa-spin"></i> Chargement...
+  </div>
+
+  <!-- Create User Form -->
+  <div *ngIf="showCreateForm" class="form-container">
+    <div class="form-header">
+      <h3>Créer un Nouvel Utilisateur</h3>
+      <button class="btn btn-close" (click)="hideCreateForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <form [formGroup]="createUserForm" (ngSubmit)="createUser()">
+      <div class="form-row">        <div class="form-group">
+          <label for="createNom">Nom *</label>
+          <input 
+            type="text" 
+            id="createNom" 
+            formControlName="nom" 
+            class="form-control"
+            [class.is-invalid]="createUserForm.get('nom')?.invalid && createUserForm.get('nom')?.touched">
+          <div *ngIf="createUserForm.get('nom')?.invalid && createUserForm.get('nom')?.touched" class="invalid-feedback">
+            Le nom est requis (minimum 2 caractères)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="createPrenom">Prénom *</label>
+          <input 
+            type="text" 
+            id="createPrenom" 
+            formControlName="prenom" 
+            class="form-control"
+            [class.is-invalid]="createUserForm.get('prenom')?.invalid && createUserForm.get('prenom')?.touched">
+          <div *ngIf="createUserForm.get('prenom')?.invalid && createUserForm.get('prenom')?.touched" class="invalid-feedback">
+            Le prénom est requis (minimum 2 caractères)
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="createEmail">Email *</label>
+          <input 
+            type="email" 
+            id="createEmail" 
+            formControlName="email" 
+            class="form-control"
+            [class.is-invalid]="createUserForm.get('email')?.invalid && createUserForm.get('email')?.touched">          <div *ngIf="createUserForm.get('email')?.invalid && createUserForm.get('email')?.touched" class="invalid-feedback">
+            Un email valide est requis
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="createPhone">Téléphone *</label>
+          <input 
+            type="tel" 
+            id="createPhone" 
+            formControlName="phone" 
+            class="form-control"
+            [class.is-invalid]="createUserForm.get('phone')?.invalid && createUserForm.get('phone')?.touched">
+          <div *ngIf="createUserForm.get('phone')?.invalid && createUserForm.get('phone')?.touched" class="invalid-feedback">
+            Le numéro de téléphone est requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="createPassword">Mot de passe *</label>
+          <input 
+            type="password" 
+            id="createPassword" 
+            formControlName="password" 
+            class="form-control"
+            [class.is-invalid]="createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched">          <div *ngIf="createUserForm.get('password')?.invalid && createUserForm.get('password')?.touched" class="invalid-feedback">
+            Le mot de passe est requis (minimum 6 caractères)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="createRole">Rôle *</label>
+          <select 
+            id="createRole" 
+            formControlName="role" 
+            class="form-control">
+            <option *ngFor="let role of roleOptions" [value]="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="!createUserForm.valid || loading">
+          <i class="fas fa-save"></i> Créer l'Utilisateur
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="hideCreateForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Edit User Form -->
+  <div *ngIf="showEditForm" class="form-container">
+    <div class="form-header">
+      <h3>Modifier l'Utilisateur</h3>
+      <button class="btn btn-close" (click)="hideEditForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <form [formGroup]="editUserForm" (ngSubmit)="updateUser()">
+      <div class="form-row">        <div class="form-group">
+          <label for="editNom">Nom *</label>
+          <input 
+            type="text" 
+            id="editNom" 
+            formControlName="nom" 
+            class="form-control"
+            [class.is-invalid]="editUserForm.get('nom')?.invalid && editUserForm.get('nom')?.touched">
+          <div *ngIf="editUserForm.get('nom')?.invalid && editUserForm.get('nom')?.touched" class="invalid-feedback">
+            Le nom est requis (minimum 2 caractères)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="editPrenom">Prénom *</label>
+          <input 
+            type="text" 
+            id="editPrenom" 
+            formControlName="prenom" 
+            class="form-control"
+            [class.is-invalid]="editUserForm.get('prenom')?.invalid && editUserForm.get('prenom')?.touched">
+          <div *ngIf="editUserForm.get('prenom')?.invalid && editUserForm.get('prenom')?.touched" class="invalid-feedback">
+            Le prénom est requis (minimum 2 caractères)
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editEmail">Email *</label>
+          <input 
+            type="email" 
+            id="editEmail" 
+            formControlName="email" 
+            class="form-control"
+            [class.is-invalid]="editUserForm.get('email')?.invalid && editUserForm.get('email')?.touched">
+          <div *ngIf="editUserForm.get('email')?.invalid && editUserForm.get('email')?.touched" class="invalid-feedback">
+            Un email valide est requis
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="editPhone">Téléphone *</label>
+          <input 
+            type="tel" 
+            id="editPhone" 
+            formControlName="phone" 
+            class="form-control"
+            [class.is-invalid]="editUserForm.get('phone')?.invalid && editUserForm.get('phone')?.touched">
+          <div *ngIf="editUserForm.get('phone')?.invalid && editUserForm.get('phone')?.touched" class="invalid-feedback">
+            Le numéro de téléphone est requis
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editRole">Rôle *</label>
+          <select 
+            id="editRole" 
+            formControlName="role" 
+            class="form-control">
+            <option *ngFor="let role of roleOptions" [value]="role.value">
+              {{ role.label }}
+            </option>
+          </select>
+        </div>
+      </div>      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="!editUserForm.valid || loading">
+          <i class="fas fa-save"></i> Mettre à Jour
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="hideEditForm()">
+          Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Users Table -->
+  <div class="table-container" *ngIf="!showCreateForm && !showEditForm">    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Rôle</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.prenom }} {{ user.nom }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.phone }}</td>
+          <td>
+            <span class="badge" 
+                  [class.badge-admin]="user.role === 0" 
+                  [class.badge-associe]="user.role === 1"
+                  [class.badge-directeur]="user.role === 2"
+                  [class.badge-manager]="user.role >= 3 && user.role <= 5"
+                  [class.badge-senior]="user.role === 6"
+                  [class.badge-junior]="user.role === 7"
+                  [class.badge-user]="user.role === 8">
+              {{ getRoleLabel(user.role) }}
+            </span>
+          </td>          <td>
+            <button class="btn btn-sm btn-outline-primary" (click)="editUser(user)" [disabled]="loading">
+              <i class="fas fa-edit"></i> Modifier
+            </button>
+            <button class="btn btn-sm btn-outline-danger" 
+                    (click)="deleteUser(user)" 
+                    [disabled]="loading"
+                    *ngIf="canDeleteUser(user)">
+              <i class="fas fa-trash"></i> Supprimer
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+      <div *ngIf="users.length === 0 && !loading" class="no-data">
+      Aucun utilisateur trouvé.
+    </div>
+  </div>
+</div>

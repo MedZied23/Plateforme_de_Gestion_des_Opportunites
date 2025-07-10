@@ -1,0 +1,364 @@
+<div class="form-container" [ngClass]="{'first-step': isFirstStep()}">
+  <h1>{{ isEditMode ? 'Modifier l\'Opportunité' : 'Nouvelle Opportunité' }}</h1>
+  
+  <!-- Loading state for edit mode -->
+  <div *ngIf="isEditMode && isLoadingEditData" class="loading-container">
+    <div class="spinner"></div>
+    <p>Chargement de l'opportunité...</p>
+  </div>
+  <!-- Step Indicator -->
+  <div class="step-indicator" *ngIf="steps && steps.length > 0 && !isLoadingEditData">
+    <div class="step-dots">
+      <div *ngFor="let step of steps; let i = index" 
+           class="step-dot" 
+           [class.active]="i === currentStep"
+           [class.completed]="i < currentStep"
+           (click)="goToStep(i)">
+        <div class="dot" [attr.data-step]="i + 1"></div>
+        <div class="step-title">{{ step.title }}</div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Form Steps -->
+  <div class="form-step-container" *ngIf="steps && steps.length > 0 && steps[currentStep] && !isLoadingEditData">
+    <div class="form-step" [class.active]="true">
+      <h2>{{ steps[currentStep].title }}</h2>
+      
+      <div class="form-fields">
+        <!-- File Import Area - Only shown in first step -->
+        <div class="file-import-area" *ngIf="currentStep === 0">
+          <div class="file-import-container">
+            <input type="file" id="opportunityFile" (change)="onFileSelected($event)" accept=".doc,.docx,.pdf" class="file-input">
+            <label for="opportunityFile" class="file-label" *ngIf="!isLoadingAnalysis">
+              <div class="file-text">
+                <span class="file-title">Importer un fichier d'opportunité</span>
+                <span class="file-subtitle">Glissez-déposez ou cliquez pour sélectionner</span>
+                <span class="file-formats">Formats acceptés: Word (.doc, .docx), PDF (.pdf)</span>
+              </div>
+            </label>
+            <!-- Loading indicator when analysis is in progress -->
+            <div *ngIf="isLoadingAnalysis" class="analysis-loading">
+              <div class="spinner"></div>
+              <p>Analyse du document en cours...</p>
+              <p class="small">Veuillez patienter pendant que nous analysons votre document et pré-remplissons les champs.</p>
+            </div>
+            <div class="selected-file" *ngIf="selectedFile && !isLoadingAnalysis">
+              <span>{{ selectedFile.name }}</span>
+              <button type="button" class="remove-file-btn" (click)="removeFile()">
+                <i class="material-icons">close</i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Fields for current step only -->
+        <div *ngFor="let field of steps[currentStep].fields">
+          <!-- Only display the field if shouldDisplayField returns true -->
+          <div *ngIf="shouldDisplayField(field)" class="form-group">
+            <label [for]="field.name">
+              {{ field.label }}
+              <span class="required-star" 
+                    *ngIf="['nomClient', 'contactNom', 'pays', 'type', 
+                            'bailleurFondsExists', 'partenaireExists', 'titre',
+                            'description', 'paysOpportunite', 'nature', 'monnaie',
+                            'duree', 'offre', 'bailleurFonds', 'associeCharge',
+                            'managerCharge', 'equipe' , 'partenairesMulti'].includes(field.name)">*</span>
+            </label>
+            
+            <!-- Different input types based on field.type -->
+            <ng-container [ngSwitch]="field.type">
+              <!-- Default text input -->
+              <input *ngSwitchDefault 
+                    type="text" 
+                    [id]="field.name" 
+                    [(ngModel)]="field.value" 
+                    class="form-control"
+                    [readonly]="field.readonly">
+              
+              <!-- Textarea for description -->
+              <textarea *ngSwitchCase="'textarea'"
+                      [id]="field.name"
+                      [(ngModel)]="field.value"
+                      class="form-control"
+                      rows="4"></textarea>
+              
+              <!-- Select dropdown -->
+              <select *ngSwitchCase="'select'"
+                     [id]="field.name"
+                     [(ngModel)]="field.value"
+                     class="form-control"
+                     [disabled]="field.name === 'pays' && isLoadingCountries"
+                     [class.hidden]="!shouldDisplayField(field)">
+                <option value="" disabled selected>
+                  {{ field.name === 'pays' && isLoadingCountries ? 'Chargement des pays...' : 'Sélectionner' }}
+                </option>
+                <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+              </select>
+              
+              <!-- Radio buttons for bailleurFondsExists -->
+              <div *ngSwitchCase="'radio'" class="radio-group">
+                <div *ngFor="let option of field.options" class="radio-option">
+                  <input type="radio" 
+                         [id]="field.name + option" 
+                         [name]="field.name" 
+                         [value]="option" 
+                         [(ngModel)]="field.value">
+                  <label [for]="field.name + option">{{ option }}</label>
+                </div>
+              </div>
+                <!-- Date input -->
+              <input *ngSwitchCase="'date'"
+                    type="date"
+                    [id]="field.name"
+                    [(ngModel)]="field.value"
+                    class="form-control"
+                    (change)="field.name === 'dateFin' ? onDateChange() : null">
+                <!-- Number input -->
+              <input *ngSwitchCase="'number'"
+                    type="number"
+                    [id]="field.name"
+                    [(ngModel)]="field.value"
+                    class="form-control"
+                    [readonly]="field.readonly">
+              
+              <!-- URL input -->
+              <input *ngSwitchCase="'url'"
+                    type="url"
+                    [id]="field.name"
+                    [(ngModel)]="field.value"
+                    class="form-control"
+                    placeholder="https://teams.microsoft.com/...">
+                <!-- Select with option to input text -->
+              <div *ngSwitchCase="'select-or-text'" class="select-or-text">
+                <select [id]="field.name + 'Select'"
+                       [(ngModel)]="field.value"
+                       class="form-control"
+                       (ngModelChange)="field.name === 'nomClient' && onClientSelectionChange(field.value)">
+                  <option value="" disabled selected>Sélectionner ou saisir</option>
+                  <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+                  <option value="autre">Autre (saisir)</option>
+                </select>
+                <input *ngIf="field.value === 'autre'"
+                      type="text"
+                      [id]="field.name + 'Text'"
+                      [(ngModel)]="field.customValue"
+                      class="form-control mt-2"
+                      placeholder="Saisir une valeur personnalisée">
+                      
+                <!-- Client information box - shown immediately after nom client field -->
+                <div *ngIf="field.name === 'nomClient' && showClientInfoBox" class="box mt-3">
+                  <div class="client-box-title">Informations Client</div>
+                  <div class="client-info">
+                    <span class="client-info-label">Nom:</span> 
+                    <span>{{existingClientInfo.nomClient || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-info">
+                    <span class="client-info-label">Contact:</span> 
+                    <span>{{existingClientInfo.contactNom || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-info">
+                    <span class="client-info-label">Pays:</span> 
+                    <span>{{existingClientInfo.pays || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-info">
+                    <span class="client-info-label">Type:</span> 
+                    <span>{{existingClientInfo.type || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-info">
+                    <span class="client-info-label">Adresse:</span> 
+                    <span>{{existingClientInfo.adresse || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-info">
+                    <span class="client-info-label">Téléphone:</span> 
+                    <span>{{existingClientInfo.telephone || 'Non spécifié'}}</span>
+                  </div>
+                  <div class="client-box-actions">
+                    <button class="btn-client btn-exists" (click)="hideClientInfoBox()">Existe déjà</button>
+                    <button class="btn-client btn-fill" (click)="fillClientInformation()">Remplir</button>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Multi-select for team members or bailleurs or partenaires -->
+              <div *ngSwitchCase="'multi-select'" class="multi-select-container">
+                <div class="select-member">
+                  <!-- Select input based on field type -->
+                  <select class="form-control" [(ngModel)]="field.value">
+                    <option value="" disabled selected>
+                      {{ field.name === 'bailleurFonds' ? 'Sélectionner un bailleur de fonds' :
+                         field.name === 'equipe' ? 'Sélectionner un membre' :
+                         field.name === 'partenairesMulti' ? 'Sélectionner un partenaire' : 'Sélectionner' }}
+                    </option>
+                    <option *ngFor="let option of field.options" [value]="option">{{ option }}</option>
+                    <option *ngIf="field.name !== 'equipe'" value="autre">Autre (nouveau)</option>
+                  </select>
+
+                  <!-- Custom input for new items -->
+                  <input *ngIf="field.value === 'autre' && field.name !== 'equipe'" 
+                         type="text" 
+                         class="form-control mt-2" 
+                         [(ngModel)]="field.customValue" 
+                         [placeholder]="'Saisir un nouveau ' + (field.name === 'bailleurFonds' ? 'bailleur de fonds' : 'partenaire')">
+
+                  <!-- Add button -->
+                  <button type="button" 
+                          class="btn-add" 
+                          (click)="field.name === 'bailleurFonds' ? addBailleurFonds(field, field.value) :
+                                  field.name === 'partenairesMulti' ? addPartenaire(field, field.value) :
+                                  addTeamMember(field, field.value)" 
+                          [disabled]="!field.value || (field.value === 'autre' && !field.customValue && field.name !== 'equipe')">
+                    Ajouter
+                  </button>
+                </div>
+
+                <!-- Selected items list - unified structure -->
+                <div *ngIf="field.selectedValues && field.selectedValues.length > 0" class="selected-members">
+                  <ul class="member-list">
+                    <li *ngFor="let item of field.selectedValues; let i = index" class="member-item">
+                      <span>{{ item }}</span>
+                      <div class="button-group">
+                        <button type="button" 
+                                class="btn-remove" 
+                                (click)="field.name === 'bailleurFonds' ? removeBailleurFonds(field, item) :
+                                        field.name === 'partenairesMulti' ? removePartenaire(field, item) :
+                                        removeTeamMember(field, item)">
+                          <i class="material-icons">close</i>
+                        </button>
+                        <button *ngIf="field.name === 'partenairesMulti' && field.selectedPartenaireIds && field.selectedPartenaireIds[i]" 
+                                type="button" 
+                                class="btn-edit" 
+                                (click)="openPartenaireEditForm(field, field.selectedPartenaireIds[i])"
+                                title="Éditer les détails du partenaire">
+                          <i class="material-icons">edit</i>
+                        </button>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ng-container>          </div>
+        </div>
+      </div>    </div>
+  </div>
+    <!-- Navigation Buttons -->
+  <div class="form-navigation" *ngIf="!isLoadingEditData">
+    <button *ngIf="!isFirstStep()" 
+            class="btn btn-secondary" 
+            (click)="previousStep()">
+      Précédent
+    </button>
+    
+    <!-- Save button for edit mode on non-last steps -->
+    <button *ngIf="isEditMode && !isLastStep()" 
+            class="btn btn-warning save-btn" 
+            (click)="onSave()">
+      Sauvegarder
+    </button>
+    
+    <button *ngIf="!isLastStep()" 
+            class="btn btn-primary" 
+            (click)="nextStep()">
+      Suivant
+    </button>
+    
+    <button *ngIf="isLastStep()" 
+            class="btn btn-success" 
+            (click)="onSubmit()">
+      Soumettre
+    </button>
+  </div>
+</div>
+
+<!-- Partenaire Edit Modal -->
+<div *ngIf="showPartenaireEditModal" class="modal-overlay">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2>Détails du partenaire</h2>
+      <button type="button" class="close-btn" (click)="closePartenaireEditModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="editPartenaireNom">Nom</label>
+        <input type="text" id="editPartenaireNom" [(ngModel)]="editingPartenaire.nom" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="editPartenaireType">Type</label>
+        <select id="editPartenaireType" [(ngModel)]="editingPartenaire.type" class="form-control">
+          <option [value]="TypePartenaire.ExpertIndividuel">Expert individuel</option>
+          <option [value]="TypePartenaire.Entreprise">Entreprise</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="editPartenaireDomaine">Domaine d'expertise</label>
+        <select id="editPartenaireDomaine" [(ngModel)]="editingPartenaire.domaine" class="form-control">
+          <option *ngFor="let option of ['Cybersécurité', 'Infrastructure', 'Développement', 'Architecture', 'Data Science', 'Intelligence Artificielle', 'Cloud']" [value]="option">{{ option }}</option>
+          <option value="autre">Autre</option>
+        </select>
+        <input *ngIf="editingPartenaire.domaine === 'autre'" 
+               type="text" 
+               [(ngModel)]="editingCustomDomaine" 
+               class="form-control mt-2" 
+               placeholder="Saisir un domaine personnalisé">
+      </div>
+
+      <div class="form-group">
+        <label for="editPartenaireContact">Contact clé</label>
+        <input type="text" id="editPartenaireContact" [(ngModel)]="editingPartenaire.contactCle" class="form-control">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closePartenaireEditModal()">Annuler</button>
+      <button type="button" class="btn btn-primary" (click)="savePartenaireChanges()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .required-star {
+    color: red;
+    margin-left: 2px;
+  }
+  
+  /* Loading indicator styles */
+  .analysis-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .analysis-loading p {
+    margin: 10px 0 0;
+    font-weight: 500;
+  }
+  
+  .analysis-loading p.small {
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-left-color: #007bff;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+</style>

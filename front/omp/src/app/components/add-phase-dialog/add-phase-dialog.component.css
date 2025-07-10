@@ -1,0 +1,114 @@
+.phase-dialog {
+  min-width: 350px;
+  max-width: 500px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.dialog-header h3 i {
+  margin-right: 8px;
+  color: #70dcdc;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.dialog-content {
+  padding: 20px 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #70dcdc;
+  box-shadow: 0 0 0 2px rgba(112, 220, 220, 0.2);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  gap: 12px;
+  border-top: 1px solid #eee;
+}
+
+.btn-cancel, .btn-save, .btn-primary, .btn-secondary {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 100px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-cancel, .btn-secondary {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.btn-cancel:hover, .btn-secondary:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.btn-save, .btn-primary {
+  background-color: #00aeae;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-save:hover, .btn-primary:hover {
+  background-color: #008f8f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-save:disabled, .btn-primary:disabled, .btn-cancel:disabled, .btn-secondary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

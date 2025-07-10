@@ -1,0 +1,133 @@
+<div class="page-container">
+  <div class="livrable-container">
+    <h1>Définition des Livrables</h1>
+
+    <!-- Configure deliverables button -->
+    <button class="add-deliverable-btn" (click)="showConfiguration ? cancelConfiguration() : startConfiguration()">
+      <i class="fas fa-cogs"></i>
+      {{ showConfiguration ? 'Terminé' : 'Définir les livrables' }}
+    </button>
+
+    @if (!showConfiguration) {
+      <div class="configuration-start">
+        <div class="empty-state-content">
+          <i class="fas fa-clock" style="font-size: 48px; color: #95a5a6; margin-bottom: 20px;"></i>
+          <p>Cliquez sur "Définir les livrables" pour commencer.</p>
+        </div>
+      </div>
+    }
+    
+    <!-- Duration Section -->
+    @if (!showDeliverables && showConfiguration) {      <div class="form-group">
+        <label for="duration">Durée de l'opportunité (en mois)</label>
+        <input 
+          type="number" 
+          id="duration" 
+          class="form-control"
+          [(ngModel)]="durationMonths" 
+          min="0.25" 
+          step="0.25"
+          required
+          placeholder="Entrez la durée en mois (ex: 1.25, 2.5)">
+        <div class="duration-helper" *ngIf="durationMonths > 0">
+          <small class="text-muted">
+            = {{ Math.round(durationMonths * 4) }} semaine(s)
+          </small>
+        </div>
+        <div class="button-group">
+          <button class="btn-primary" (click)="onDurationSubmit()">
+            <span>Suivant</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    }
+      <!-- Phase and Livrables Section -->
+  @if (showDeliverables || configurationComplete) {
+    <div class="deliverables-section">      <div class="section-summary">
+        <div class="summary-info">
+          <h3>Synthèse du projet</h3>
+          <p>Durée totale: <strong>{{getFormattedProjectWeeks()}}</strong> semaines ({{getFormattedDurationMonths()}} mois)</p>
+        </div>
+        @if (showConfiguration) {
+          <button class="plus-button btn-edit" (click)="goToPreviousStep()">
+            <i class="fas fa-edit"></i> Modifier durée
+          </button>
+        }
+      </div>
+      
+      <!-- Loading indicator for phases -->
+      @if (loadingPhases) {
+        <div class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Chargement des phases...</p>
+        </div>
+      }
+      
+      <!-- Phase List -->
+      @for (phase of phases; track phase.id) {
+        <div class="cv-section phase-card">
+          <div class="section-header phase-header">
+            <div class="section-title">
+              <i class="fas fa-tasks"></i>
+              <h2>{{phase.name}} <span class="phase-numero" *ngIf="phase.numero">(Phase {{phase.numero}})</span></h2>
+            </div>
+            @if (showConfiguration) {
+              <div class="section-controls">
+                <button class="remove-button" [disabled]="isDeletingPhase" (click)="deletePhase(phase.id)" title="Supprimer la phase">
+                  <span class="remove-icon"></span>
+                </button>
+              </div>
+            }
+          </div>
+          <div class="section-content phase-livrables">
+            <!-- Livrable List -->
+            <div class="item-list">
+              @for (livrable of phase.livrables; track livrable.id) {                <div class="list-item livrable-item">
+                  <div class="item-content">
+                    <div class="item-title">{{livrable.name}}</div>
+                  </div>
+                  <div class="item-actions">
+                    <span class="week-range">S{{livrable.startWeek}} - S{{livrable.endWeek}} <span class="duration-pill">{{calculateLivrableDuration(livrable)}} sem</span></span>
+                    @if (showConfiguration) {
+                      <button class="remove-button" (click)="deleteLivrable(phase.id, livrable.id)" title="Supprimer le livrable">
+                        <span class="remove-icon"></span>
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <!-- Add Livrable Button - Only show when configuring -->
+            @if (showConfiguration) {
+              <div class="plus-button-container">
+                <button class="plus-button" (click)="showAddLivrable(phase.id)">
+                  + Livrable
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+        <!-- Configuration controls - Only show when configuring -->
+      @if (showConfiguration) {
+        <!-- Add Phase Section -->
+        <div class="plus-button-container">
+          <button class="plus-button" [disabled]="isCreatingPhase" (click)="showAddPhase()">
+            + Phase
+            @if (isCreatingPhase) {
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            }
+          </button>
+        </div>        <!-- Confirmation buttons -->
+        <div class="confirmation-buttons">
+          <button class="btn-primary btn-confirm" [disabled]="isCreatingPhase || isDeletingPhase" (click)="onDurationsSubmit()">
+            <i class="fas fa-check"></i> Terminé
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>
+</div>

@@ -1,0 +1,6 @@
+@omp.API_HostAddress = http://localhost:5069
+
+GET {{omp.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

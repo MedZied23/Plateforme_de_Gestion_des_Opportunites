@@ -1,0 +1,203 @@
+<div class="search-cvs-container" [class.with-sidebar]="showProjectsSidebar">
+  <div class="main-content">
+    <div class="header">
+      <div class="search-bar">
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Rechercher des CVs..."
+            [(ngModel)]="searchKeywords"
+            (keyup.enter)="searchCvs(1)"
+          >
+        </div>        <div class="search-controls">
+          <label class="option-checkbox">
+            <input type="checkbox" [(ngModel)]="useFuzzySearch">
+            <span class="checkbox-text">Recherche approximative</span>
+          </label>
+          <div class="buttons-container">
+            <!-- User search autocomplete positioned next to search button -->
+            <div class="user-search-wrapper">
+              <div class="user-input-container">
+                <i class="fas fa-user search-icon"></i>
+                <input 
+                  type="text"
+                  class="user-search-input"
+                  placeholder="Par utilisateur..."
+                  [formControl]="userControl"
+                  (focus)="showUserSuggestions()"
+                  (input)="filterUsers(userControl.value)"
+                  (clickOutside)="closeUserDropdown()"
+                >
+                <div class="user-dropdown" *ngIf="showUserDropdown">
+                  <div 
+                    class="user-option" 
+                    *ngFor="let user of filteredUsers"
+                    (click)="selectUser(user)"
+                  >
+                    {{ user.prenom }} {{ user.nom }}
+                  </div>
+                  <div *ngIf="filteredUsers.length === 0" class="no-results">
+                    Aucun utilisateur trouvé
+                  </div>
+                </div>
+              </div>
+            </div>            <button class="search-button" (click)="searchCvs(1)">
+              <i class="fas fa-search"></i> Rechercher
+            </button>
+            <button *ngIf="isSearchActive || searchingByUser" class="reset-button" (click)="resetAllSearches()">
+              <i class="fas fa-times"></i> Réinitialiser
+            </button>
+            <button class="add-cv-button" (click)="createNewCv()">
+              <i class="fas fa-plus"></i> Créer un nouveau CV
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>    <!-- Search Results Info -->
+    <div *ngIf="isSearchActive || searchingByUser" class="search-results-info-container">
+      <span class="search-results-info" *ngIf="isSearchActive && !searchingByUser">
+        {{totalItems}} résultat(s) trouvé(s) pour "{{searchKeywords}}"
+      </span>
+      <span class="search-results-info" *ngIf="searchingByUser && !isSearchActive">
+        {{totalItems}} résultat(s) trouvé(s) pour l'utilisateur "{{selectedUser?.prenom}} {{selectedUser?.nom}}"
+      </span>
+      <span class="search-results-info" *ngIf="searchingByUser && isSearchActive">
+        {{totalItems}} résultat(s) trouvé(s) pour l'utilisateur "{{selectedUser?.prenom}} {{selectedUser?.nom}}" 
+        avec les mots-clés "{{searchKeywords}}"
+      </span>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Chargement des CVs...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>    <!-- No CVs found message -->
+    <div *ngIf="!isLoading && cvs.length === 0 && !error" class="no-cvs-message">
+      <p *ngIf="isSearchActive && !searchingByUser">
+        Aucun CV correspondant aux mots-clés "{{searchKeywords}}" n'a été trouvé.
+      </p>
+      <p *ngIf="searchingByUser && !isSearchActive">
+        Aucun CV correspondant à l'utilisateur "{{selectedUser?.prenom}} {{selectedUser?.nom}}" n'a été trouvé.
+      </p>
+      <p *ngIf="searchingByUser && isSearchActive">
+        Aucun CV correspondant à l'utilisateur "{{selectedUser?.prenom}} {{selectedUser?.nom}}" 
+        avec les mots-clés "{{searchKeywords}}" n'a été trouvé.
+      </p>
+      <p *ngIf="!isSearchActive && !searchingByUser">
+        Aucun CV trouvé. Veuillez créer un nouveau CV.
+      </p>
+      <button class="add-cv-button" (click)="createNewCv()">
+        <i class="fas fa-plus"></i> Créer un CV
+      </button>
+    </div>
+
+    <!-- CV List -->
+    <div *ngIf="!isLoading && cvs.length > 0" class="cv-list">
+      <div *ngFor="let cv of cvs" class="cv-card">
+        <div class="cv-header" (click)="viewCv(cv.id)">
+          <h3><i class="fas fa-user"></i> {{ getUserName(cv.id_user || '') }}</h3>
+        </div>
+        <div class="cv-content" (click)="viewCv(cv.id)">
+          <p class="cv-presentation">{{ getPreviewText(cv.presentation || '') }}</p>
+          <div class="cv-details">
+            <span *ngIf="cv.experiences && cv.experiences.length > 0" class="cv-detail">
+              <i class="fas fa-briefcase"></i> {{ cv.experiences.length }} expérience(s)
+            </span>
+            <span *ngIf="cv.formations && cv.formations.length > 0" class="cv-detail">
+              <i class="fas fa-graduation-cap"></i> {{ cv.formations.length }} formation(s)
+            </span>
+            <span *ngIf="cv.projets && cv.projets.length > 0" class="cv-detail">
+              <i class="fas fa-project-diagram"></i> {{ cv.projets.length }} projet(s)
+            </span>
+          </div>
+        </div>
+        <div class="cv-footer">          <button class="delete-button" (click)="deleteCv($event, cv.id)">
+            <i class="fas fa-trash-alt"></i> Supprimer
+          </button>
+          <button class="view-button" (click)="viewCv(cv.id)">
+            <i class="fas fa-eye"></i> Voir
+          </button>
+          <button *ngIf="(isSearchActive || searchingByUser) && hasMatchingProjects(cv)" class="match-button" (click)="showMatchingProjects($event, cv)">
+            <i class="fas fa-project-diagram"></i> Projets associés
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="!isLoading && totalPages > 1" class="pagination-controls">
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === 1" 
+        (click)="goToPage(currentPage - 1)"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <span class="pagination-info">
+        Page {{ currentPage }} sur {{ totalPages }}
+      </span>
+      
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === totalPages" 
+        (click)="goToPage(currentPage + 1)"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Projects Sidebar -->
+  <div *ngIf="showProjectsSidebar" class="projects-sidebar">
+    <div class="sidebar-header">
+      <h3>
+        <i class="fas fa-project-diagram"></i> 
+        Projets associés au CV de {{ getUserName(selectedCv?.id_user || '') }}
+      </h3>
+      <button class="close-sidebar-button" (click)="closeProjectsSidebar()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Loading indicator for projects -->
+    <div *ngIf="loadingSelectedCvProjects" class="projects-loading">
+      <div class="spinner"></div>
+      <p>Chargement des projets...</p>
+    </div>
+
+    <!-- No matching projects message -->
+    <div *ngIf="!loadingSelectedCvProjects && getMatchingProjectsArray(selectedCvId).length === 0" class="no-projects-message">
+      <p>Aucun projet correspondant trouvé.</p>
+    </div>
+
+    <!-- Project list -->
+    <div *ngIf="!loadingSelectedCvProjects && getMatchingProjectsArray(selectedCvId).length > 0" class="projects-list">
+      <div *ngFor="let project of getMatchingProjectsArray(selectedCvId)" class="project-item" 
+        (click)="navigateToProjectInCv(project.id, selectedCvId)">
+        <div class="project-header">
+          <h5 class="project-title">{{ project.nom }}</h5>
+          <div class="project-year">{{ project.year }}</div>
+        </div>
+        <div class="project-details">
+          <div *ngIf="project.client" class="project-client">
+            <strong>Client:</strong> {{ project.client }}
+          </div>
+          <div *ngIf="project.domaine" class="project-domain">
+            <strong>Domaine:</strong> {{ project.domaine }}
+          </div>
+          <div *ngIf="project.role" class="project-role">
+            <strong>Rôle:</strong> {{ project.role }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

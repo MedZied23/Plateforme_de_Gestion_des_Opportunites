@@ -1,0 +1,119 @@
+.opportunity-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #00aeae !important;
+  color: white !important;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-link:hover {
+  background-color: #008f8f !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-link i {
+  font-size: 18px;
+}
+
+.linked-opportunity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.linked-label {
+  color: #7f8c8d;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.opportunity-name {
+  color: #2c3e50;
+  font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;  /* Prevent text from wrapping */
+  margin: 0 8px;
+  min-width: 0;  /* Required for text-overflow to work in a flex container */
+  max-width: calc(100% - 180px);  /* Leave space for buttons */
+  cursor: help;  /* Show help cursor on hover */
+  transition: opacity 0.2s ease;  /* Smooth transition for hover effect */
+}
+
+.opportunity-name:hover {
+  opacity: 0.8;  /* Slight dimming effect on hover */
+}
+
+.btn-modify {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #00aeae;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-modify:hover {
+  background-color: #008f8f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-modify i {
+  font-size: 16px;
+}
+
+.btn-unlink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-unlink:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-unlink i {
+  font-size: 16px;
+}

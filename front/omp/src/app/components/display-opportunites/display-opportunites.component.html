@@ -1,0 +1,86 @@
+<div class="opportunities-container">  <!-- Header with potential filters/actions -->
+  <header class="header">
+    <h1>Mes Opportunités</h1>
+    @if (canCreateOpportunity$ | async) {
+      <button class="create-opportunity-btn" (click)="createOpportunity()">
+        <i class="fas fa-plus"></i>
+        Créer une opportunité
+      </button>
+    }
+  </header>
+  <!-- Card grid for opportunities -->
+  <div class="opportunities-grid">
+    @for (opportunity of opportunities; track opportunity.id) {
+      <div class="opportunity-card" (click)="navigateToTracking(opportunity)">
+        <div class="card-header">
+          <h2 class="card-title">{{ opportunity.nomOpportunite }}</h2>          <div class="card-actions">
+            @if (canEditOpportunity(opportunity) | async) {
+              <button class="action-button edit" (click)="editOpportunity(opportunity); $event.stopPropagation()" title="Modifier">
+                <i class="fas fa-edit"></i>
+              </button>
+            }
+            @if (canDeleteOpportunity(opportunity) | async) {
+              <button class="action-button delete" (click)="deleteOpportunity(opportunity.id); $event.stopPropagation()" title="Supprimer">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            }
+          </div>
+        </div>        <div class="card-content">
+          <!-- Progress bar section -->
+          <div class="progress-section">
+            <div class="progress-label">
+              <span>Progression: {{ getOpportunityProgress(opportunity.id) }}%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="getOpportunityProgress(opportunity.id)"></div>
+            </div>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Nature:</span>            <span class="nature-badge {{ opportunity.nature !== undefined ? getNatureLabel(opportunity.nature).toLowerCase() : '' }}">
+              {{ opportunity.nature !== undefined ? getNatureLabel(opportunity.nature) : '' }}
+            </span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Description:</span>
+            <p class="description">{{ opportunity.description }}</p>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Pays:</span>
+            <span>{{ opportunity.pays }}</span>
+          </div>          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Date début:</span>
+              <span>{{ opportunity.dateDebut | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date fin:</span>
+              <span>{{ opportunity.dateFin | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+
+          <div class="info-row offer-row">
+            <span class="info-label">Offre:</span>
+            <span class="offer-badge">{{ opportunity.offre }}</span>
+          </div>
+
+          <div class="info-row">
+            <span class="info-label">Monnaie:</span>
+            <span>{{ opportunity.monnaie }}</span>
+          </div>          <!-- Status display removed as it's not part of OpportuniteDto -->
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Empty state -->
+  @if (!opportunities.length) {
+    <div class="empty-state">
+      <i class="fas fa-folder-open"></i>
+      <h3>Aucune opportunité trouvée</h3>
+      <p>Commencez par créer une nouvelle opportunité</p>
+    </div>
+  }
+</div>

@@ -1,0 +1,111 @@
+<div class="validation-dialog">
+  <div class="dialog-header">
+    <h3><i class="fas fa-check-circle"></i> Validation de l'opportunité</h3>
+    <button type="button" class="close-button" (click)="close()">×</button>
+  </div>
+    
+  <div class="dialog-content">
+    <form [formGroup]="validationForm" (ngSubmit)="submitForValidation()">
+      
+      <!-- Lien proposition technique -->
+      <div class="form-group">
+        <label for="lienPropositionTechnique">
+          <i class="fas fa-link"></i> Lien proposition technique *
+        </label>
+        <input 
+          type="url"
+          id="lienPropositionTechnique"
+          class="form-input"
+          placeholder="https://teams.microsoft.com/..."
+          formControlName="lienPropositionTechnique"
+          [class.error]="validationForm.get('lienPropositionTechnique')?.invalid && validationForm.get('lienPropositionTechnique')?.touched"
+        >
+        <div class="error-message" *ngIf="validationForm.get('lienPropositionTechnique')?.invalid && validationForm.get('lienPropositionTechnique')?.touched">
+          Le lien de la proposition technique est requis
+        </div>
+      </div>
+
+      <!-- Lien proposition financière -->
+      <div class="form-group">
+        <label for="lienPropositionFinanciere">
+          <i class="fas fa-link"></i> Lien proposition financière *
+        </label>
+        <input 
+          type="url"
+          id="lienPropositionFinanciere"
+          class="form-input"
+          placeholder="https://..."
+          formControlName="lienPropositionFinanciere"
+          [class.error]="validationForm.get('lienPropositionFinanciere')?.invalid && validationForm.get('lienPropositionFinanciere')?.touched"
+        >
+        <div class="error-message" *ngIf="validationForm.get('lienPropositionFinanciere')?.invalid && validationForm.get('lienPropositionFinanciere')?.touched">
+          Le lien de la proposition financière est requis
+        </div>
+      </div>
+
+      <!-- À notifier -->
+      <div class="form-group">
+        <label>
+          <i class="fas fa-bell"></i> À notifier
+        </label>
+        <div class="user-input-container">
+          <i class="fas fa-user search-icon"></i>
+          <input 
+            type="text"
+            class="form-input"
+            placeholder="Rechercher des utilisateurs à notifier..."
+            [formControl]="userControl"
+            (click)="showMemberSuggestions()"
+            (input)="filterMembers(userControl.value || '')"
+            (clickOutside)="closeUserDropdown()"
+          >
+          <div class="user-dropdown" *ngIf="showUserDropdown">
+            <div 
+              class="user-option" 
+              *ngFor="let member of filteredMembers"
+              (click)="selectMember(member)"
+            >
+              {{ member.prenom }} {{ member.nom }}
+              <span class="user-email" *ngIf="member.email">{{ member.email }}</span>
+            </div>
+            <div *ngIf="filteredMembers.length === 0" class="no-results">
+              Aucun utilisateur trouvé
+            </div>
+          </div>
+        </div>
+
+        <div class="selected-users" *ngIf="selectedUsers.length > 0">
+          <label class="selected-label">Utilisateurs sélectionnés</label>
+          <div class="user-chips">
+            <div class="user-chip" *ngFor="let userId of selectedUsers">
+              {{ getMemberName(userId) }}
+              <button type="button" class="remove-user-button" (click)="removeMember(userId)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button type="button" class="btn-secondary" (click)="close()" [disabled]="isSubmitting">
+      Annuler
+    </button>
+    <button 
+      type="button" 
+      class="btn-primary" 
+      (click)="submitForValidation()" 
+      [disabled]="validationForm.invalid || isSubmitting"
+    >
+      <span *ngIf="isSubmitting">
+        <i class="fas fa-spinner fa-spin"></i> Soumission...
+      </span>
+      <span *ngIf="!isSubmitting">
+        <i class="fas fa-paper-plane"></i> Soumettre pour validation
+      </span>
+    </button>
+  </div>
+</div>

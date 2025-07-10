@@ -1,0 +1,132 @@
+<div class="main-container">
+  <!-- Financial Navigation Sidebar -->
+  <app-financial-navigation [propositionId]="propositionId || ''" [activeSheet]="3"></app-financial-navigation>
+
+  <div class="feuil-trois-container">
+    <div class="header-container">
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">&#8592;</span> Retour
+      </button>
+      <h1>Récapitulatif des Coûts</h1>
+      <button class="download-button" (click)="exportToPdf()" [disabled]="isExportingPdf">
+        <span class="material-icons">download</span> 
+        <span *ngIf="!isExportingPdf">Télécharger PDF</span>
+        <span *ngIf="isExportingPdf">Génération...</span>
+      </button>
+    </div>
+
+    <!-- Loading and error messages -->
+    <div class="message-container" *ngIf="isLoading || errorMessage">
+      <div class="loading-message" *ngIf="isLoading">
+        <span class="material-icons">hourglass_empty</span> Chargement des données...
+      </div>
+      <div class="error-message" *ngIf="errorMessage">
+        <span class="material-icons">error_outline</span> {{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="feuilTroisContent" class="feuil-trois-content" *ngIf="!isLoading && !errorMessage">
+      <div class="proposition-info" *ngIf="proposition">
+        <p *ngIf="proposition.nom">{{ proposition.nom }}</p>
+      </div>      <!-- Expense details container with tables -->
+      <div class="expense-details-container">
+        <!-- Unit Prices Table -->
+        <div class="expense-card">
+          <div class="card-header">
+            <h3>Coûts Unitaires des Dépenses</h3>
+          </div>
+          <div class="table-container">
+            <table class="expense-table unit-prices-table">
+              <thead>
+                <tr>
+                  <th>Type de Dépense</th>
+                  <th>Prix Unitaire</th>
+                </tr>
+              </thead>              <tbody>
+                <tr *ngFor="let type of typeDepenseValues">
+                  <td>{{ formatTypeName(type.name) }}</td>
+                  <td>{{ expensePrices[type.type] || 0 }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Units per Profile Table -->
+        <div class="expense-card">
+          <div class="card-header">
+            <h3>Unités des Dépenses par Profil</h3>
+          </div>
+          <div class="table-container">
+            <table class="expense-table units-table">
+              <thead>                <tr>
+                  <th>Profil</th>
+                  <th *ngFor="let type of typeDepenseValues">{{ formatTypeName(type.name) }}</th>
+                </tr>
+              </thead>
+              <tbody>                <tr *ngFor="let profile of profiles">
+                  <td>{{ profile.nomPrenom || 'Profile #' + profile.numero }}</td>
+                  <td *ngFor="let type of typeDepenseValues">{{ expenseUnits[profile.id][type.type] || 0 }}</td>
+                </tr>
+              </tbody>              <tfoot>
+                <tr>
+                  <td>Total</td>
+                  <td *ngFor="let type of typeDepenseValues">{{ getTotalUnitsForType(type.type) }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Total Costs per Profile Table -->
+        <div class="expense-card">
+          <div class="card-header">
+            <h3>Total des Dépenses par Profil</h3>
+          </div>
+          <div class="table-container">
+            <table class="expense-table costs-table">
+              <thead>
+                <tr>
+                  <th>Profil</th>
+                  <th *ngFor="let type of typeDepenseValues">{{ formatTypeName(type.name) }}</th>
+                  <th>Total du Profil</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let profile of profiles">
+                  <td>{{ profile.nomPrenom || 'Profile #' + profile.numero }}</td>
+                  <td *ngFor="let type of typeDepenseValues">{{ 
+                    (expenseUnits[profile.id][type.type] * expensePrices[type.type]) || 0 | number:'1.2-2' 
+                  }}</td>
+                  <td class="profile-total">{{ getTotalForProfile(profile.id) }}</td>
+                </tr>
+              </tbody>
+              <tfoot>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <!-- Project Cost Summary -->
+        <div class="project-summary">
+          <h2 class="summary-title">Coûts du Projet</h2>
+          <div class="summary-items">
+            <div class="summary-item">
+              <span class="summary-label">Total Main d'Oeuvre</span>
+              <span class="summary-value">{{ formatValue(totalLabor) }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Total Dépenses</span>
+              <span class="summary-value">{{ formatValue(totalExpenses) }}</span>
+            </div>
+            <div class="summary-item total">
+              <span class="summary-label">Total Projet</span>
+              <span class="summary-value">{{ formatValue(totalProject) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

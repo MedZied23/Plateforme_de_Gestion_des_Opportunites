@@ -1,0 +1,6 @@
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.csproj.AssemblyReference.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.AssemblyInfoInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.AssemblyInfo.cs
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.csproj.CoreCompileInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net8.0\omp.Infrastructure.sourcelink.json

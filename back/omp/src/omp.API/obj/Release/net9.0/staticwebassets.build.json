@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "MOMqV7uNcr9GiVldGLfeZuzbLCc47qSgyxgolPZWsHo=",
+  "Source": "omp.API",
+  "BasePath": "_content/omp.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

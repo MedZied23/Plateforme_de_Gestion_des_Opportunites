@@ -1,0 +1,36 @@
+services:
+  omp-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"  # Changed port to avoid conflicts
+    container_name: omp-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - omp-network
+
+  # Optional: Development service for hot reload
+  omp-frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4200:4200"
+    container_name: omp-frontend-dev
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    networks:
+      - omp-network
+    profiles:
+      - dev
+
+networks:
+  omp-network:
+    external: true  # Reference external network from backend

@@ -1,0 +1,79 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: omp-postgres
+    environment:
+      POSTGRES_DB: ompDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./back/omp/init-scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - omp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ompDB"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Backend API
+  omp-api:
+    build:
+      context: ./back/omp
+      dockerfile: Dockerfile
+    container_name: omp-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:8080
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=ompDB;Username=postgres;Password=root;Port=5432
+      - Jwt__Key=your-super-secret-key-with-at-least-256-bits-length-for-production
+      - Jwt__Issuer=omp-api
+      - Jwt__Audience=omp-client
+      - Jwt__DurationInHours=12
+      - DefaultAdmin__Email=admin@omp.com
+      - DefaultAdmin__Password=Admin@123!
+      - DefaultAdmin__FirstName=System
+      - DefaultAdmin__LastName=Administrator
+      - DefaultAdmin__Phone=+1234567890
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - omp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Frontend
+  omp-frontend:
+    build:
+      context: ./front/omp
+      dockerfile: Dockerfile
+    container_name: omp-frontend
+    ports:
+      - "3001:80" 
+    depends_on:
+      - omp-api
+    networks:
+      - omp-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  omp-network:
+    driver: bridge

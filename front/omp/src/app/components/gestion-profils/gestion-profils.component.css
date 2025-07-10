@@ -1,0 +1,465 @@
+.gestion-profils {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-family: 'Dylan', Arial, sans-serif;
+  margin-bottom: 30px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.gestion-profils h3 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.add-profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #00aeae !important;
+  color: white !important;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.add-profile-btn:hover {
+  background-color: #008f8f !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.add-profile-btn .material-icons {
+  font-size: 18px;
+}
+
+.add-profile-form {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  align-items: flex-start;
+}
+
+/* Remove Material form field styling */
+/* Custom form field styling replaces this */
+
+/* Custom form field styling to replace Material */
+.custom-form-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.custom-label {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-bottom: 4px;
+  font-weight: 500;
+  padding-left: 4px;
+}
+
+.custom-input-container {
+  position: relative;
+}
+
+.custom-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 42px;
+  transition: border-color 0.3s;
+  background-color: white;
+  color: #333;
+  font-family: 'Dylan', Arial, sans-serif;
+}
+
+.custom-input:focus {
+  outline: none;
+  border-color: #2c3e50;
+  box-shadow: 0 0 0 1px rgba(44, 62, 80, 0.25);
+}
+
+.custom-input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.custom-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  margin-top: 2px;
+  border: 1px solid #eee;
+}
+
+.custom-option {
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.custom-option:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Enhanced hover effects for opportunity team members - unified styling */
+.custom-option.associe-en-charge:hover,
+.custom-option.manager-en-charge:hover,
+.custom-option.co-manager-en-charge:hover,
+.custom-option.team-member:hover {
+  background: linear-gradient(120deg, rgba(0, 174, 174, 0.25) 0%, rgba(0, 174, 174, 0.2) 100%);
+  transform: translateX(2px);
+}
+
+/* Opportunity team member highlighting styles - unified styling */
+.custom-option.associe-en-charge,
+.custom-option.manager-en-charge,
+.custom-option.co-manager-en-charge,
+.custom-option.senior-manager-en-charge,
+.custom-option.team-member {
+  background: linear-gradient(120deg, rgba(0, 174, 174, 0.15) 0%, rgba(0, 174, 174, 0.1) 100%);
+  border-left: 3px solid #00aeae;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Role labels for opportunity team members - unified styling */
+.custom-option.associe-en-charge::after {
+  content: " • Associé en charge";
+  font-size: 11px;
+  color: rgba(0, 174, 174, 0.8);
+  font-weight: normal;
+  font-style: italic;
+}
+
+.custom-option.manager-en-charge::after {
+  content: " • Manager en charge";
+  font-size: 11px;
+  color: rgba(0, 174, 174, 0.8);
+  font-weight: normal;
+  font-style: italic;
+}
+
+.custom-option.co-manager-en-charge::after {
+  content: " • Co-manager en charge";
+  font-size: 11px;
+  color: rgba(0, 174, 174, 0.8);
+  font-weight: normal;
+  font-style: italic;
+}
+
+.custom-option.senior-manager-en-charge::after {
+  content: " • Senior Manager en charge";
+  font-size: 11px;
+  color: rgba(0, 174, 174, 0.8);
+  font-weight: normal;
+  font-style: italic;
+}
+
+.custom-option.team-member::after {
+  content: " • Équipe projet";
+  font-size: 11px;
+  color: rgba(0, 174, 174, 0.8);
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Button styling */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: white;
+  color: #00aeae;
+  border: 2px solid #00aeae;
+  padding: 0 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  height: 42px;
+  margin-top: 4px;
+  transition: all 0.3s ease;
+  grid-column: 2;
+  justify-self: end;
+  width: auto;
+  min-width: 120px;
+}
+
+.submit-btn:hover:not([disabled]) {
+  background-color: rgba(0, 174, 174, 0.1);
+  border-color: #00aeae;
+  color: #00aeae;
+  transform: none;
+  box-shadow: none;
+}
+
+.submit-btn[disabled] {
+  background-color: #f5f5f5;
+  border-color: #95a5a6;
+  color: #95a5a6;
+  cursor: not-allowed;
+}
+
+.submit-btn .material-icons {
+  font-size: 18px;
+}
+
+/* Table styling for profiles */
+.profiles-table-container {
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.profiles-count {
+  padding: 15px 20px;
+  font-size: 14px;
+  color: #7f8c8d;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  font-weight: 500;
+}
+
+.profiles-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.profiles-table thead th {
+  background-color: #f5f5f5;
+  color: #2c3e50;
+  font-weight: 500;
+  text-align: left;
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+.profiles-table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.profiles-table tbody tr:hover {
+  background-color: rgba(44, 62, 80, 0.05);
+}
+
+.profiles-table tbody td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+
+.profiles-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.profile-name-cell {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.tjm-cell {
+  font-weight: 500;
+  color: #00aeae;
+}
+
+.actions-cell {
+  text-align: center;
+  width: 60px;
+}
+
+.remove-profile-btn {
+  background-color: transparent;
+  color: #e74c3c;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0;
+}
+
+.remove-profile-btn:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.remove-profile-btn .material-icons {
+  font-size: 18px;
+}
+
+.remove-button {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 0.2s;
+}
+
+.remove-button:hover {
+  background-color: rgba(234, 67, 53, 0.1);
+}
+
+.remove-icon::before {
+  content: '\f2ed';
+  font-family: 'Font Awesome 5 Free';
+  color: #EA4335; /* Google red for delete icons */
+  font-size: 16px;
+}
+
+.no-profiles {
+  text-align: center;
+  padding: 30px 20px;
+  color: #7f8c8d;
+  background-color: white;
+  border-radius: 8px;
+  margin-top: 15px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.no-profiles p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* Loading styles */
+.loading-profiles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  border: 1px solid #e0e0e0;
+}
+
+.loading-profiles p {
+  margin-top: 15px;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #00aeae;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive table */
+@media screen and (max-width: 768px) {
+  .gestion-profils {
+    padding: 15px;
+  }
+  
+  .profiles-table {
+    display: block;
+    overflow-x: auto;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .custom-form-field {
+    width: 100%;
+    min-width: 100%;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: 10px;
+  }
+}
+
+/* Empty state styling */
+.no-profiles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.empty-state-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.no-profiles p {
+  color: #6c757d;
+  font-size: 16px;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.5;
+}

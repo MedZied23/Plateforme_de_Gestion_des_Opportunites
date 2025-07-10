@@ -1,0 +1,37 @@
+<nav class="navbar">
+  <div class="navbar-left">
+    <button class="menu-toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+      <i class="material-icons">menu</i>
+    </button>
+    <div class="breadcrumb">
+      <h1>{{ pageTitle }}</h1>
+    </div>
+  </div>
+  <div class="navbar-right">
+    <div class="search-bar">
+      <input type="text" placeholder="Rechercher..." />
+      <i class="material-icons">search</i>
+    </div>    <div class="navbar-actions">
+      <div class="notification-container">
+        <button 
+          class="action-button" 
+          aria-label="Notifications" 
+          (click)="toggleNotificationDropdown()"
+        >
+          <i class="material-icons">notifications</i>
+          <span class="badge" *ngIf="notificationCount > 0">{{ notificationCount }}</span>
+        </button>
+        <app-notification-dropdown 
+          [isOpen]="showNotificationDropdown"
+          (close)="onNotificationDropdownClose()"
+        ></app-notification-dropdown>
+      </div>
+      <button class="action-button" aria-label="Messages">
+        <i class="material-icons">email</i>
+      </button>
+      <button class="action-button" aria-label="Help">
+        <i class="material-icons">help_outline</i>
+      </button>
+    </div>
+  </div>
+</nav>

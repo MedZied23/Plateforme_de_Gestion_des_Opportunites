@@ -1,0 +1,414 @@
+/* Main container for layout with sidebar */
+.main-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+}
+
+.matrix-container {
+  flex: 1;
+  padding: 20px;
+  box-sizing: border-box;
+  font-weight: 400;
+  /* Default: no margin when financial navigation is not present */
+  margin-left: 0;
+  width: 100%;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+/* When financial navigation is present */
+.main-container.has-navigation .matrix-container {
+  margin-left: 240px; /* Matches the width of the financial navigation */
+  width: calc(100% - 240px);
+}
+
+/* Responsive adjustments for when financial navigation is present */
+@media screen and (max-width: 992px) {
+  .main-container.has-navigation .matrix-container {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .main-container.has-navigation .matrix-container {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+  }
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.matrix-table th,
+.matrix-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+.matrix-table th {
+  background-color: #f5f5f5;
+  font-weight: 500; /* Reduced from bold */
+}
+
+.matrix-input {
+  width: 60px;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.matrix-input:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.profile-name {
+  font-weight: 500; /* Reduced from bold */
+  text-align: left;
+  padding-left: 20px;
+}
+
+/* Styles for the old sections that are now replaced */
+.opportunity-section,
+.proposition-name-section {
+  display: none; /* Hide these as they're replaced by the integrated section */
+}
+
+.proposition-name-section .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Updated proposition name styling - now using the styles in the integrated section */
+
+.proposition-name-input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 42px;
+  transition: border-color 0.3s;
+  background-color: white;
+  color: #333;
+  font-family: 'Dylan', Arial, sans-serif;
+  width: 100%;
+}
+
+.proposition-name-input:focus {
+  outline: none;
+  border-color: #2c3e50;
+  box-shadow: 0 0 0 1px rgba(44, 62, 80, 0.25);
+}
+
+.proposition-name-input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.checkbox-container {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.checkbox-container label {
+  font-weight: 400; /* Reduced from bold */
+  cursor: pointer;
+}
+
+.select-container {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.select-container label {
+  margin-right: 15px;
+  font-weight: 500;
+}
+
+.opportunity-select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+  min-width: 250px;
+  font-size: 14px;
+}
+
+.opportunity-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* These styles are moved to liaison-opportunite-component.component.css */
+
+/* These styles are moved to liaison-opportunite-component.component.css */
+
+/* These styles are moved to liaison-opportunite-component.component.css */
+
+/* Styles pour Angular Material Autocomplete */
+::ng-deep .mat-mdc-option {
+  font-size: 14px;
+  padding: 0 16px;
+  height: 40px !important;
+  line-height: 40px !important;
+  font-weight: 400 !important; /* Added normal weight */
+}
+
+::ng-deep .mat-mdc-option .mdc-list-item__primary-text {
+  font-size: 14px;
+}
+
+::ng-deep .mat-mdc-autocomplete-panel {
+  border-radius: 4px !important;
+  background-color: white !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.form-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.btn-save {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-save:hover {
+  background-color: #219653;
+}
+
+/* Styles for user autocomplete */
+.user-option {
+  display: flex;
+  align-items: center;
+}
+
+.priority-user {
+  font-weight: 500;
+  color: #2c3e50;
+  background-color: rgba(44, 62, 80, 0.05);
+}
+
+::ng-deep .mat-mdc-option {
+  height: auto !important;
+  min-height: 40px !important;
+  line-height: 1.4 !important;
+  padding: 8px 16px !important;
+}
+
+::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(44, 62, 80, 0.1) !important;
+}
+
+/* This btn-modify style is moved to liaison-opportunite-component.component.css */
+
+.btn-redirect-matrix {
+  margin: 20px auto 0;
+  padding: 10px 20px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  width: auto;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.btn-disabled {
+  background-color: #95a5a6;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btn-active {
+  background-color: white;
+  color: #27ae60;
+  border: 2px solid #27ae60;
+  font-weight: 500;
+}
+
+.btn-active:hover {
+  background-color: rgba(39, 174, 96, 0.1);
+  border-color: #219653;
+  color: #219653;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-back {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-back:hover {
+  background-color: #2980b9;
+}
+
+.btn-configure-siege {
+  background-color: #e67e22;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-configure-siege:hover {
+  background-color: #d35400;
+}
+
+/* Styles for the new integrated section */
+.integrated-section {
+  max-width: 800px;
+  margin: 0 auto 30px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  font-family: 'Dylan', Arial, sans-serif;
+}
+
+.section-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.opportunity-component, 
+.proposition-name-component {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* This helps with truncation and overflow */
+}
+
+.section-label {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+/* Permission and loading states */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #70dcdc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.permission-denied-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 400px;
+}
+
+.permission-denied-content {
+  max-width: 500px;
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.permission-denied-content h2 {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+.permission-denied-content p {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.permission-denied-content .btn-back {
+  background-color: #70dcdc;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.permission-denied-content .btn-back:hover {
+  background-color: #5bc5c5;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .section-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

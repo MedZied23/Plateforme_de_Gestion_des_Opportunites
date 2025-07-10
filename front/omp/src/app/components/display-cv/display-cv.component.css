@@ -1,0 +1,385 @@
+.cv-display-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 100%;
+  overflow-y: auto;
+  max-height: calc(100vh - 100px);
+  font-family: 'dylan-normal', sans-serif;
+  font-size: 14px; /* Base font size reduced */
+}
+
+/* Hide elements with this class when generating PDF */
+.no-print {
+  display: block;
+}
+
+.cv-section {
+  margin-bottom: 25px;
+}
+
+/* Section Headers - restyled with light grey background instead of lines */
+.section-header {
+  color: #333;
+  padding: 8px 15px;
+  margin-bottom: 12px;
+  font-family: 'dylan-medium', sans-serif;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+  text-align: center;
+  position: relative;
+  font-weight: 600;
+  border: none;
+  background-color: #f5f5f5; /* Light grey background similar to add-cv component */
+  border-radius: 4px; /* Slight rounding of corners */
+}
+
+/* Remove the pseudo-elements that were creating the lines */
+.section-header::before,
+.section-header::after {
+  display: none;
+}
+
+.cv-name {
+  margin-bottom: 25px; /* Reduced from 30px */
+  text-align: center;
+}
+
+.cv-name h1 {
+  font-family: 'dylan-medium', sans-serif;
+  color: #2c5282;
+  font-size: 24px; /* Reduced from 28px */
+  margin: 0;
+}
+
+.cv-quote {
+  font-style: italic;
+  color: #555;
+  text-align: center;
+  margin-top: 8px; /* Reduced from 10px */
+  padding: 0 35px; /* Reduced from 40px */
+  position: relative;
+  font-size: 13px; /* Added smaller font size */
+}
+
+.cv-quote::before,
+.cv-quote::after {
+  content: '"';
+  font-size: 20px; /* Reduced from 24px */
+  color: #aaa;
+  position: absolute;
+}
+
+.cv-quote::before {
+  left: 20px;
+}
+
+.cv-quote::after {
+  right: 20px;
+}
+
+.cv-presentation {
+  margin-bottom: 25px;
+}
+
+.cv-presentation p {
+  margin: 0;
+  line-height: 1.5; /* Slightly reduced from 1.6 */
+  color: #4a5568;
+  text-align: justify;
+  font-size: 13px; /* Added smaller font size */
+}
+
+/* Two Column Layout */
+.two-column {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+}
+
+/* Tables styling for all tables */
+.formation-table,
+.langues-table,
+.experience-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0; /* Very thin light gray border around the table */
+  font-size: 13px; /* Added smaller font size for tables */
+}
+
+.formation-table th,
+.langues-table th,
+.experience-table th {
+  text-align: left;
+  background-color: white;
+  padding: 8px; /* Reduced from 10px */
+  font-weight: 600;
+  color: #333;
+  border: 1px solid #e0e0e0; /* Very thin border */
+  font-size: 13px; /* Added smaller font size */
+}
+
+.formation-table td,
+.langues-table td,
+.experience-table td {
+  padding: 8px; /* Reduced from 10px */
+  vertical-align: top;
+  border: 1px solid #e0e0e0; /* Very thin border */
+}
+
+/* Remove hover effect to keep the design clean */
+.formation-table tr:hover,
+.langues-table tr:hover,
+.experience-table tr:hover {
+  background-color: transparent;
+}
+
+/* Certifications */
+.certifications-list {
+  margin: 0;
+  padding-left: 18px; /* Reduced from 20px */
+  list-style-type: disc;
+  font-size: 13px; /* Added smaller font size */
+}
+
+.certifications-list li {
+  margin-bottom: 6px; /* Reduced from 8px */
+  color: #333;
+}
+
+/* Experiences */
+.experience-item {
+  margin-bottom: 16px; /* Reduced from 20px */
+  padding-bottom: 12px; /* Reduced from 15px */
+  border-bottom: 1px solid #eee;
+}
+
+.experience-item:last-child {
+  border-bottom: none;
+}
+
+.experience-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.experience-role {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px; /* Added smaller font size */
+}
+
+.experience-dates {
+  color: #666;
+  font-size: 12px; /* Added smaller font size */
+}
+
+.experience-company {
+  color: #4a5568;
+  font-style: italic;
+  margin-bottom: 6px; /* Reduced from 8px */
+  font-size: 12px; /* Added smaller font size */
+}
+
+/* Projects */
+.projet-container {
+  margin-bottom: 15px;
+}
+
+.projet-item {
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  background-color: #fff;
+}
+
+.projet-item:last-child {
+  border-bottom: 1px solid #eee;
+}
+
+.projet-header {
+  margin-bottom: 8px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.projet-title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.projet-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.projet-client {
+  color: #4a5568;
+  font-size: 14px;
+}
+
+.projet-year {
+  color: #666;
+  font-size: 14px;
+}
+
+.projet-separator {
+  margin: 0 3px;
+  display: inline;
+}
+
+.projet-domain {
+  color: #4a5568;
+  font-style: italic;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 12px;
+}
+
+.projet-role {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+  display: block;
+  font-size: 12px;
+}
+
+/* Domain section styling */
+.domaine-section {
+  margin-bottom: 30px;
+}
+
+.domaine-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+  padding: 12px 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  border-left: 4px solid #3f51b5;
+}
+
+/* Périmètre styling */
+.projet-perimetre {
+  margin-top: 8px;
+}
+
+.perimetre-title {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px; /* Reduced from 8px */
+  font-size: 12px; /* Added smaller font size */
+}
+
+.perimetre-list {
+  margin: 0;
+  padding-left: 18px; /* Reduced from 20px */
+  list-style-type: disc;
+  font-size: 12px; /* Added smaller font size */
+}
+
+.perimetre-sentence {
+  margin-bottom: 8px; /* Reduced from 10px */
+  color: #333;
+}
+
+.ramifications-list {
+  margin-top: 4px; /* Reduced from 5px */
+  padding-left: 18px; /* Reduced from 20px */
+  list-style-type: circle;
+}
+
+.ramification-item {
+  margin-bottom: 4px; /* Reduced from 5px */
+  color: #4a5568;
+  font-size: 11px; /* Added smaller font size */
+}
+
+/* States */
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: #718096;
+  text-align: center;
+  font-size: 13px; /* Added smaller font size */
+}
+
+.error-state {
+  color: #e53e3e;
+}
+
+/* Highlight styling for keywords */
+.highlighted-text {
+  background-color: #ffe066;
+  padding: 0 3px;
+  border-radius: 2px;
+  font-weight: 500;
+  color: #000;
+  display: inline-block; /* This prevents the highlighting from extending beyond its boundaries */
+}
+
+/* Highlight styling for the selected project */
+.highlighted-project {
+  border: 2px solid #3f51b5 !important;
+  background-color: #f5f7ff !important;
+  box-shadow: 0 4px 8px rgba(63, 81, 181, 0.1);
+  animation: highlight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes highlight-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.3); }
+  70% { box-shadow: 0 0 0 8px rgba(63, 81, 181, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(63, 81, 181, 0); }
+}
+
+.cv-actions {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 10px 0;
+  z-index: 100;
+  text-align: right;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 20px;
+}
+
+.download-pdf-btn {
+  background-color: #FFD500;
+  color: #333;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.download-pdf-btn:hover {
+  background-color: #FFE600;
+  transform: translateY(-1px);
+}
+
+.download-pdf-btn i {
+  font-size: 16px;
+}

@@ -1,0 +1,243 @@
+.task-assignment-dialog {
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.dialog-header h3 i {
+  margin-right: 8px;
+  color: #00aeae;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.dialog-content {
+  padding: 20px 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #00aeae;
+  box-shadow: 0 0 0 2px rgba(0, 174, 174, 0.2);
+}
+
+.view-only-message {
+  color: #666;
+  margin: 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border-left: 4px solid #00aeae;
+  font-size: 14px;
+}
+
+/* User search styling */
+.user-input-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #757575;
+  font-size: 14px;
+  z-index: 1;
+}
+
+.user-input-container .form-input {
+  padding-left: 40px;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.user-option {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.user-option:hover {
+  background-color: #f8f9fa;
+}
+
+.user-option:last-child {
+  border-bottom: none;
+}
+
+.no-results {
+  padding: 15px;
+  text-align: center;
+  color: #757575;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.selected-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.member-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #e8f5f5;
+  border: 1px solid #00aeae;
+  border-radius: 16px;
+  font-size: 14px;
+  color: #006666;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.member-chip.disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  background-color: #f5f5f5;
+  border-color: #ddd;
+  color: #666;
+}
+
+.remove-member-button {
+  background: none;
+  border: none;
+  color: #757575;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 18px;
+  height: 18px;
+}
+
+.remove-member-button:hover {
+  color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.1);
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16px 24px;
+  gap: 12px;
+  border-top: 1px solid #eee;
+}
+
+.btn-secondary,
+.btn-primary {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 100px;
+  transition: background-color 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-secondary {
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.btn-secondary:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.btn-primary {
+  background-color: #00aeae;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background-color: #008f8f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}

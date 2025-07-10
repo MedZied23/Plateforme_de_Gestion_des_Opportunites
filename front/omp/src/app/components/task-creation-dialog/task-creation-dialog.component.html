@@ -1,0 +1,61 @@
+<div class="task-creation-dialog">  <div class="dialog-header">
+    <h3><i class="fas fa-tasks"></i> Créer une tâche {{ taskTypeLabel }}</h3>
+    <button type="button" class="close-button" (click)="cancel()">×</button>
+  </div>
+  
+  <div class="dialog-content">    <div class="form-group">
+      <label for="taskName">Nom de la tâche</label>
+      <input
+        id="taskName"
+        type="text"
+        [formControl]="taskNameControl"
+        placeholder="Saisir le nom de la tâche"
+        class="form-input"
+        [class.error]="taskNameControl.invalid && taskNameControl.touched"
+      />
+      <div *ngIf="taskNameControl.invalid && taskNameControl.touched" class="error-message">
+        Le nom de la tâche est requis
+      </div>
+    </div>    <!-- Only show percentage field for Operational tasks -->
+    <div class="form-group" *ngIf="isOperationalTask">      <label for="percentage">Poids ({{ percentageControl.value }}%)</label>
+      <div class="slider-container">
+        <input
+          id="percentage"
+          type="range"
+          [formControl]="percentageControl"
+          min="0"
+          max="100"
+          step="1"
+          class="percentage-slider"
+          [class.error]="percentageControl.invalid && percentageControl.touched"
+        />
+      </div>
+      <div *ngIf="percentageControl.invalid && percentageControl.touched" class="error-message">
+        <span *ngIf="percentageControl.hasError('required')">Le poids est requis</span>
+        <span *ngIf="percentageControl.hasError('min') || percentageControl.hasError('max')">
+          Le poids doit être entre 0 et 100
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-actions">    <button
+      type="button"
+      class="btn-secondary"
+      (click)="cancel()"
+      [disabled]="isLoading"
+    >
+      Annuler
+    </button>
+    <button
+      type="button"
+      class="btn-primary"
+      (click)="createTask()"
+      [disabled]="!isFormValid || isLoading"
+    >
+      <span *ngIf="!isLoading">Créer la tâche</span>
+      <span *ngIf="isLoading">Création en cours...</span>
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>

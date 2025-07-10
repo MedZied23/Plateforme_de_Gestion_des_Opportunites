@@ -1,0 +1,106 @@
+<div class="main-container" [class.has-navigation]="currentPropositionId">
+  <!-- Financial Navigation Sidebar - Only show when editing an existing proposition -->
+  <app-financial-navigation *ngIf="currentPropositionId" [propositionId]="currentPropositionId" [activeSheet]="1"></app-financial-navigation>
+  
+  <div class="matrix-container">
+    
+    <!-- Loading permissions state -->
+    <div *ngIf="loadingPermissions" class="loading-container">
+      <div class="spinner"></div>
+      <p>Vérification des autorisations...</p>
+    </div>
+    
+    <!-- Permission denied state -->
+    <div *ngIf="!loadingPermissions && !canCreateProposition && !currentPropositionId" class="permission-denied-container">
+      <div class="permission-denied-content">
+        <i class="fas fa-lock" style="font-size: 48px; color: #e74c3c; margin-bottom: 20px;"></i>
+        <h2>Accès non autorisé</h2>
+        <p>Vous n'avez pas les autorisations nécessaires pour créer une proposition financière.</p>
+        <p>Seuls les <strong>Managers</strong>, <strong>Senior Managers</strong>, <strong>Directeurs</strong> et <strong>Associés</strong> peuvent créer des propositions financières.</p>
+        <button class="btn-back" (click)="router.navigate(['/layout/propositions-financieres'])">
+          Retour aux propositions financières
+        </button>
+      </div>
+    </div>
+    
+    <!-- Main content - only show if user has permissions or is editing existing proposition -->
+    <ng-container *ngIf="!loadingPermissions && (canCreateProposition || currentPropositionId)">
+    
+    <!-- Show display-feuil-one component when matrix is submitted, otherwise show the regular components -->
+    <ng-container *ngIf="showFeuilOne; else regularComponents">
+      <!-- Show configure-siege-terrain when toggled, otherwise show display-feuil-one -->
+      <ng-container *ngIf="showConfigureSiegeTerrain; else displayFeuilOne">
+        <app-configure-siege-terrain [propositionId]="currentPropositionId"></app-configure-siege-terrain>
+        
+        <div class="button-container">
+          <button class="btn-back" (click)="toggleConfigureSiegeTerrain()">
+            Retour à la vue Feuil One
+          </button>
+        </div>
+      </ng-container>
+      
+      <ng-template #displayFeuilOne>
+        <app-display-feuil-one [propositionId]="currentPropositionId"></app-display-feuil-one>
+        
+        <div class="button-container">
+          <div class="button-group">
+            <button class="btn-configure-siege" (click)="toggleConfigureSiegeTerrain()">
+              Configurer Siège/Terrain
+            </button>
+            <button class="btn-back" (click)="showFeuilOne = false">
+              Retour à la configuration
+            </button>
+          </div>
+        </div>
+      </ng-template>    </ng-container>
+    
+    <ng-template #regularComponents>
+      <!-- Integrated opportunity and proposition name section -->
+      <div class="integrated-section">
+        <div class="section-row">          <div class="opportunity-component">
+            <label class="section-label">Opportunité</label>
+            <app-liaison-opportunite-component
+              [currentOpportunityId]="currentOpportunity?.id"
+              (opportunityLinked)="onOpportunityLinked($event)"
+              (opportunityUnlinked)="onOpportunityUnlinked()">
+            </app-liaison-opportunite-component>
+          </div>
+          
+          <div class="proposition-name-component">
+            <label for="propositionName" class="section-label">Nom de la proposition financière</label>
+            <input 
+              type="text" 
+              id="propositionName" 
+              class="proposition-name-input" 
+              [(ngModel)]="propositionName" 
+              placeholder="Saisissez un nom pour cette proposition financière">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pass opportunity data and proposition ID to gestion-profils and listen for proposition creation -->
+      <app-gestion-profils 
+        [opportunityData]="currentOpportunity"
+        [propositionFinanciereId]="currentPropositionId"
+        [propositionName]="propositionName"
+        (profilesChanged)="updateProfilesFromComponent()"
+        (propositionFinanciereCreated)="onPropositionFinanciereCreated($event)">
+      </app-gestion-profils>
+  
+      <!-- Pass the proposition ID to add-livrable component -->
+      <app-add-livrable 
+        [propositionId]="currentPropositionId"
+        (livrablesConfirmed)="onLivrablesConfirmed($event)">
+      </app-add-livrable>
+      
+      <button 
+        class="btn-redirect-matrix" 
+        [ngClass]="{'btn-disabled': !hasProfilesAndLivrables(), 'btn-active': hasProfilesAndLivrables()}"
+        (click)="redirectToMatrix()"
+        [disabled]="!hasProfilesAndLivrables()">        Définir la distribution des HJ
+      </button>
+    </ng-template>
+    
+    </ng-container> <!-- End of permission check container -->
+  </div>
+</div>

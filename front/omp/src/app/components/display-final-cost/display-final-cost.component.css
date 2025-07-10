@@ -1,0 +1,502 @@
+/* Main container for layout with sidebar */
+.main-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Container that takes full width */
+.feuil-trois-container {
+  flex: 1;
+  padding: 25px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Dylan', Arial, sans-serif;
+}
+
+/* Header styles */
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+h1 {
+  margin: 0;
+  flex-grow: 1;
+  font-size: 24px;
+  text-align: center;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.back-button {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #e9ecef;
+}
+
+.download-button {
+  background-color: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #fff5f5;
+  border-color: #c0392b;
+  color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.15);
+}
+
+.download-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.download-button:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Spinning animation when exporting */
+@keyframes spin {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.download-button:disabled .material-icons {
+  animation: spin 1s infinite;
+}
+
+/* Message container styles */
+.message-container {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.loading-message, .error-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #666;
+}
+
+.error-message {
+  color: #dc3545;
+}
+
+/* Main content styles */
+.feuil-trois-content {
+  margin-top: 20px;
+  padding: 25px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+  min-height: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.proposition-info {
+  margin-bottom: 30px;
+}
+
+.proposition-info p {
+  color: #5f6368;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Cost summary cards */
+.cost-summary-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.cost-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cost-card.total-project {
+  background-color: #70dcdc;
+  color: white;
+}
+
+.cost-card .card-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+}
+
+.cost-card.total-project .card-header {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.cost-card .card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.cost-card.total-project .card-header h3 {
+  color: white;
+}
+
+.cost-card .card-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.cost-value {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.cost-percentage {
+  font-size: 14px;
+  color: #666;
+}
+
+.cost-card.total-project .cost-percentage {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Expense details container and cards */
+.expense-details-container {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.expense-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.table-container {
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.expense-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.expense-table th,
+.expense-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.expense-table th {
+  background-color: #f8f9fa;
+  font-weight: 500;
+  color: #2c3e50;
+  white-space: nowrap;
+}
+
+.expense-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.expense-table tbody tr:hover {
+  background-color: #f2f2f2;
+}
+
+.expense-table tfoot {
+  background-color: #f8f9fa;
+  font-weight: 500;
+}
+
+.expense-table tfoot td {
+  border-top: 2px solid #dee2e6;
+}
+
+/* Unit prices table specific styles */
+.unit-prices-table th:first-child {
+  min-width: 200px;
+}
+
+.unit-prices-table th:last-child,
+.unit-prices-table td:last-child {
+  text-align: left;
+  padding-left: 40px;
+}
+
+/* Units table and costs table shared column styles */
+.units-table th,
+.units-table td,
+.costs-table th,
+.costs-table td {
+  text-align: center;
+  min-width: 100px;
+  max-width: 120px;
+  padding: 12px 8px;
+}
+
+.units-table th,
+.costs-table th {
+  white-space: normal;
+  word-wrap: break-word;
+  height: auto;
+  line-height: 1.2;
+}
+
+/* Keep the profile column wider as it contains names */
+.units-table th:first-child,
+.units-table td:first-child,
+.costs-table th:first-child,
+.costs-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #f8f9fa;
+  min-width: 160px;
+  max-width: 180px;
+  z-index: 1;
+  text-align: left;
+}
+
+/* Units table specific styles */
+.units-table th:first-child,
+.units-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #f8f9fa;
+  min-width: 180px;
+  z-index: 1;
+}
+
+.units-table th,
+.units-table td {
+  text-align: center;
+  min-width: 120px;
+}
+
+/* Costs table specific styles */
+.costs-table th:first-child,
+.costs-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #f8f9fa;
+  min-width: 180px;
+  z-index: 1;
+}
+
+.costs-table th,
+.costs-table td {
+  text-align: right;
+  min-width: 120px;
+}
+
+.costs-table td:first-child {
+  text-align: left;
+}
+
+.costs-table .profile-total,
+.costs-table .total-all {
+  font-weight: 600;
+  background-color: #f0f7f7;
+}
+
+.costs-table .percentage-row {
+  font-style: italic;
+  color: #666;
+}
+
+.costs-table tfoot tr:first-child {
+  font-weight: 600;
+  background-color: #f0f7f7;
+}
+
+/* Project Summary styles */
+.project-summary {
+  margin-top: 60px;
+  padding: 40px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+
+.summary-title {
+  color: #2c3e50;
+  font-size: 22px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaecef;
+  font-weight: 500;
+  text-align: left;
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #fafbfc;
+  border: 1px solid #eaecef;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.summary-item:hover {
+  background-color: #fff;
+  border-color: #70dcdc;
+}
+
+.summary-label {
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.summary-item.total {
+  background-color: #f0f7f7;
+  border-color: #70dcdc;
+  margin-top: 16px;
+}
+
+.summary-item.total .summary-label {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.summary-item.total .summary-value {
+  color: #2c3e50;
+  font-size: 20px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1200px) {
+  .cost-summary-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cost-card.total-project {
+    grid-column: 1 / -1;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .feuil-trois-container {
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .feuil-trois-container {
+    padding: 15px;
+  }
+
+  .cost-summary-container {
+    grid-template-columns: 1fr;
+  }
+
+  .cost-card.total-project {
+    grid-column: auto;
+  }
+
+  .header-container {
+    flex-direction: column;
+  }
+
+  h1 {
+    order: -1;
+    margin-bottom: 15px;
+  }
+
+  .back-button, .download-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .project-summary {
+    padding: 20px;
+    margin-top: 40px;
+  }
+
+  .summary-label {
+    font-size: 16px;
+  }
+
+  .summary-value {
+    font-size: 18px;
+  }
+
+  .summary-item.total .summary-value {
+    font-size: 20px;
+  }
+}

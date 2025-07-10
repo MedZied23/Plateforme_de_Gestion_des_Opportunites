@@ -1,0 +1,681 @@
+/* Main container for layout with sidebar */
+.main-container {
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Container that takes full width */
+.feuil-one-container {
+  flex: 1;
+  padding: 25px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Dylan', Arial, sans-serif;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+h1 {
+  margin: 0;
+  flex-grow: 1;
+  font-size: 24px;
+  text-align: center;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.back-button {
+  background-color: #f8f9fa;
+  color: #2c3e50;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #e9ecef;
+  border-color: #ced4da;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.back-icon {
+  font-size: 16px;
+}
+
+/* PDF Download Button Styling */
+.download-button {
+  background-color: white;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+  border-radius: 6px;
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #fff5f5;
+  border-color: #c0392b;
+  color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.15);
+}
+
+.download-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.download-button:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+  transform: none;
+}
+
+.download-icon {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Spinning animation when exporting */
+@keyframes spin {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.download-button:disabled .download-icon {
+  animation: spin 1.5s infinite;
+}
+
+.message-container {
+  margin: 20px 0;
+}
+
+.loading-message {
+  padding: 15px;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  text-align: center;
+  border-left: 4px solid #2196f3;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loading-message .material-icons {
+  font-size: 20px;
+}
+
+.error-message {
+  padding: 15px;
+  background-color: #ffebee;
+  border-radius: 8px;
+  color: #c62828;
+  text-align: center;
+  border-left: 4px solid #f44336;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.error-message .material-icons {
+  font-size: 20px;
+}
+
+.feuil-one-content {
+  margin-top: 20px;
+  padding: 25px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fff;
+  min-height: 400px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.proposition-info {
+  margin-bottom: 30px;
+}
+
+.proposition-info h2 {
+  color: #2c3e50;
+  font-size: 22px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.proposition-info p {
+  color: #5f6368;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.placeholder {
+  text-align: center;
+  color: #757575;
+  padding: 40px 0;
+}
+
+/* Enhanced table styling */
+.table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+/* Matrix table styling */
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+.matrix-table th, 
+.matrix-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+}
+
+.matrix-table thead {
+  background-color: #f5f5f5;
+}
+
+.matrix-table th {
+  font-weight: 500;
+  color: #333;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+}
+
+.phase-header-row th {
+  border-bottom: none;
+}
+
+.phase-header {
+  background-color: #70dcdc;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.5px;
+  padding: 14px 10px 10px;
+}
+
+.livrable-header-row th {
+  border-top: none;
+}
+
+.profile-header {
+  min-width: 150px;
+  background-color: #5cc7c7;
+  color: white;
+  text-align: left;
+}
+
+.livrable-header {
+  min-width: 120px;
+  background-color: #62d0d0;
+  color: white;
+  padding: 10px 8px;
+}
+
+.livrable-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+
+.livrable-days {
+  font-size: 12px;
+  color: #e0e0e0;
+}
+
+.profile-name {
+  font-weight: 500;
+  text-align: left;
+  background-color: #f9f9f9;
+}
+
+.days-cell {
+  font-weight: 500;
+  position: relative;
+}
+
+/* Zebra striping for rows */
+.matrix-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.matrix-table tbody tr:hover {
+  background-color: #f0f7fa;
+}
+
+.matrix-display h3 {
+  margin: 30px 0 15px;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 2px solid #70dcdc;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.matrix-display h3 .material-icons {
+  font-size: 20px;
+  color: #70dcdc;
+}
+
+.no-matrix {
+  text-align: center;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  color: #5f6368;
+  border: 1px dashed #dee2e6;
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.no-matrix .material-icons {
+  font-size: 32px;
+  color: #9e9e9e;
+  margin-bottom: 10px;
+}
+
+/* Livrable Totals Table Styling */
+.livrable-totals-container,
+.phase-totals-container,
+.profile-totals-container,
+.entity-totals-container {
+  margin-top: 40px;
+  margin-bottom: 30px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.livrable-totals-container h3,
+.phase-totals-container h3,
+.profile-totals-container h3,
+.entity-totals-container h3 {
+  margin: 0 0 20px;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 2px solid #70dcdc;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.livrable-totals-container h3 .material-icons,
+.phase-totals-container h3 .material-icons,
+.profile-totals-container h3 .material-icons,
+.entity-totals-container h3 .material-icons {
+  font-size: 20px;
+  color: #70dcdc;
+}
+
+.livrable-totals-table,
+.phase-totals-table,
+.profile-totals-table,
+.entity-totals-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 14px;
+}
+
+.livrable-totals-table th, 
+.livrable-totals-table td,
+.phase-totals-table th,
+.phase-totals-table td,
+.profile-totals-table th,
+.profile-totals-table td,
+.entity-totals-table th,
+.entity-totals-table td {
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+}
+
+.livrable-totals-table thead,
+.phase-totals-table thead,
+.profile-totals-table thead,
+.entity-totals-table thead {
+  background-color: #f5f5f5;
+}
+
+.livrable-totals-table th,
+.phase-totals-table th,
+.profile-totals-table th,
+.entity-totals-table th {
+  font-weight: 500;
+  text-align: center;
+  background-color: #70dcdc;
+  color: white;
+}
+
+/* Livrable specific styles */
+.livrable-name-header {
+  min-width: 200px;
+  text-align: left;
+}
+
+.livrable-phase-header {
+  min-width: 150px;
+}
+
+.livrable-total-header,
+.livrable-percentage-header {
+  min-width: 120px;
+}
+
+.livrable-name-cell {
+  font-weight: 500;
+  text-align: left;
+}
+
+.livrable-phase-cell {
+  text-align: left;
+  color: #5cc7c7;
+  font-weight: 500;
+}
+
+.livrable-total-cell {
+  text-align: center;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.livrable-percentage-cell {
+  text-align: center;
+  font-weight: 500;
+  color: #27ae60;
+}
+
+/* Phase specific styles */
+.measure-header {
+  text-align: left;
+  background-color: #5cc7c7;
+  color: white;
+  min-width: 150px;
+}
+
+.phase-header-cell {
+  background-color: #70dcdc;
+  color: white;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.measure-label {
+  font-weight: 500;
+  text-align: left;
+  background-color: #f9f9f9;
+}
+
+.phase-total-cell {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.phase-percentage-cell {
+  font-weight: 500;
+  color: #27ae60;
+}
+
+/* Profile specific styles */
+.profile-name-header {
+  text-align: left;
+  width: 40%;
+}
+
+.profile-tjm-header,
+.profile-total-header,
+.profile-cost-header {
+  width: 20%;
+}
+
+.profile-name-cell {
+  text-align: left;
+  font-weight: 500;
+}
+
+.profile-tjm-cell {
+  font-weight: 500;
+  color: #f57c00; /* Keep orange color for TJM */
+}
+
+.profile-total-cell {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.profile-cost-cell {
+  font-weight: 500;
+  color: #e74c3c;
+}
+
+/* Summary row styling (TJM moyen and Coût Total) */
+.summary-row {
+  background-color: #f8f9fa;
+  font-weight: 500;
+}
+
+.average-label-cell, .total-cost-label-cell {
+  text-align: center;
+  font-weight: 500;
+  color: white;
+  background-color: #5cc7c7;
+}
+
+.average-tjm-value-cell {
+  font-weight: 600;
+  color: #f57c00;
+  font-size: 15px;
+}
+
+.total-cost-value-cell {
+  font-weight: 600;
+  color: #e74c3c;
+  font-size: 15px;
+}
+
+/* Entity specific styles */
+.entity-name-header {
+  text-align: left;
+  width: 30%;
+}
+
+.entity-budget-header,
+.entity-hj-header,
+.entity-percentage-hj-header,
+.entity-percentage-budget-header {
+  width: 17.5%;
+}
+
+.entity-name-cell {
+  text-align: left;
+  font-weight: 500;
+}
+
+.entity-budget-cell {
+  font-weight: 500;
+  color: #e74c3c;
+}
+
+.entity-hj-cell {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.entity-percentage-hj-cell {
+  font-weight: 500;
+  color: #27ae60;
+}
+
+.entity-percentage-budget-cell {
+  font-weight: 500;
+  color: #f57c00;
+}
+
+/* Entity charts styling */
+.entity-charts-row {
+  background-color: #f8f9fa;
+}
+
+.entity-title-cell {
+  text-align: left;
+  font-weight: 500;
+  padding: 12px 15px;
+  color: #2c3e50;
+}
+
+.entity-chart-cell {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+.chart-container-table {
+  position: relative;
+  height: 220px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Zebra striping and hover effects for all tables */
+.livrable-totals-table tbody tr:nth-child(even),
+.phase-totals-table tbody tr:nth-child(even),
+.profile-totals-table tbody tr:nth-child(even):not(.summary-row),
+.entity-totals-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.livrable-totals-table tbody tr:hover,
+.phase-totals-table tbody tr:hover,
+.profile-totals-table tbody tr:hover:not(.summary-row),
+.entity-totals-table tbody tr:hover {
+  background-color: #f0f7fa;
+  transition: background-color 0.2s ease;
+}
+
+/* Additional styling for the section titles */
+.livrable-totals-container h3,
+.phase-totals-container h3,
+.profile-totals-container h3,
+.entity-totals-container h3 {
+  margin: 0 0 20px;
+  color: #2c3e50;
+  font-size: 18px;
+  font-weight: 500;
+  border-bottom: 2px solid #70dcdc;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Total cost display styling */
+.total-cost-container {
+  margin-top: 30px;
+  border-top: 2px solid #e0e0e0;
+  padding-top: 20px;
+  text-align: right;
+}
+
+.total-cost-label {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ff0000;
+  margin-right: 10px;
+}
+
+.total-cost-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+}
+
+/* Media queries to preserve responsiveness */
+@media (max-width: 1200px) {
+  .feuil-one-container {
+    padding: 15px;
+  }
+  
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .header-container h1 {
+    order: -1;
+    margin-bottom: 10px;
+  }
+  
+  .back-button, .download-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .livrable-totals-container,
+  .phase-totals-container,
+  .profile-totals-container,
+  .entity-totals-container {
+    padding: 15px;
+  }
+  
+  .matrix-table th, 
+  .matrix-table td,
+  .livrable-totals-table th, 
+  .livrable-totals-table td,
+  .phase-totals-table th,
+  .phase-totals-table td,
+  .profile-totals-table th,
+  .profile-totals-table td,
+  .entity-totals-table th,
+  .entity-totals-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}

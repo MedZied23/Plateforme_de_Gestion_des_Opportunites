@@ -1,0 +1,23 @@
+<div class="financial-nav-container">
+  <div class="nav-title">
+    <div class="title-text">Navigation</div>
+    <div class="title-underline"></div>
+  </div>
+  
+  <ul class="nav-list">
+    <li *ngFor="let item of navItems" 
+        class="nav-item" 
+        [class.active]="isActive(item)"
+        (click)="navigateTo(item)">
+      <div class="item-container">
+        <div class="nav-icon">
+          <mat-icon>{{item.icon}}</mat-icon>
+        </div>
+        <div class="nav-content">
+          <div class="nav-name">{{item.name}}</div>
+        </div>
+        <div class="active-indicator" *ngIf="isActive(item)"></div>
+      </div>
+    </li>
+  </ul>
+</div>

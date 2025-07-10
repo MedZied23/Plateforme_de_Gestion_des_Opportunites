@@ -1,0 +1,65 @@
+<app-financial-navigation [propositionId]="propositionId || ''" [activeSheet]="4"></app-financial-navigation>
+
+<div class="matrix-container">
+  <div class="header-container">
+    <button class="back-button" (click)="goBackToConfiguration()">
+      <span class="back-icon">&#8592;</span> Retour
+    </button>
+  </div>
+  
+  <!-- Add error/success message section -->
+  <div class="message-container" *ngIf="errorMessage || submitSuccess">
+    <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="success-message" *ngIf="submitSuccess">
+      Matrice soumise avec succès! Redirection...
+    </div>
+  </div>
+  
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th></th>
+        @for (livrable of livrables; track livrable.id) {
+          <th>
+            <div class="livrable-name">{{ livrable.name }}</div>
+            <div class="days-info">{{ livrable.weeks * 5 }}</div>
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (profile of profiles; track profile.id; let i = $index) {
+        <tr>
+          <td class="profile-name">{{ profile.nomPrenom }}</td>
+          @for (livrable of livrables; track livrable.id; let j = $index) {
+            <td>
+              <input 
+                type="number" 
+                min="0" 
+                inputmode="numeric"
+                [ngModel]="matrix[i][j].hommeJour"
+                (ngModelChange)="updateCell(i, j, $event)"
+                [attr.data-row]="i"
+                [attr.data-col]="j"
+                (keydown)="onKeyDown($event, i, j)"
+                (click)="onCellClick($event)"
+                [title]="'Maximum allowed: ' + (livrable.weeks * 5) + ' days'"
+                [style.border-color]="matrix[i][j].hommeJour > (livrable.weeks * 5) ? 'red' : ''"
+                class="matrix-input">
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+  
+  <!-- Add Soumettre button -->
+  <div class="button-container">
+    <button 
+      class="submit-button" 
+      (click)="submitMatrix()" 
+      [disabled]="isSubmitting">
+      {{ isSubmitting ? 'Soumission en cours...' : 'Soumettre' }}
+    </button>
+  </div>
+</div>

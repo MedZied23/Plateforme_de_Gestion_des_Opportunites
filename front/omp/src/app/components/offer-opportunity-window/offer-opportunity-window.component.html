@@ -1,0 +1,21 @@
+<div class="opportunity-dialog">
+  <h2 class="modal-title">{{ data.currentOpportunityId ? "Modifier l'opportunité liée" : "Sélectionner une opportunité" }}</h2>
+  
+  <mat-dialog-content class="modal-content">
+    <div class="form-group">
+      <label for="opportunitySelect">Opportunité</label>
+      <select id="opportunitySelect" [(ngModel)]="selectedOpportunityId" class="form-control opportunity-select">
+        <option [ngValue]="null">Sélectionner une opportunité...</option>
+        <option *ngFor="let opportunity of data.opportunities" [value]="opportunity.id" [class.current-opportunity]="opportunity.id === data.currentOpportunityId">
+          {{ opportunity.nomOpportunite }}
+        </option>
+      </select>
+      <p class="helper-text" *ngIf="!selectedOpportunityId">Veuillez sélectionner une opportunité pour continuer</p>
+    </div>
+  </mat-dialog-content>
+
+  <div class="form-navigation">
+    <button class="btn btn-secondary" (click)="onNoClick()">Annuler</button>
+    <button class="btn btn-primary" (click)="onConfirm()" [disabled]="!selectedOpportunityId">{{ data.currentOpportunityId ? 'Modifier' : 'Confirmer' }}</button>
+  </div>
+</div>

@@ -1,0 +1,247 @@
+.notifications-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.mark-all-read-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #70dcdc;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.mark-all-read-btn:hover:not(:disabled) {
+  background: #5cc7c7;
+  transform: translateY(-1px);
+}
+
+.mark-all-read-btn:disabled {
+  background: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mark-all-read-btn i {
+  font-size: 18px;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #70dcdc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  margin: 0;
+  font-size: 16px;
+}
+
+/* Notifications container */
+.notifications-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notification-card {
+  display: flex;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.notification-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: #70dcdc;
+}
+
+.notification-card.unread {
+  background: #fff9e6;
+  border-left: 4px solid #70dcdc;
+}
+
+.notification-card.unread:hover {
+  background: #fff5d6;
+}
+
+.notification-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent;
+  margin-right: 16px;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.notification-indicator.unread {
+  background: #70dcdc;
+}
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.notification-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2c3e50;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.notification-time {
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+  white-space: nowrap;
+}
+
+.notification-body {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+/* Empty state */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.empty-state i {
+  font-size: 80px;
+  margin-bottom: 24px;
+  color: #ddd;
+}
+
+.empty-state h2 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #666;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .notifications-page {
+    padding: 16px;
+  }
+  
+  .page-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+  }
+  
+  .mark-all-read-btn {
+    align-self: flex-end;
+  }
+  
+  .notification-card {
+    padding: 16px;
+  }
+  
+  .notification-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .notification-title {
+    font-size: 16px;
+  }
+  
+  .notification-body {
+    font-size: 14px;
+  }
+  
+  .empty-state {
+    padding: 60px 20px;
+  }
+  
+  .empty-state i {
+    font-size: 60px;
+  }
+  
+  .empty-state h2 {
+    font-size: 20px;
+  }
+}

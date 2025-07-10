@@ -1,0 +1,129 @@
+<div class="gestion-profils">
+  <h3>Définition des Profils</h3>
+
+  <!-- Add profile button -->
+  <button class="add-profile-btn" (click)="toggleAddProfileForm()">
+    <i class="fas fa-user-plus"></i>
+    {{ showAddProfileForm ? 'Terminé' : 'Ajouter un profil' }}
+  </button>
+
+  <!-- Add profile form -->
+  <div class="add-profile-form" *ngIf="showAddProfileForm">
+    <div class="form-row">
+      <!-- User selection - Custom Autocomplete -->
+      <div class="custom-form-field">
+        <label class="custom-label">Nom et prénom</label>
+        <div class="custom-input-container">
+          <input type="text"
+                 class="custom-input"
+                 [formControl]="userControl"
+                 placeholder="Sélectionnez un utilisateur"
+                 (focus)="showUserSuggestions()"
+                 (input)="filterUsers(userControl.value)">          <div class="custom-dropdown" *ngIf="showUserDropdown">            <div class="custom-option" 
+                 *ngFor="let user of filteredUsers | async"
+                 [class.team-member]="currentOpportunity?.equipeProjet?.includes(user.id)"
+                 [class.associe-en-charge]="user.id === associeEnChargeId"
+                 [class.manager-en-charge]="user.id === managerEnChargeId"
+                 [class.co-manager-en-charge]="user.id === coManagerEnChargeId"
+                 [class.senior-manager-en-charge]="user.id === seniorManagerEnChargeId"
+                 (click)="selectUser(user)">
+              {{ user.prenom }} {{ user.nom }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Role/Position -->
+      <div class="custom-form-field">
+        <label class="custom-label">Poste</label>
+        <input type="text"
+               class="custom-input"
+               [(ngModel)]="newProfile.poste"
+               name="poste"
+               required>
+      </div>
+
+      <!-- TJM -->
+      <div class="custom-form-field">
+        <label class="custom-label">TJM</label>
+        <input type="number"
+               class="custom-input"
+               [(ngModel)]="newProfile.tjm"
+               name="tjm"
+               required
+               min="0">
+      </div>
+
+      <!-- Entity selection - Custom Autocomplete -->
+      <div class="custom-form-field">
+        <label class="custom-label">Entité</label>
+        <div class="custom-input-container">
+          <input type="text"
+                 class="custom-input"
+                 [formControl]="entiteControl"
+                 placeholder="Sélectionnez une entité"
+                 required
+                 (focus)="showEntitySuggestions()"
+                 (input)="filterEntities(entiteControl.value)">
+          <div class="custom-dropdown" *ngIf="showEntityDropdown">
+            <div class="custom-option" 
+                 *ngFor="let option of filteredEntities"
+                 (click)="selectEntity(option)">
+              {{ option }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button class="submit-btn" (click)="addProfile()" [disabled]="!userControl.value || !newProfile.poste || !newProfile.tjm || !entiteControl.value || isCreatingProfile">
+        <span class="material-icons">add</span>
+        <span *ngIf="!isCreatingProfile">Ajouter</span>
+        <span *ngIf="isCreatingProfile">Création...</span>
+      </button>
+    </div>
+  </div>
+    <!-- Loading indicator for profiles -->
+  <div class="loading-profiles" *ngIf="isLoadingProfiles">
+    <div class="spinner"></div>
+    <p>Chargement des profils...</p>
+  </div>
+    <!-- Profiles list in table format -->
+  <div class="profiles-table-container" *ngIf="profiles.length > 0 && !isLoadingProfiles">
+    <div class="profiles-count">
+      <span><i class="fas fa-users"></i> {{ profiles.length }} profil(s) configuré(s)</span>
+    </div>
+    
+    <table class="profiles-table">
+      <thead>
+        <tr>
+          <th>Nom Prénom</th>
+          <th>Poste</th>
+          <th>Entité</th>
+          <th>TJM</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let profile of profiles">
+          <td class="profile-name-cell">{{ profile.nomPrenom }}</td>
+          <td>{{ profile.poste }}</td>
+          <td>{{ profile.entite }}</td>
+          <td class="tjm-cell">{{ profile.tjm }}</td>
+          <td class="actions-cell">
+            <button class="remove-button" (click)="removeProfile(profile.id)" title="Supprimer">
+              <span class="remove-icon"></span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Empty state when no profiles are configured -->
+  <div class="no-profiles" *ngIf="profiles.length === 0 && !showAddProfileForm && !isLoadingProfiles">
+    <div class="empty-state-content">
+      <i class="fas fa-user-slash" style="font-size: 48px; color: #95a5a6; margin-bottom: 20px;"></i>
+      <p>Aucun profil ajouté. Cliquez sur "Ajouter un profil" pour commencer.</p>
+    </div>
+  </div>
+</div>

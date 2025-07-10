@@ -1,0 +1,376 @@
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: #2E2E38; /* Changed to EY dark gray */
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 20px 0;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2); /* Added shadow for depth */
+  transition: width 0.3s ease-out;
+  z-index: 1000;
+}
+
+.brand {
+  padding: 0 0px;
+  margin-bottom: 0px; /* Reduced from 30px to 20px */
+  margin-top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  max-width: 55%;  /* Slightly smaller logo */
+  height: auto;
+}
+
+.brand h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.user-info {
+  padding: 0 20px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-avatar.initials-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffe600; /* EY yellow */
+  color: #2e2e38; /* Dark blue/gray */
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+
+.user-dropdown {
+  position: relative;
+  flex: 1;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  font-size: 14px;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.user-item:hover {
+  background-color: rgba(255, 230, 0, 0.15); /* Yellow tint on hover */
+  color: #FFE600; /* EY yellow */
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+/* Update the dropdown-menu CSS to ensure visibility */
+.dropdown-menu {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease, opacity 0.3s ease;
+  width: 100%;
+  background-color: #383844; /* Slightly lighter than sidebar bg */
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  display: block;
+  margin-top: 0;
+}
+
+.dropdown-menu.show {
+  height: auto;
+  opacity: 1;
+  margin-bottom: 10px; /* Add space after dropdown */
+  position: relative; /* Remove absolute positioning */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px 12px 40px; /* Indented to show hierarchy */
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 230, 0, 0.15); /* Yellow tint on hover */
+  color: #FFE600; /* EY yellow */
+}
+
+.dropdown-item i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 0;
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  margin: 0;
+  margin-bottom: 3px; /* Added small space between menu items */
+}
+
+.menu a {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.menu a:hover, .menu a.active {
+  background-color: rgba(255, 230, 0, 0.15); /* Yellow tint on hover */
+  color: #FFE600; /* EY yellow for text */
+  border-left: 4px solid #FFE600; /* Yellow accent on active items */
+  padding-left: 16px; /* Adjust padding to account for border */
+}
+
+.menu i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.menu span {
+  font-size: 14px;
+}
+
+/* Category styling */
+.menu-category {
+  padding: 10px 20px 5px;
+  margin-top: 18px; /* Slightly increased from 15px */
+  margin-bottom: 5px; /* Added space after category title */
+}
+
+.category-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+  position: relative;
+  display: block;
+}
+
+/* Removing the yellow separator line under category titles */
+/* 
+.category-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: #FFE600;
+}
+*/
+
+.user-dropdown-container {
+  position: relative;
+  margin-bottom: 20px; /* Increased from 15px to create more space */
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.user-item:hover {
+  background-color: rgba(255, 230, 0, 0.15); /* Yellow tint on hover */
+  color: #FFE600; /* EY yellow */
+}
+
+.user-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  font-size: 14px;
+}
+
+.dropdown-icon {
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+.dropdown-menu {
+  position: relative; /* Change from absolute to relative */
+  top: auto;
+  left: auto;
+  width: 100%;
+  background-color: #383844; /* Slightly lighter than sidebar bg */
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: auto; /* Remove z-index */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0); /* Remove transform */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  position: relative;
+  z-index: auto; /* Remove z-index */
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(255, 230, 0, 0.15); /* Yellow tint on hover */
+  color: #FFE600; /* EY yellow */
+}
+
+.dropdown-item i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 5px 0;
+}
+
+/* Styles for collapsed sidebar */
+.sidebar.collapsed {
+  width: 70px;
+  overflow-x: hidden;
+  transition: width 0.3s ease-out;
+}
+
+/* Adjust the main content when sidebar is collapsed */
+.sidebar.collapsed + .main-content {
+  margin-left: 70px;
+}
+
+/* Adjust logo display in collapsed state */
+.sidebar.collapsed .brand {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.sidebar.collapsed .logo {
+  max-width: 80%;
+  padding: 0 10px;
+}
+
+/* Adjust menu items in collapsed state */
+.sidebar.collapsed .menu a {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar.collapsed .menu a:hover, 
+.sidebar.collapsed .menu a.active {
+  border-left: none;
+  border-left: 4px solid #FFE600;
+  padding-left: 0;
+}
+
+.sidebar.collapsed .menu i {
+  margin-right: 0;
+}
+
+/* Adjust user dropdown in collapsed state */
+.sidebar.collapsed .user-item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.sidebar.collapsed .user-avatar.initials-circle {
+  margin-right: 0;
+}
+
+/* Ensure dropdown menu is properly aligned when sidebar is collapsed */
+.sidebar.collapsed .dropdown-menu {
+  position: absolute;
+  left: 70px;
+  top: 0;
+  width: 200px;
+  z-index: 1001;
+}
+
+.sidebar.collapsed .dropdown-menu.show {
+  visibility: visible;
+  opacity: 1;
+}

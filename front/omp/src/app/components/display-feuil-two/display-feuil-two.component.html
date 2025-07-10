@@ -1,0 +1,140 @@
+<div class="main-container">
+  <!-- Financial Navigation Sidebar -->
+  <app-financial-navigation [propositionId]="propositionId || ''" [activeSheet]="2"></app-financial-navigation>
+  
+  <div class="feuil-two-container">
+    <div class="header-container">
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">&#8592;</span> Retour
+      </button>
+      <h1>Distribution Siège Terrain</h1>
+      <button class="download-button" (click)="exportToPdf()" [disabled]="isExportingPdf">
+        <span class="material-icons">download</span> 
+        <span *ngIf="!isExportingPdf">Télécharger PDF</span>
+        <span *ngIf="isExportingPdf">Génération...</span>
+      </button>
+    </div>
+    
+    <!-- Loading indicator -->
+    <div class="loading-container" *ngIf="loading">
+      <p>Chargement des données...</p>
+    </div>
+    
+    <!-- Error message -->
+    <div class="error-message-container" *ngIf="errorMessage">
+      <p class="error-text">{{ errorMessage }}</p>
+    </div>
+    
+    <!-- Matrix table -->
+    <div id="feuilTwoContent" *ngIf="!loading && !errorMessage && matrix.length > 0" class="matrix-content">
+      <div class="proposition-info" *ngIf="propositionId">
+      </div>
+      
+      <table class="siege-terrain-table">
+        <thead>
+          <tr>
+            <th class="profile-header" rowspan="2">Profil</th>
+            @for (livrable of livrables; track livrable.id) {
+              <th class="livrable-header" colspan="2">
+                <div class="livrable-name">{{ livrable.nom }}</div>
+                <div class="phase-name" *ngIf="getPhaseName(livrable)">Phase: {{ getPhaseName(livrable) }}</div>
+                <div class="days-info" *ngIf="livrable.duration">{{ livrable.duration * 5 }} HJ</div>
+              </th>
+            }
+          </tr>
+          <tr>
+            @for (livrable of livrables; track livrable.id) {
+              <th class="siege-header">Siège</th>
+              <th class="terrain-header">Terrain</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (profile of profiles; track profile.id; let i = $index) {
+            <tr class="profile-row">
+              <td class="profile-name">{{ profile.nomPrenom }}</td>
+              @for (livrable of livrables; track livrable.id; let j = $index) {
+                <td class="siege-value">{{ matrix[i][j].siegeJour }}</td>
+                <td class="terrain-value">{{ matrix[i][j].terrainJour }}</td>
+              }
+            </tr>
+          }
+          <tr class="totals-row">
+            <td class="totals-label">Total</td>
+            @for (livrable of livrables; track livrable.id; let j = $index) {
+              <td class="siege-total">{{ calculateTotalForLivrable(j).siege }}</td>
+              <td class="terrain-total">{{ calculateTotalForLivrable(j).terrain }}</td>
+            }
+          </tr>
+          <tr class="grand-totals-row">
+            <td class="totals-label">Total Par Livrable</td>
+            @for (livrable of livrables; track livrable.id; let j = $index) {
+              <td class="livrable-total" colspan="2">{{ calculateTotalForLivrable(j).siege + calculateTotalForLivrable(j).terrain }}</td>
+            }
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="second-table-header">Récapitulatif Par Mois</h3>
+      
+      <!-- Second table for totalSiegeParJour and totalTerrainParJour -->
+      <table class="siege-terrain-table">
+        <thead>
+          <tr>
+            <th class="profile-header" rowspan="2">Profil</th>
+            @for (livrable of livrables; track livrable.id) {
+              <th class="livrable-header" colspan="2">
+                <div class="livrable-name">{{ livrable.nom }}</div>
+                <div class="phase-name" *ngIf="getPhaseName(livrable)">Phase: {{ getPhaseName(livrable) }}</div>
+                <div class="days-info" *ngIf="livrable.duration">{{ livrable.duration * 5 }} HJ</div>
+              </th>
+            }
+            <!-- Added new header for totals -->
+            <th class="totals-header" colspan="3">Totaux</th>
+          </tr>
+          <tr>
+            @for (livrable of livrables; track livrable.id) {
+              <th class="siege-header">Siège</th>
+              <th class="terrain-header">Terrain</th>
+            }
+            <!-- Added new column headers for total values -->
+            <th class="siege-header">Total Siège</th>
+            <th class="terrain-header">Total Terrain</th>
+            <th class="total-combined-header">Total Global</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (profile of profiles; track profile.id; let i = $index) {
+            <tr class="profile-row">
+              <td class="profile-name">{{ profile.nomPrenom }}</td>
+              @for (livrable of livrables; track livrable.id; let j = $index) {
+                <td class="siege-value decimal-value">{{ getSiegeParJourValue(i, j) | number:'1.0-2' }}</td>
+                <td class="terrain-value decimal-value">{{ getTerrainParJourValue(i, j) | number:'1.0-2' }}</td>
+              }
+              <!-- Added new columns for total values with bold numbers -->
+              <td class="siege-value total-value"><strong>{{ getTotalSiegeParJour(i) | number:'1.0-2' }}</strong></td>
+              <td class="terrain-value total-value"><strong>{{ getTotalTerrainParJour(i) | number:'1.0-2' }}</strong></td>
+              <td class="total-combined-value">{{ getTotalSiegeParJour(i) + getTotalTerrainParJour(i) | number:'1.0-2' }}</td>
+            </tr>
+          }
+          <!-- New row for overall totals -->
+          <tr class="totals-row">
+            <td class="totals-label">Totaux</td>
+            @for (livrable of livrables; track livrable.id; let j = $index) {
+              <td class="siege-total decimal-value">{{ calculateSiegeTotalForLivrable(j) | number:'1.0-2' }}</td>
+              <td class="terrain-total decimal-value">{{ calculateTerrainTotalForLivrable(j) | number:'1.0-2' }}</td>
+            }
+            <td class="siege-total"><strong>{{ calculateTotalSiegeParJour() | number:'1.0-2' }}</strong></td>
+            <td class="terrain-total"><strong>{{ calculateTotalTerrainParJour() | number:'1.0-2' }}</strong></td>
+            <td class="total-combined-value">{{ calculateGrandTotal() | number:'1.0-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- No data message -->
+    <div class="no-data-container" *ngIf="!loading && !errorMessage && matrix.length === 0">
+      <p class="no-data-text">Aucune donnée de configuration Siège/Terrain disponible.</p>
+    </div>
+  </div>
+</div>

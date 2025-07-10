@@ -1,0 +1,103 @@
+<div class="audit-log-container">  
+  <div class="audit-log-header">
+    <div class="header-left">
+      <button type="button" class="back-button" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        Retour
+      </button>
+      <h3>
+        <i class="fas fa-history"></i>
+        Historique des modifications
+      </h3>
+    </div>
+    <div class="audit-log-info" *ngIf="!isLoading">
+      <span>{{ totalItems }} entrée(s) trouvée(s)</span>
+    </div>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <span>Chargement de l'historique...</span>
+  </div>
+
+  <!-- Audit logs table -->
+  <div *ngIf="!isLoading && auditLogs.length > 0" class="audit-log-table-container">
+    <table class="audit-log-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Opération</th>
+          <th>Élément</th>
+          <th>Modifié par</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of auditLogs" class="audit-log-row">
+          <td class="date-column">
+            {{ log.dateModification | date:'dd/MM/yyyy HH:mm' }}
+          </td>
+          <td class="operation-column">
+            <span class="operation-badge" [ngClass]="getOperationClass(log.typeOperation)">
+              {{ getOperationText(log.typeOperation) }}
+            </span>
+          </td>          <td class="element-column">
+            <span class="element-badge" [ngClass]="getElementClass(log.element)">
+              <i [class]="getElementIcon(log.element)"></i>
+              {{ getElementText(log.element) }}
+            </span>
+          </td>          <td class="user-column">
+            <div class="user-info">
+              <div class="user-avatar" [style.background-color]="getAvatarColor(log.modifiedBy)">
+                {{ getUserInitials(log.modifiedBy) }}
+              </div>
+              <span class="user-name">{{ getUserName(log.modifiedBy) }}</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && auditLogs.length === 0" class="empty-state">
+    <div class="empty-icon">📋</div>
+    <h4>Aucun historique trouvé</h4>
+    <p>Aucune modification n'a encore été enregistrée pour ce CV.</p>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!isLoading && totalPages > 1" class="pagination-container">
+    <div class="pagination-info">
+      Page {{ currentPage }} sur {{ totalPages }}
+    </div>
+    <div class="pagination-controls">
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === 1" 
+        (click)="previousPage()"
+        title="Page précédente">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <span class="page-numbers">
+        <button 
+          *ngFor="let page of [].constructor(totalPages); let i = index" 
+          class="page-number" 
+          [class.active]="currentPage === i + 1"
+          [class.hidden]="totalPages > 7 && Math.abs((i + 1) - currentPage) > 2 && (i + 1) !== 1 && (i + 1) !== totalPages"
+          (click)="goToPage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </span>
+      
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages" 
+        (click)="nextPage()"
+        title="Page suivante">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

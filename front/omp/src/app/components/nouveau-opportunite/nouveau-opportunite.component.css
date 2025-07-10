@@ -1,0 +1,723 @@
+/* Main container styles */
+.form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-weight: 400; /* Added default font weight */
+}
+
+/* Header styles */
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 500; /* Reduced from default 700 */
+}
+
+/* Step indicator styles */
+.step-indicator {
+  margin: 3rem auto;
+  padding: 0 2rem;
+  max-width: 900px;
+}
+
+.step-dots {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 20px;
+}
+
+/* Main progress line */
+.step-dots::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 40%);  /* Adjust these values to control where the line starts/ends */
+  right: calc(50% - 40%); /* Adjust these values to control where the line starts/ends */
+  width: 80%;             /* This controls the total width of the line */
+  height: 2px;
+  background: #E0E0E0;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.step-dot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  min-width: 120px;
+  max-width: 160px;
+  cursor: pointer;
+}
+
+.dot {
+  width: 36px;
+  height: 36px;
+  background: #FFFFFF;
+  border: 2px solid #E0E0E0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 500;
+  color: #999;
+  font-size: 14px;
+  z-index: 3;  /* Ensure dots are always above lines */
+}
+
+.dot::after {
+  content: attr(data-step);
+  font-size: 14px;
+}
+
+.step-title {
+  color: #999;
+  font-size: 0.813rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  font-weight: 400; /* Reduced from 500 */
+  position: absolute;
+  top: 100%;
+  width: 120px;
+  margin-top: 8px;
+  transform: translateX(-50%);
+  left: 50%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  line-height: 1.2;
+}
+
+/* Active state */
+.step-dot.active .dot {
+  background: #FFE600;
+  border-color: #FFE600;
+  color: #2E2E38;
+  box-shadow: 0 0 0 4px rgba(255, 230, 0, 0.2);
+  transform: scale(1.1);
+}
+
+.step-dot.active .step-title {
+  color: #2E2E38;
+  font-weight: 500; /* Reduced from 600 */
+}
+
+/* Completed state - Updated design */
+.step-dot.completed .dot {
+  background: #FFFFFF;
+  border-color: #FFE600;
+  border-width: 2px;
+  color: #2E2E38;
+}
+
+.step-dot.completed .dot::after {
+  content: '✓';
+  color: #2E2E38;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.step-dot.completed .step-title {
+  color: #2E2E38;
+}
+
+/* Remove the highlight effect for completed steps that was creating a yellow line */
+.step-dot.completed {
+  position: relative;
+}
+
+/* Remove the yellow line in completed steps */
+.step-dot.completed::after {
+  display: none;
+}
+
+/* Remove progress line for first and last dots */
+.step-dot:first-child::before,
+.step-dot:last-child::before {
+  display: none;
+}
+
+/* Form fields styles */
+.form-fields {
+  margin-top: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #34495e;
+  font-weight: 400; /* Reduced from 500 */
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  font-weight: 400; /* Explicitly set normal font weight */
+}
+
+.form-control:focus {
+  border-color: #70dcdc;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(112, 220, 220, 0.2);
+}
+
+/* Radio buttons styles */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 5rem;
+}
+
+.radio-option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  outline: none;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.radio-option input[type="radio"]:checked {
+  border-color: #70dcdc;
+}
+
+.radio-option input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #70dcdc;
+  border-radius: 50%;
+}
+
+.radio-option label {
+  display: inline-block;
+  margin-bottom: 0;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #2e2e38;
+  font-weight: 400; /* Explicitly set normal font weight */
+}
+
+/* File import area styles */
+.file-import-container {
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.file-import-container:hover,
+.file-import-container.dragover {
+  border-color: #70dcdc;
+  background: rgba(112, 220, 220, 0.05);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-label {
+  cursor: pointer;
+}
+
+.file-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.file-title {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 400; /* Reduced from 500 */
+}
+
+.file-subtitle {
+  color: #7f8c8d;
+}
+
+.file-formats {
+  font-size: 0.85rem;
+  color: #95a5a6;
+}
+
+/* Selected file display */
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.remove-file-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+/* Multi-select styles */
+.multi-select-container {
+  margin-bottom: 1.5rem;
+}
+
+.select-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.select-input-group .btn-add {
+  align-self: flex-start;
+}
+
+.selected-members {
+  margin-top: 1rem;
+}
+
+.select-member {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.select-member .form-control {
+  flex: 1;
+  min-width: 0;
+}
+
+.btn-add {
+  min-width: 100px;
+  height: 42px;
+  padding: 0 1.25rem;
+  background: #2e2e38;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-add:hover {
+  background: #1d1d24;
+}
+
+.btn-add:disabled {
+  background: #9999a6;
+  cursor: not-allowed;
+}
+
+/* Selected members list */
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0 0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.member-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s;
+}
+
+.member-item .button-group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.btn-remove, .btn-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-remove {
+  color: #dc3545;
+}
+
+.btn-remove:hover {
+  color: #bd2130;
+  background-color: rgba(220, 53, 69, 0.1);
+  border-radius: 4px;
+}
+
+.btn-edit {
+  color: #2196F3;
+}
+
+.btn-edit:hover {
+  color: #0d8bf2;
+  background-color: rgba(33, 150, 243, 0.1);
+  border-radius: 4px;
+}
+
+.material-icons {
+  font-size: 18px;
+}
+
+.member-item:last-child {
+  border-bottom: none;
+}
+
+.member-item:hover {
+  background: #f8f9fa;
+}
+
+.member-item span {
+  color: #2e2e38;
+  font-size: 0.9375rem;
+  font-weight: 400; /* Explicitly set normal font weight */
+}
+
+.btn-remove {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.btn-remove:hover {
+  color: #bd2130;
+}
+
+.material-icons {
+  font-size: 20px;
+}
+
+/* Navigation buttons */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;  /* Changed back to space-between to allow buttons on both sides */
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+/* First step - single button alignment */
+.first-step .form-navigation {
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 400; /* Reduced from 500 */
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+}
+
+.btn-primary {
+  background: #70dcdc;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5cc7c7; /* Slightly darker shade */
+}
+
+.btn-success {
+  background: #2ecc71;
+  color: white;
+}
+
+.btn-success:hover {
+  background: #27ae60;
+}
+
+.btn-warning {
+  background: #f39c12;
+  color: white;
+}
+
+.btn-warning:hover {
+  background: #e67e22;
+}
+
+.save-btn {
+  margin: 0 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .form-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .step-indicator {
+    padding: 0 1rem;
+  }
+
+  .step-dot {
+    min-width: 80px;
+  }
+
+  .step-title {
+    font-size: 0.75rem;
+    width: 80px;
+  }
+
+  .dot {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .select-member {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btn {
+    width: 100%;
+  }
+  
+  .radio-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Select or text input styles */
+.select-or-text {
+  margin-bottom: 1rem;
+}
+
+.select-or-text .custom-value {
+  margin-top: 0.5rem;
+}
+
+/* Add modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500; /* Reduced from default */
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-btn:hover {
+  color: #000;
+}
+
+.btn-edit {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 3px 6px;
+  margin-left: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-edit:hover {
+  background-color: #0d8bf2;
+}
+
+.btn-edit i {
+  font-size: 16px;
+}
+
+/* Form step title */
+.form-step h2 {
+  font-weight: 500; /* Reduced from default */
+  color: #2c3e50;
+}
+
+.box {
+  background-color: #fce3d8;
+  border: 2px solid #ffb000;
+  width: 400px; /* approximate width */
+  min-height: 250px; /* changed from fixed height to minimum height */
+  height: auto; /* allow it to grow with content */
+  padding: 20px;
+  padding-bottom: 70px; /* add extra padding at the bottom for the buttons */
+  margin: 15px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.client-box-title {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.client-info {
+  margin-bottom: 10px;
+}
+
+.client-info-label {
+  font-weight: 500;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.client-box-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  position: absolute;
+  bottom: 20px;
+  left: 20px; /* ensure the buttons are aligned with the left padding */
+}
+
+.btn-client {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-exists {
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-exists:hover {
+  background-color: #d6dbdf;
+}
+
+.btn-fill {
+  background-color: #27ae60;
+  color: white;
+}
+
+.btn-fill:hover {
+  background-color: #219955;
+}

@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="login-box">
+        <div class="platform-title">
+            <h1>Gestion des Opportunités</h1>
+        </div>
+        <h2>Connexion</h2>
+        <p class="welcome-text">Accédez à votre espace personnel pour gérer vos opportunités</p>
+        <form (ngSubmit)="onSubmit()">
+            <div class="input-group">
+                <input type="email" [(ngModel)]="login" name="login" required>
+                <label>Email</label>
+            </div>
+            <div class="input-group">
+                <input type="password" [(ngModel)]="password" name="password" required>
+                <label>Mot de passe</label>
+            </div>
+            <div class="remember-forgot">
+                <a href="#">Mot de passe oublié ?</a>
+            </div>
+            <div class="error-message" *ngIf="errorMessage">
+                {{ errorMessage }}
+            </div>
+            <button type="submit">Se connecter</button>
+            <div class="signup-link">
+                <p>Vous n'avez pas de compte ? <a [routerLink]="['/signup']">S'inscrire</a></p>
+            </div>
+        </form>
+    </div>
+</div>

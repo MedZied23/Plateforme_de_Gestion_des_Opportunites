@@ -1,0 +1,91 @@
+<div class="dialog-container">
+  <h2 class="dialog-title">Ajouter des éléments</h2>
+
+  <form [formGroup]="bulletForm" (ngSubmit)="save()" class="bullet-form">
+    <!-- Phase Name Input -->
+    <div class="phase-name-section">
+      <input type="text" 
+             formControlName="phaseName" 
+             class="phase-name-input" 
+             placeholder="Nom de la phase" />
+    </div>
+
+    <div class="bullet-section">
+      <div class="bullet-list" formArrayName="bullets" cdkDropList (cdkDropListDropped)="onBulletDrop($event)">
+        <div *ngFor="let bulletGroup of bulletArray.controls; let bulletIndex = index"
+             class="bullet-item"
+             [formGroupName]="bulletIndex"
+             cdkDrag
+             [cdkDragDisabled]="bulletEditModes[bulletIndex] || bulletExpandStates[bulletIndex]">
+
+          <!-- Edit Mode -->
+          <div *ngIf="bulletEditModes[bulletIndex]" class="bullet-edit-mode" (clickOutside)="handleClickOutside(bulletIndex)">
+            <div class="bullet-text">
+              <textarea formControlName="text" class="form-control" rows="2"></textarea>
+              <button type="button" class="remove-button" (click)="removeBullet(bulletIndex)">
+                <span class="remove-icon"></span>
+              </button>
+            </div>
+
+            <div class="sub-bullets-container" formArrayName="subBullets" cdkDropList (cdkDropListDropped)="onSubBulletDrop($event, bulletIndex)">
+              <div *ngFor="let subBullet of getSubBulletsArray(bulletIndex).controls; let subBulletIndex = index"
+                   class="sub-bullet-item"
+                   cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <div class="drag-icon">
+                    <span></span><span></span>
+                    <span></span><span></span>
+                    <span></span><span></span>
+                  </div>
+                </div>
+                <textarea [formControlName]="subBulletIndex" class="form-control" rows="2"
+                  (blur)="onSubBulletBlur(bulletIndex, subBulletIndex)"></textarea>
+                <button type="button" class="remove-button" (click)="removeSubBullet(bulletIndex, subBulletIndex)">
+                  <span class="remove-icon"></span>
+                </button>
+                <div *cdkDragPlaceholder class="drag-placeholder"></div>
+              </div>
+        <button type="button" class="add-sub-bullet-button" (click)="addSubBullet(bulletIndex)">+ Détail</button>
+            </div>
+          </div>
+
+          <!-- Display Mode -->
+          <div *ngIf="!bulletEditModes[bulletIndex]" class="bullet-display-mode">
+            <div class="bullet-text-display" (click)="toggleBulletExpand(bulletIndex, $event)">
+              <div class="bullet-drag-handle" cdkDragHandle>
+                <div class="drag-icon">
+                  <span></span><span></span>
+                  <span></span><span></span>
+                  <span></span><span></span>
+                </div>
+              </div>
+              <span class="bullet-text">{{ bulletGroup.get('text')?.value }}</span>              <div class="bullet-actions">
+                <button type="button" class="edit-button" (click)="$event.stopPropagation(); toggleBulletEditMode(bulletIndex)">
+                  <span class="edit-icon"></span>
+                </button>
+                <button type="button" class="remove-button" (click)="$event.stopPropagation(); removeBullet(bulletIndex)">
+                  <span class="remove-icon"></span>
+                </button>
+              </div>
+            </div>
+
+            <div *ngIf="bulletExpandStates[bulletIndex]" class="sub-bullets-display" formArrayName="subBullets">
+              <div *ngFor="let subBullet of getSubBulletsArray(bulletIndex).controls; let subBulletIndex = index" 
+                   class="sub-bullet-display-item">
+                <span class="sub-bullet-bullet">•</span>
+                <span class="sub-bullet-text">{{ subBullet.value }}</span>
+              </div>
+            </div>
+
+            <div *cdkDragPlaceholder class="bullet-drag-placeholder"></div>
+          </div>
+        </div>
+      </div>      <button type="button" class="add-bullet-button" (click)="addBullet()">+ Element</button>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="cancel-button" (click)="cancel()">Annuler</button>
+      <button type="submit" class="save-button" [disabled]="bulletForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</div>

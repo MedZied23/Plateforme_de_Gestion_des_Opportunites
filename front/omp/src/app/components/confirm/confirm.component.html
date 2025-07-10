@@ -1,0 +1,14 @@
+<div class="confirm-dialog">
+  <div class="modal-header">
+    <h2>{{ data.title }}</h2>
+  </div>
+  
+  <div class="modal-content">
+    <p>{{ data.message }}</p>
+  </div>
+  
+  <div class="modal-actions">
+    <button class="btn-cancel" (click)="onCancel()">{{ data.cancelButtonText }}</button>
+    <button class="btn-confirm" (click)="onConfirm()">{{ data.confirmButtonText }}</button>
+  </div>
+</div>

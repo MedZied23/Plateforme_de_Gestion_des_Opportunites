@@ -1,0 +1,15 @@
+C:\omp\back\omp\src\omp.Domain\bin\Release\net9.0\omp.Domain.deps.json
+C:\omp\back\omp\src\omp.Domain\bin\Release\net9.0\omp.Domain.runtimeconfig.json
+C:\omp\back\omp\src\omp.Domain\bin\Release\net9.0\omp.Domain.dll
+C:\omp\back\omp\src\omp.Domain\bin\Release\net9.0\omp.Domain.pdb
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.csproj.AssemblyReference.cache
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.AssemblyInfoInputs.cache
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.AssemblyInfo.cs
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.csproj.CoreCompileInputs.cache
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.sourcelink.json
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.dll
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\refint\omp.Domain.dll
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.pdb
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\omp.Domain.genruntimeconfig.cache
+C:\omp\back\omp\src\omp.Domain\obj\Release\net9.0\ref\omp.Domain.dll

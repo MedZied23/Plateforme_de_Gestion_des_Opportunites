@@ -1,0 +1,150 @@
+<div class="search-references-container">
+  <div class="main-content">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="header-buttons">
+        <button class="add-reference-button" (click)="createNewReference()">
+          <i class="fas fa-plus"></i> Créer une nouvelle référence
+        </button>
+      </div>
+    </div>    <!-- Search Form -->
+    <div class="search-form">
+      <form [formGroup]="searchForm">
+        <!-- Main search field - always visible -->
+        <div class="main-search">
+          <div class="search-field">
+            <input id="keywords" type="text" formControlName="keywords" placeholder="Rechercher une référence...">
+            <i class="fas fa-search search-icon"></i>
+          </div>
+          <button class="toggle-filters-button" (click)="toggleFilters()" [class.active]="hasActiveFilters()">
+            <i class="fas fa-filter"></i>
+            <span *ngIf="!showFilters">Filtres{{ getActiveFiltersCount() > 0 ? ' (' + getActiveFiltersCount() + ')' : '' }}</span>
+            <span *ngIf="showFilters">Masquer les filtres</span>
+          </button>
+        </div>
+        <div class="fuzzy-search-option">
+          <label class="checkbox-field">
+            <input type="checkbox" formControlName="useFuzzySearch">
+            <span>Utiliser la recherche approximative</span>
+          </label>
+        </div>
+        
+        <!-- Advanced filters - collapsible -->
+        <div class="filters-container" [class.show]="showFilters">
+          <div class="filters-grid">
+            <div class="filter-group">
+              <label for="offre">Type d'offre</label>
+              <input id="offre" type="text" formControlName="offre" placeholder="Type d'offre">
+            </div>
+            
+            <div class="filter-group">
+              <label for="country">Pays</label>
+              <input id="country" type="text" formControlName="country" placeholder="Pays">
+            </div>
+
+            <div class="filter-group">
+              <label for="startDate">Date de début après</label>
+              <input id="startDate" type="date" formControlName="startDate">
+            </div>
+            
+            <div class="filter-group">
+              <label for="endDate">Date de fin avant</label>
+              <input id="endDate" type="date" formControlName="endDate">
+            </div>
+
+            <div class="filter-group">
+              <label for="budgetMin">Budget minimum</label>
+              <input id="budgetMin" type="number" formControlName="budgetMin" placeholder="Min €">
+            </div>
+            
+            <div class="filter-group">
+              <label for="budgetMax">Budget maximum</label>
+              <input id="budgetMax" type="number" formControlName="budgetMax" placeholder="Max €">
+            </div>          </div>          
+          <div class="filters-footer">
+            <div class="filter-actions">
+              <button type="button" class="clear-filters-button" (click)="clearFilters()" [disabled]="!hasActiveFilters()">
+                <i class="fas fa-times"></i> Effacer les filtres
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Chargement des références...</p>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="error" class="error-message">
+      <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+
+    <!-- No references found message -->
+    <div *ngIf="!loading && references.length === 0 && !error" class="no-references-message">
+      <p>Aucune référence n'a été trouvée.</p>
+      <button class="add-reference-button" (click)="createNewReference()">
+        <i class="fas fa-plus"></i> Créer une nouvelle référence
+      </button>
+    </div>
+
+    <!-- References list -->
+    <div *ngIf="!loading && references.length > 0" class="reference-list">
+      <div *ngFor="let reference of references" class="reference-card">
+        <div class="reference-content" (click)="viewReference(reference.id)">
+          <div class="reference-header">
+            <h3>{{ reference.nom || 'Sans titre' }}</h3>
+          </div>
+          <div class="reference-body">
+            <p class="reference-description">{{ getPreviewText(reference.description) }}</p>
+            <div class="reference-details">
+              <span class="reference-detail">
+                <i class="fas fa-building"></i> {{ reference.client || 'Client non spécifié' }}
+              </span>
+              <span class="reference-detail">
+                <i class="fas fa-calendar"></i> {{ reference.dateDebut | date:'yyyy' }}
+              </span>
+              <span class="reference-detail" *ngIf="reference.budget">
+                <i class="fas fa-euro-sign"></i> {{ reference.budget | number:'1.0-0' }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="reference-footer">
+          <button class="delete-button" (click)="deleteReference($event, reference.id)">
+            <i class="fas fa-trash-alt"></i> Supprimer
+          </button>
+          <button class="view-button" (click)="viewReference(reference.id)">
+            <i class="fas fa-eye"></i> Voir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div *ngIf="!loading && totalPages > 1" class="pagination-controls">
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === 1" 
+        (click)="goToPage(currentPage - 1)"
+      >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      
+      <span class="pagination-info">
+        Page {{ currentPage }} sur {{ totalPages }}
+      </span>
+      
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === totalPages" 
+        (click)="goToPage(currentPage + 1)"
+      >
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</div>

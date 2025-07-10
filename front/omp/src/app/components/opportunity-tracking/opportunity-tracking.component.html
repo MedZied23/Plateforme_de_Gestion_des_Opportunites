@@ -1,0 +1,852 @@
+<div class="opportunity-tracking-container" [class.informations-mode]="activeView === 'informations'">  <div class="header-section">
+    <div class="header-content">
+      <h1>Suivi de l'opportunité {{ currentOpportunity?.nomOpportunite || 'Opportunité' }}</h1>      <div class="header-controls">
+        <div class="status-indicator" *ngIf="shouldShowStatus()">
+          <span class="status-label" [class]="getStatusClass()">
+            {{ getStatusLabel() }}
+          </span>
+        </div><button 
+          *ngIf="canValidateOpportunity()"
+          class="btn-validate"
+          (click)="openValidationDialog()"
+          [disabled]="isValidationLoading"
+        >
+          <span *ngIf="isValidationLoading">
+            <i class="fas fa-spinner fa-spin"></i> Validation...
+          </span>
+          <span *ngIf="!isValidationLoading">
+            <i class="fas fa-check-circle"></i> Valider
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <nav class="tabs">
+    <a class="tab" 
+       [class.active]="activeView === 'suivi'"
+       (click)="activeView = 'suivi'">
+      Suivi
+    </a>
+    <a class="tab" 
+       [class.active]="activeView === 'informations'"
+       (click)="activeView = 'informations'">
+      Informations
+    </a>
+    <a class="tab" 
+       *ngIf="shouldShowDecisionTab()"
+       [class.active]="activeView === 'decision'"
+       (click)="activeView = 'decision'">
+      Décision
+    </a>
+  </nav>
+
+  @if (!opportunityId) {
+    <p>Aucune opportunité sélectionnée</p>
+  } @else {
+    @if (activeView === 'suivi') {
+      <!-- Progress Tracker -->
+    <div class="progress-tracker">      <div class="progress-header">
+        <h2>{{ getCurrentOperationalProgress().phaseName }}</h2>
+        <div class="progress-stats">
+          <span class="progress-percentage">{{ Math.round(animatedProgressPercentage) }}%</span>
+        </div>
+      </div><div class="progress-bar-container">
+        <div class="progress-bar">
+          <div class="progress-fill" [style.width.%]="animatedProgressPercentage"></div>
+        </div>
+      </div>
+    </div>    <div class="columns-container">
+      <!-- Administrative Tasks Column -->
+      <div class="column">
+        <h2>Tâches Administratives</h2>
+        <div class="column-content">
+          @for (task of administrativeTasks; track task.id) {
+            <div class="task-card">
+            <div class="task-header">              <div class="task-title-section">
+                <div class="status-dot" 
+                     [class]="getAdministrativeTaskStatusClass(task)"></div>
+                <h3>{{ getTaskDisplayName(task) }}</h3>
+                @if (isCurrentUserManager && isManuallyCreatedTask(task)) {
+                  <button 
+                    class="delete-task-button" 
+                    (click)="deleteManualTask(task)"
+                    [disabled]="isTaskLoading(task.id)"
+                    title="Supprimer la tâche">
+                    @if (isTaskLoading(task.id)) {
+                      <i class="fas fa-spinner fa-spin"></i>
+                    } @else {
+                      <i class="fas fa-trash"></i>
+                    }
+                  </button>
+                }
+              </div><div class="task-status">
+                @if (isCurrentUserManager) {
+                  <div class="status-selector-container">
+                    <select 
+                      class="status-select"
+                      [value]="getTaskStatut(task)"
+                      [disabled]="isTaskLoading(task.id)"
+                      (change)="onAdministrativeTaskStatusChange(task, $event)"
+                      [class.loading]="isTaskLoading(task.id)">
+                      <option [value]="0">Non commencé</option>
+                      <option [value]="1">En cours</option>
+                      <option [value]="2">Terminé</option>
+                    </select>
+                    @if (isTaskLoading(task.id)) {
+                      <div class="select-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
+            <div class="task-info">
+              <!-- Dates section -->
+              <div class="task-dates">
+                @if (task.dateDone && !isAdministrativeTaskDone(task)) {
+                  <div class="task-date deadline">
+                    <span class="date-label">Échéance</span>
+                    <span class="date-value">{{ task.dateDone | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>        }
+          <!-- Manual Task Creation for Administrative Tasks -->
+        @if (isCurrentUserManager) {
+          <div class="add-task-button-container">
+            <button class="add-task-button" (click)="showCreateAdminTaskForm()">
+              <i class="fas fa-plus"></i>
+              Ajouter une tâche
+            </button>
+          </div>        }
+        
+        @if (administrativeTasks.length === 0) {
+          <div class="empty-state administrative">
+            <i class="fas fa-tasks empty-state-icon"></i>
+            <h3 class="empty-state-title">Aucune tâche administrative</h3>
+            <p class="empty-state-subtitle">Les tâches administratives apparaîtront ici</p>
+          </div>
+        }
+        </div> <!-- End column-content -->
+      </div>
+
+      <!-- AMI Tasks Column -->
+      @if (shouldShowAMIColumn()) {
+        <div class="column">
+          <h2>Tâches Opérationnelles</h2>
+          <div class="column-content">            @for (task of operationalTasksAMI; track task.id) {
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-title-section">
+                  <div class="status-dot" 
+                       [class.done]="task.done && hasAssignedMembers(task)" 
+                       [class.in-progress]="!task.done && hasAssignedMembers(task) && !isTaskOverdue(task)"
+                       [class.unassigned]="!hasAssignedMembers(task)"
+                       [class.overdue]="isTaskOverdue(task)"></div>
+                  <h3>{{ getTaskDisplayName(task) }}</h3>
+                  @if (isCurrentUserManager && isManuallyCreatedTask(task)) {
+                    <button 
+                      class="delete-task-button" 
+                      (click)="deleteManualTask(task)"
+                      [disabled]="isTaskLoading(task.id)"
+                      title="Supprimer la tâche">
+                      @if (isTaskLoading(task.id)) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                      } @else {
+                        <i class="fas fa-trash"></i>
+                      }
+                    </button>
+                  }
+                </div>
+                <div class="task-status">
+                  @if (isCurrentUserManager && hasAssignedMembers(task)) {
+                    <div class="custom-checkbox-container">
+                      <label class="custom-checkbox" 
+                             [class.loading]="isTaskLoading(task.id)"
+                             [title]="isTaskLoading(task.id) ? 'Mise à jour en cours...' : (task.done ? 'Marquer comme en cours' : 'Marquer comme terminé')">
+                        <input type="checkbox" 
+                               [checked]="task.done"
+                               [disabled]="isTaskLoading(task.id)"
+                               (change)="toggleTaskDone(task)"
+                               class="checkbox-input">
+                        <span class="checkmark">
+                          @if (isTaskLoading(task.id)) {
+                            <i class="fas fa-spinner fa-spin"></i>
+                          } @else if (task.done) {
+                            <i class="fas fa-check"></i>
+                          }
+                        </span>
+                      </label>
+                    </div>
+                  }
+                </div>
+              </div><div class="task-info">
+                <!-- Dates section -->
+                <div class="task-dates">
+                  @if (task.type === 0 && hasAssignedMembers(task) && task.dateAssigned) {
+                    <div class="task-date">
+                      <span class="date-label">Assigné le</span>
+                      <span class="date-value">{{ task.dateAssigned | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                  }
+                  @if (task.dateDone && !task.done) {
+                    <div class="task-date deadline">
+                      <span class="date-label">Échéance</span>
+                      <span class="date-value">{{ task.dateDone | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                  }
+                </div>
+                
+                @if (task.type === 0) { <!-- TaskType.Operational -->
+                  <div class="task-team">
+                    <div class="team-members">
+                      <div class="team-members-row">                        <div class="team-members-tickets">
+                          @for (member of getAssignedMembersAsTickets(task); track member.name) {
+                            <span class="member-ticket" [class.completed]="member.completed">
+                              {{ member.name }}
+                            </span>
+                          }
+                          @if (getAssignedMembersAsTickets(task).length === 0) {
+                            <span class="no-members">Aucun membre assigné</span>
+                          }
+                        </div>
+                        <button 
+                          class="assign-button" 
+                          *ngIf="isCurrentUserManager"
+                          (click)="openTaskAssignment(task)"
+                          title="Assigner">
+                          <i class="fas fa-user-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>          }
+            <!-- Manual Task Creation for AMI Operational Tasks -->
+          @if (isCurrentUserManager) {
+            <div class="add-task-button-container">
+              <button class="add-task-button" (click)="showCreateOperationalTaskForm()">
+                <i class="fas fa-plus"></i>
+                Ajouter une tâche
+              </button>
+            </div>          }
+            @if (operationalTasksAMI.length === 0) {
+            <div class="empty-state operational">
+              <i class="fas fa-clipboard-list empty-state-icon"></i>
+              <h3 class="empty-state-title">Aucune tâche AMI</h3>
+              <p class="empty-state-subtitle">Les tâches opérationnelles AMI apparaîtront ici</p>
+            </div>
+          }
+          </div> <!-- End column-content -->
+        </div>
+      }      <!-- Propale Tasks Column -->
+      @if (shouldShowPropaleColumn()) {
+        <div class="column">
+        <h2>Tâches Opérationnelles</h2>
+        <div class="column-content">        @for (task of operationalTasksPropale; track task.id) {
+            <div class="task-card">
+              <div class="task-header">
+                <div class="task-title-section">
+                  <div class="status-dot" 
+                       [class.done]="task.done && hasAssignedMembers(task)" 
+                       [class.in-progress]="!task.done && hasAssignedMembers(task) && !isTaskOverdue(task)"
+                       [class.unassigned]="!hasAssignedMembers(task)"
+                       [class.overdue]="isTaskOverdue(task)"></div>
+                  <h3>{{ getTaskDisplayName(task) }}</h3>
+                  @if (isCurrentUserManager && isManuallyCreatedTask(task)) {
+                    <button 
+                      class="delete-task-button" 
+                      (click)="deleteManualTask(task)"
+                      [disabled]="isTaskLoading(task.id)"
+                      title="Supprimer la tâche">
+                      @if (isTaskLoading(task.id)) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                      } @else {
+                        <i class="fas fa-trash"></i>
+                      }
+                    </button>
+                  }
+                </div>
+                <div class="task-status">
+                  @if (isCurrentUserManager && hasAssignedMembers(task)) {
+                    <div class="custom-checkbox-container">
+                      <label class="custom-checkbox" 
+                             [class.loading]="isTaskLoading(task.id)"
+                             [title]="isTaskLoading(task.id) ? 'Mise à jour en cours...' : (task.done ? 'Marquer comme en cours' : 'Marquer comme terminé')">
+                        <input type="checkbox" 
+                               [checked]="task.done"
+                               [disabled]="isTaskLoading(task.id)"
+                               (change)="toggleTaskDone(task)"
+                               class="checkbox-input">
+                        <span class="checkmark">
+                          @if (isTaskLoading(task.id)) {
+                            <i class="fas fa-spinner fa-spin"></i>
+                          } @else if (task.done) {
+                            <i class="fas fa-check"></i>
+                          }
+                        </span>
+                      </label>
+                    </div>
+                  }
+                </div>
+              </div><div class="task-info">
+                <!-- Dates section -->
+                <div class="task-dates">
+                  @if (task.type === 0 && hasAssignedMembers(task) && task.dateAssigned) {
+                    <div class="task-date">
+                      <span class="date-label">Assigné le</span>
+                      <span class="date-value">{{ task.dateAssigned | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                  }
+                  @if (task.dateDone && !task.done) {
+                    <div class="task-date deadline">
+                      <span class="date-label">Échéance</span>
+                      <span class="date-value">{{ task.dateDone | date:'dd/MM/yyyy' }}</span>
+                    </div>
+                  }
+                </div>
+                
+                @if (task.type === 0) { <!-- TaskType.Operational -->
+                  <div class="task-team">
+                    <div class="team-members">
+                      <div class="team-members-row">                        <div class="team-members-tickets">
+                          @for (member of getAssignedMembersAsTickets(task); track member.name) {
+                            <span class="member-ticket" [class.completed]="member.completed">
+                              {{ member.name }}
+                            </span>
+                          }
+                          @if (getAssignedMembersAsTickets(task).length === 0) {
+                            <span class="no-members">Aucun membre assigné</span>
+                          }
+                        </div>
+                        <button 
+                          class="assign-button" 
+                          *ngIf="isCurrentUserManager"
+                          (click)="openTaskAssignment(task)"
+                          title="Assigner">
+                          <i class="fas fa-user-plus"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>          }
+            <!-- Manual Task Creation for Propale Operational Tasks -->
+          @if (isCurrentUserManager) {
+            <div class="add-task-button-container">
+              <button class="add-task-button" (click)="showCreateOperationalTaskForm()">
+                <i class="fas fa-plus"></i>
+                Ajouter une tâche
+              </button>
+            </div>          }
+            @if (operationalTasksPropale.length === 0) {
+            <div class="empty-state operational">
+              <i class="fas fa-file-contract empty-state-icon"></i>
+              <h3 class="empty-state-title">Aucune tâche Propale</h3>
+              <p class="empty-state-subtitle">Les tâches opérationnelles Propale apparaîtront ici</p>
+            </div>
+          }
+          </div> <!-- End column-content -->
+        </div>
+      }      <!-- Current User Tasks Column -->
+      <div class="column">
+        <h2>Mes Tâches</h2>
+        <div class="column-content">
+        @for (task of getSortedCurrentUserTasks(); track task.id) {
+          <div class="task-card">            <div class="task-header">              <div class="task-title-section">
+                <div class="status-dot" 
+                     [class.done]="task.type === 1 ? isAdministrativeTaskDone(task) : task.done" 
+                     [class.in-progress]="task.type === 1 ? isAdministrativeTaskInProgress(task) : (!task.done && !isTaskOverdue(task))"                     [class.not-started]="task.type === 1 ? isAdministrativeTaskNotStarted(task) : false"
+                     [class.unassigned]="task.type === 0 && !hasAssignedMembers(task)"
+                     [class.overdue]="isTaskOverdue(task)"></div>
+                <h3>{{ getTaskDisplayName(task) }}</h3>
+              </div>              <div class="task-status">
+                <!-- Individual completion checkbox for operational tasks -->
+                @if (task.type === 0 && canCurrentUserToggleTaskCompletion(task)) {
+                  <div class="custom-checkbox-container">
+                    <label class="custom-checkbox" 
+                           [class.loading]="isTaskLoading(task.id)"
+                           [title]="isTaskLoading(task.id) ? 'Mise à jour en cours...' : (getUserTaskCompletionStatus(task, currentUserId!) ? 'Marquer comme non terminé' : 'Marquer comme terminé')">
+                      <input type="checkbox" 
+                             [checked]="getUserTaskCompletionStatus(task, currentUserId!)"
+                             [disabled]="isTaskLoading(task.id)"
+                             (change)="toggleIndividualMemberTaskCompletion(task, currentUserId!)"
+                             class="checkbox-input">
+                      <span class="checkmark">
+                        @if (isTaskLoading(task.id)) {
+                          <i class="fas fa-spinner fa-spin"></i>
+                        } @else if (getUserTaskCompletionStatus(task, currentUserId!)) {
+                          <i class="fas fa-check"></i>
+                        }
+                      </span>
+                    </label>
+                  </div>
+                }
+              </div>
+            </div>
+              <div class="task-info">
+              <!-- Dates section -->
+              <div class="task-dates">
+                @if (task.dateAssigned) {
+                  <div class="task-date">
+                    <span class="date-label">Assigné le</span>
+                    <span class="date-value">{{ task.dateAssigned | date:'dd/MM/yyyy' }}</span>
+                  </div>
+                }
+                @if (task.dateDone && ((task.type === 1 && !isAdministrativeTaskDone(task)) || (task.type === 0 && !task.done)) && getRemainingDaysTextForUserTask(task)) {
+                  <div class="task-date deadline" [class.overdue]="getRemainingDays(task.dateDone) !== null && getRemainingDays(task.dateDone)! < 0">
+                    <span class="date-value">{{ getRemainingDaysTextForUserTask(task) }}</span>
+                  </div>
+                }
+              </div>
+                @if (task.type === 0) { <!-- TaskType.Operational -->
+                <div class="task-team">
+                  <div class="team-members">
+                    <div class="team-members-row">
+                      <div class="team-members-tickets">
+                        @for (member of getAssignedMembersAsTickets(task); track member.name) {
+                          <span class="member-ticket" [class.completed]="member.completed">
+                            {{ member.name }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>        }        @if (getSortedCurrentUserTasks().length === 0) {
+          <div class="empty-state user-tasks">
+            <i class="fas fa-user-check empty-state-icon"></i>
+            <h3 class="empty-state-title">Aucune tâche assignée</h3>
+            <p class="empty-state-subtitle">Vos tâches assignées apparaîtront ici</p>
+          </div>
+        }
+        </div> <!-- End column-content -->
+      </div>
+    </div>} @else if (activeView === 'informations') {
+      <div class="informations-view">
+        @if (currentOpportunity) {
+          <div class="informations-grid">
+            
+            <!-- Opportunity Details Section -->
+            <div class="info-section opportunity-section">
+              <h2 class="section-title">
+                <i class="fas fa-briefcase"></i>
+                Détails de l'Opportunité
+              </h2>              <div class="info-grid opportunity-details-grid">
+                <div class="info-item nom-span">
+                  <label>Nom de l'opportunité:</label>
+                  <span>{{ currentOpportunity.nomOpportunite || 'Non défini' }}</span>
+                </div>
+                <div class="info-item description-span">
+                  <label>Description:</label>
+                  <span>{{ currentOpportunity.description || 'Non définie' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Nature:</label>
+                  <span class="nature-badge" [class]="'nature-' + currentOpportunity.nature">
+                    @if (currentOpportunity.nature === 0) { AMI }
+                    @else if (currentOpportunity.nature === 1) { Propale }
+                    @else if (currentOpportunity.nature === 2) { Pitch }
+                    @else { Non définie }
+                  </span>
+                </div>
+                <div class="info-item">
+                  <label>Pays:</label>
+                  <span>{{ currentOpportunity.pays || 'Non défini' }}</span>
+                </div>
+                <div class="info-item">
+                  <label>Monnaie:</label>
+                  <span>{{ currentOpportunity.monnaie || 'Non définie' }}</span>
+                </div>                <div class="info-item">
+                  <label>Offre:</label>
+                  <span>{{ currentOpportunity.offre || 'Non définie' }}</span>
+                </div>                <div class="info-item">
+                  <label>Date de soumission prévisionnelle:</label>
+                  <span>{{ currentOpportunity.dateFin ? (currentOpportunity.dateFin | date:'dd/MM/yyyy') : 'Non définie' }}</span>
+                </div>                <div class="info-item teams-link-item" *ngIf="currentOpportunity.linkTeams1">
+                  <div class="teams-link-container">
+                    <label>Lien Teams:</label>
+                    <button type="button" class="copy-button" (click)="copyTeamsLink()" title="Copier le lien Teams">
+                      <i class="fas fa-copy"></i>
+                    </button>
+                    <button type="button" class="redirect-button" (click)="openTeamsLink()" title="Ouvrir le lien Teams">
+                      <i class="fas fa-external-link-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Client Section -->
+            <div class="info-section client-section">
+              <h2 class="section-title">
+                <i class="fas fa-user-tie"></i>
+                Client
+              </h2>
+              @if (client) {
+                <div class="info-grid">
+                  <div class="info-item">
+                    <label>Nom du client:</label>
+                    <span>{{ client.nomClient || 'Non défini' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Contact:</label>
+                    <span>{{ client.contactNom || 'Non défini' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Pays:</label>
+                    <span>{{ client.pays || 'Non défini' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Type:</label>
+                    <span>{{ client.type || 'Non défini' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Adresse:</label>
+                    <span>{{ client.adresse || 'Non définie' }}</span>
+                  </div>
+                  <div class="info-item">
+                    <label>Téléphone:</label>
+                    <span>{{ client.telephone || 'Non défini' }}</span>
+                  </div>
+                </div>
+              } @else {
+                <p class="no-data">Aucun client associé à cette opportunité</p>
+              }
+            </div>
+
+            <!-- Team Section -->
+            <div class="info-section team-section">
+              <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                Équipe
+              </h2>
+              <div class="team-grid">                <div class="team-member-card">
+                  <h4>Associé en charge</h4>
+                  @if (associeEnCharge) {
+                    <div class="member-info">
+                      <span class="member-name">{{ associeEnCharge.prenom }} {{ associeEnCharge.nom }}</span>
+                      <span class="member-email">{{ associeEnCharge.email }}</span>
+                      @if (associeEnCharge.phone) {
+                        <span class="member-phone">{{ associeEnCharge.phone }}</span>
+                      }
+                    </div>
+                  } @else {
+                    <p class="no-data">Non assigné</p>
+                  }
+                </div>
+
+                <div class="team-member-card">
+                  <h4>Senior Manager en charge</h4>
+                  @if (seniorManagerEnCharge) {
+                    <div class="member-info">
+                      <span class="member-name">{{ seniorManagerEnCharge.prenom }} {{ seniorManagerEnCharge.nom }}</span>
+                      <span class="member-email">{{ seniorManagerEnCharge.email }}</span>
+                      @if (seniorManagerEnCharge.phone) {
+                        <span class="member-phone">{{ seniorManagerEnCharge.phone }}</span>
+                      }
+                    </div>
+                  } @else {
+                    <p class="no-data">Non assigné</p>
+                  }
+                </div>
+
+                <div class="team-member-card">
+                  <h4>Manager en charge</h4>
+                  @if (managerEnCharge) {
+                    <div class="member-info">
+                      <span class="member-name">{{ managerEnCharge.prenom }} {{ managerEnCharge.nom }}</span>
+                      <span class="member-email">{{ managerEnCharge.email }}</span>
+                      @if (managerEnCharge.phone) {
+                        <span class="member-phone">{{ managerEnCharge.phone }}</span>
+                      }
+                    </div>
+                  } @else {
+                    <p class="no-data">Non assigné</p>
+                  }
+                </div>
+
+                <div class="team-member-card full-width">
+                  <h4>Équipe projet</h4>
+                  @if (equipeProjet && equipeProjet.length > 0) {
+                    <div class="project-team-list">
+                      @for (member of equipeProjet; track member.id) {
+                        <div class="member-info">
+                          <span class="member-name">{{ member.prenom }} {{ member.nom }}</span>
+                          <span class="member-email">{{ member.email }}</span>
+                          @if (member.phone) {
+                            <span class="member-phone">{{ member.phone }}</span>
+                          }
+                        </div>
+                      }
+                    </div>
+                  } @else {
+                    <p class="no-data">Aucun membre assigné</p>
+                  }
+                </div>
+              </div>
+            </div>            <!-- Partners Section - Only show if there are partners -->
+            @if (partenaires && partenaires.length > 0) {
+              <div class="info-section partners-section">
+                <h2 class="section-title">
+                  <i class="fas fa-handshake"></i>
+                  Partenaires
+                </h2>
+                <div class="partners-grid">
+                  @for (partenaire of partenaires; track partenaire.id) {
+                    <div class="partner-card">
+                      <div class="info-grid">
+                        <div class="info-item">
+                          <label>Nom:</label>
+                          <span>{{ partenaire.nom || 'Non défini' }}</span>
+                        </div>                        <div class="info-item">
+                          <label>Type:</label>
+                          <span>{{ getPartenaireTypeLabel(partenaire.type) }}</span>
+                        </div>
+                        <div class="info-item">
+                          <label>Domaine:</label>
+                          <span>{{ partenaire.domaine || 'Non défini' }}</span>
+                        </div>
+                        <div class="info-item">
+                          <label>Contact clé:</label>
+                          <span>{{ partenaire.contactCle || 'Non défini' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Bailleurs de Fonds Section - Only show if there are bailleurs -->
+            @if (bailleursF && bailleursF.length > 0) {
+              <div class="info-section bailleurs-section">
+                <h2 class="section-title">
+                  <i class="fas fa-university"></i>
+                  Bailleurs de Fonds
+                </h2>
+                <div class="bailleurs-grid">
+                  @for (bailleur of bailleursF; track bailleur.id) {
+                    <div class="bailleur-card">
+                      <div class="info-grid">
+                        <div class="info-item">
+                          <label>Nom:</label>
+                          <span>{{ bailleur.nomBailleur || 'Non défini' }}</span>
+                        </div>
+                        <div class="info-item">
+                          <label>Modèle:</label>
+                          <span>{{ bailleur.modele || 'Non défini' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+          </div>
+        } @else {
+          <div class="loading-placeholder">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Chargement des informations...</p>
+          </div>
+        }
+      </div>
+    } @else if (activeView === 'decision') {
+      <div class="decision-view">
+        @if (currentOpportunity) {
+          <div class="decision-container">
+            
+            <!-- Decision Status Section -->
+            <div class="decision-status-section">
+              <h2 class="section-title">
+                <i class="fas fa-gavel"></i>
+                Statut de la Décision
+              </h2>
+              <div class="status-display">
+                <span class="status-badge" [class]="getDecisionStatusClass()">
+                  {{ getDecisionStatusLabel() }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Decision Actions Section (Only for Partner in charge) -->
+            @if (canEditDecision() && currentOpportunity.status === 2) {
+              <div class="decision-actions-section">
+                <h3 class="section-subtitle">
+                  <i class="fas fa-user-check"></i>
+                  Prendre une Décision
+                </h3>
+
+                <!-- Proposal Links Section -->
+                <div class="proposal-links-section">
+                  <h4 class="links-title">Consulter les propositions :</h4>
+                  <div class="proposal-links">
+                    @if (currentOpportunity.linkTeams2) {
+                      <a 
+                        [href]="currentOpportunity.linkTeams2" 
+                        target="_blank" 
+                        class="proposal-link technical-proposal"
+                        title="Ouvrir la proposition technique">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Proposition Technique</span>
+                        <i class="fas fa-external-link-alt external-icon"></i>
+                      </a>
+                    }
+                    
+                    @if (currentOpportunity.linkPropositionFinanciere) {
+                      <a 
+                        [href]="currentOpportunity.linkPropositionFinanciere" 
+                        target="_blank" 
+                        class="proposal-link financial-proposal"
+                        title="Ouvrir la proposition financière">
+                        <i class="fas fa-euro-sign"></i>
+                        <span>Proposition Financière</span>
+                        <i class="fas fa-external-link-alt external-icon"></i>
+                      </a>
+                    }
+                  </div>
+                </div>
+                
+                <div class="decision-form">
+                  <div class="comment-section">
+                    <label for="decisionComment" class="comment-label">
+                      Commentaire (optionnel)
+                    </label>
+                    <textarea 
+                      id="decisionComment"
+                      class="decision-comment"
+                      [(ngModel)]="decisionComment"
+                      placeholder="Ajoutez un commentaire sur votre décision..."
+                      rows="4"
+                      [disabled]="isDecisionLoading">
+                    </textarea>
+                  </div>
+                  
+                  <div class="decision-buttons">
+                    <button 
+                      type="button"
+                      class="btn-approve"
+                      (click)="approveOpportunity()"
+                      [disabled]="isDecisionLoading">
+                      @if (isDecisionLoading) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                      } @else {
+                        <i class="fas fa-check-circle"></i>
+                      }
+                      Approuver
+                    </button>
+                    
+                    <button 
+                      type="button"
+                      class="btn-reject"
+                      (click)="rejectOpportunity()"
+                      [disabled]="isDecisionLoading">
+                      @if (isDecisionLoading) {
+                        <i class="fas fa-spinner fa-spin"></i>
+                      } @else {
+                        <i class="fas fa-times-circle"></i>
+                      }
+                      Rejeter
+                    </button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- Decision Details Section (For viewing completed decisions) -->
+            @if (canViewDecision() && (currentOpportunity.status === 0 || currentOpportunity.status === 1)) {
+              <div class="decision-details-section">
+                <h3 class="section-subtitle">
+                  <i class="fas fa-info-circle"></i>
+                  Détails de la Décision
+                </h3>
+
+                <!-- Proposal Links Section for Completed Decisions -->
+                @if (isCurrentUserPartnerInCharge()) {
+                  <div class="proposal-links-section">
+                    <h4 class="links-title">Propositions consultées :</h4>
+                    <div class="proposal-links">
+                      @if (currentOpportunity.linkTeams2) {
+                        <a 
+                          [href]="currentOpportunity.linkTeams2" 
+                          target="_blank" 
+                          class="proposal-link technical-proposal"
+                          title="Ouvrir la proposition technique">
+                          <i class="fas fa-file-alt"></i>
+                          <span>Proposition Technique</span>
+                          <i class="fas fa-external-link-alt external-icon"></i>
+                        </a>
+                      }
+                      
+                      @if (currentOpportunity.linkPropositionFinanciere) {
+                        <a 
+                          [href]="currentOpportunity.linkPropositionFinanciere" 
+                          target="_blank" 
+                          class="proposal-link financial-proposal"
+                          title="Ouvrir la proposition financière">
+                          <i class="fas fa-euro-sign"></i>
+                          <span>Proposition Financière</span>
+                          <i class="fas fa-external-link-alt external-icon"></i>
+                        </a>
+                      }
+                    </div>
+                  </div>
+                }
+                
+                <div class="decision-info">
+                  <div class="decision-result">
+                    <div class="result-item">
+                      <label>Décision:</label>
+                      <span class="decision-value" [class]="getDecisionStatusClass()">
+                        {{ getDecisionStatusLabel() }}
+                      </span>
+                    </div>
+                    
+                    <div class="result-item">
+                      <label>Prise par:</label>
+                      <span class="decision-value">
+                        {{ associeEnCharge ? (associeEnCharge.prenom + ' ' + associeEnCharge.nom) : 'Associé en charge' }}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  @if (currentOpportunity.commentaire) {
+                    <div class="decision-comment-display">
+                      <label>Commentaire:</label>
+                      <div class="comment-content">
+                        {{ currentOpportunity.commentaire }}
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Access Denied Section -->
+            @if (!canEditDecision() && !canViewDecision()) {
+              <div class="access-denied-section">
+                <div class="access-denied-content">
+                  <i class="fas fa-lock access-denied-icon"></i>
+                  <p>La décision sera visible une fois qu'elle aura été prise par l'associé en charge.</p>
+                </div>
+              </div>
+            }
+
+          </div>
+        } @else {
+          <div class="loading-placeholder">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Chargement des informations de décision...</p>
+          </div>
+        }
+      </div>
+    }
+  }

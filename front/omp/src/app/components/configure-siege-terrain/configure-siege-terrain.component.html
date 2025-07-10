@@ -1,0 +1,125 @@
+<div class="main-container">
+  <!-- Financial Navigation Sidebar -->
+  <app-financial-navigation [propositionId]="propositionId || ''" [activeSheet]="2"></app-financial-navigation>
+  
+  <div class="matrix-container">
+    <div class="header-container">
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">&#8592;</span> Retour
+      </button>
+      <h1>Distribution Siège/Terrain</h1>
+    </div>
+    
+    <!-- Loading indicator -->
+    <div class="loading-container" *ngIf="loading">
+      <p>Chargement des données...</p>
+    </div>
+    
+    <!-- Error/success message section -->
+    <div class="message-container" *ngIf="errorMessage || submitSuccess">
+      <div class="error-message" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="success-message" *ngIf="submitSuccess">
+        Configuration soumise avec succès! Redirection...
+      </div>
+    </div>
+    
+    <!-- Matrix table -->
+    <div *ngIf="!loading && matrix.length > 0">
+      <!-- Configuration mode selection -->
+      <div class="config-mode-container">
+        <select class="config-mode-select" [(ngModel)]="configurationMode" (change)="changeConfigMode(configurationMode)">
+          <option value="siege">Remplir par HJ siège</option>
+          <option value="terrain">Remplir par HJ terrain</option>
+        </select>
+      </div>
+      
+      <!-- Nombre de Jours Par Mois field -->
+      <div class="jours-par-mois-container">
+        <label for="nbrJoursParMois">Nombre de Jours Par Mois:</label>
+        <input 
+          type="number" 
+          id="nbrJoursParMois" 
+          name="nbrJoursParMois" 
+          [(ngModel)]="nbrJoursParMois" 
+          min="1" 
+          max="31"
+          class="jours-par-mois-input">
+      </div>
+      
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th class="profile-header">Profil</th>
+            @for (livrable of livrables; track livrable.id) {
+              <th class="livrable-header">
+                <div class="livrable-name">{{ livrable.nom }}</div>
+                <div class="days-info" *ngIf="livrable.duration">{{ livrable.duration * 5 }} HJ</div>
+              </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (profile of profiles; track profile.id; let i = $index) {
+            <tr class="profile-row">
+              <td class="profile-name" rowspan="2">{{ profile.nomPrenom }}</td>
+              @for (livrable of livrables; track livrable.id; let j = $index) {
+                <!-- Readonly cell - MatricePL data -->
+                <td class="readonly-cell">
+                  <input 
+                    type="number"
+                    [value]="getMatricePLValue(i, j)"
+                    readonly
+                    class="matrix-input readonly-input"
+                    title="Valeur MatricePL (lecture seule)">
+                </td>
+              }
+            </tr>
+            <tr class="terrain-row">
+              @for (livrable of livrables; track livrable.id; let j = $index) {
+                <!-- Editable cell - Siege/Terrain data based on configuration mode -->
+                <td>
+                  <input 
+                    *ngIf="configurationMode === 'siege'"
+                    type="number" 
+                    min="0" 
+                    inputmode="numeric"
+                    [(ngModel)]="matrix[i][j].siegeJour"
+                    [attr.data-row]="i"
+                    [attr.data-col]="j"
+                    [attr.data-field]="'siege'"
+                    (keydown)="onKeyDown($event, i, j, 'siege')"
+                    (input)="updateSiegeCell(i, j, matrix[i][j].siegeJour)"
+                    (click)="onCellClick($event)"
+                    class="matrix-input">
+                  <input 
+                    *ngIf="configurationMode === 'terrain'"
+                    type="number" 
+                    min="0" 
+                    inputmode="numeric"
+                    [(ngModel)]="matrix[i][j].terrainJour"
+                    [attr.data-row]="i"
+                    [attr.data-col]="j"
+                    [attr.data-field]="'terrain'"
+                    (keydown)="onKeyDown($event, i, j, 'terrain')"
+                    (input)="updateTerrainCell(i, j, matrix[i][j].terrainJour)"
+                    (click)="onCellClick($event)"
+                    class="matrix-input">
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+      
+      <!-- Submit button -->
+      <div class="button-container">
+        <button 
+          class="submit-button" 
+          (click)="submitMatrix()" 
+          [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Soumission en cours...' : 'Soumettre' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

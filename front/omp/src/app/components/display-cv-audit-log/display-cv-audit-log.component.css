@@ -1,0 +1,463 @@
+.audit-log-container {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  margin: 24px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.audit-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 16px;
+}
+
+.audit-log-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.125rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.audit-log-header h3 i {
+  color: #4285F4;
+  font-size: 1rem;
+}
+
+.audit-log-info {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #4285F4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Table */
+.audit-log-table-container {
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+}
+
+.audit-log-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.audit-log-table thead {
+  background-color: #f8f9fa;
+}
+
+.audit-log-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+}
+
+.audit-log-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+  vertical-align: middle;
+}
+
+.audit-log-row:hover {
+  background-color: #f8f9fa;
+}
+
+.audit-log-row:last-child td {
+  border-bottom: none;
+}
+
+/* Operation badges */
+.operation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.operation-add {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.operation-edit {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.operation-delete {
+  background-color: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+/* Element badges */
+.element-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.element-file {
+  background-color: #f3e5f5;
+  color: #7b1fa2;
+  border-color: #ce93d8;
+}
+
+.element-presentation {
+  background-color: #e8f5e8;
+  color: #388e3c;
+  border-color: #a5d6a7;
+}
+
+.element-experience {
+  background-color: #fff3e0;
+  color: #f57c00;
+  border-color: #ffcc02;
+}
+
+.element-formation {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-color: #90caf9;
+}
+
+.element-langue {
+  background-color: #fce4ec;
+  color: #c2185b;
+  border-color: #f8bbd9;
+}
+
+.element-certification {
+  background-color: #fff8e1;
+  color: #f9a825;
+  border-color: #fff176;
+}
+
+.element-projet {
+  background-color: #f1f8e9;
+  color: #689f38;
+  border-color: #aed581;
+}
+
+.element-unknown {
+  background-color: #f5f5f5;
+  color: #757575;
+  border-color: #e0e0e0;
+}
+
+/* Hover effects for badges */
+.element-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.operation-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+/* Column specific styles */
+.date-column {
+  width: 20%;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+.operation-column {
+  width: 18%;
+}
+
+.element-column {
+  width: 30%;
+  font-weight: 500;
+}
+
+.user-column {
+  width: 32%;
+}
+
+/* User info styling */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* User avatar hover effects */
+.user-avatar:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.user-info:hover .user-name {
+  color: #4285F4;
+  transition: color 0.2s ease;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.empty-state h4 {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+/* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.pagination-info {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.pagination-btn:disabled {
+  background-color: #f9f9f9;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 2px;
+  margin: 0 8px;
+}
+
+.page-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+  font-size: 0.875rem;
+}
+
+.page-number:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.page-number.active {
+  background-color: #4285F4;
+  border-color: #4285F4;
+  color: white;
+}
+
+.page-number.hidden {
+  display: none;
+}
+
+/* Header layout and back button */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.875rem;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: #f5f5f5;
+  color: #4285F4;
+}
+
+.back-button i {
+  font-size: 0.875rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .audit-log-container {
+    padding: 16px;
+    margin: 8px 0;
+  }
+  
+  .audit-log-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .audit-log-table {
+    font-size: 0.8rem;
+  }
+  
+  .audit-log-table th,
+  .audit-log-table td {
+    padding: 8px 12px;
+  }
+  
+  .pagination-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .page-numbers {
+    margin: 0;
+  }
+  
+  /* Mobile user info adjustments */
+  .user-info {
+    gap: 8px;
+  }
+  
+  .user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+  
+  .user-name {
+    font-size: 0.8rem;
+  }
+  
+  /* Stack element badges on mobile if needed */
+  .element-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+  
+  .operation-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+}

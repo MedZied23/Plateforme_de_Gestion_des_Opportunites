@@ -1,0 +1,593 @@
+<div class="page-container">
+  <div class="cv-container" [class.with-preview]="cvForm.get('id')?.value">
+    <!-- User selection and presentation -->
+    <div class="cv-header">
+      
+      <form [formGroup]="cvForm" (ngSubmit)="onSubmit()">
+        <!-- File Import Area -->
+        <div class="file-import-area">
+          <!-- File upload zone (only visible when no file is selected) -->
+          <div class="file-upload-zone" *ngIf="!selectedFile && !fileName && !isLoadingAnalysis">
+            <input type="file" id="cvFile" (change)="onFileSelected($event)" accept=".doc,.docx,.pdf,.ppt,.pptx" class="file-input">
+            <label for="cvFile" class="file-label">
+              <div class="file-text">
+                <span class="file-title">Importer un CV</span>
+                <span class="file-subtitle">Glissez-déposez ou cliquez pour sélectionner</span>
+                <span class="file-formats">Formats acceptés: Word (.doc, .docx), PDF (.pdf), PowerPoint (.ppt, .pptx)</span>
+              </div>
+            </label>
+          </div>
+          
+          <!-- Loading indicator -->
+          <div *ngIf="isLoadingAnalysis" class="analysis-loading">
+            <div class="spinner"></div>
+            <p>Téléchargement et création du CV...</p>
+            <p class="small">Cette opération peut prendre quelques instants</p>
+          </div>
+          
+          <!-- CV processing loading indicator -->
+          <div *ngIf="isProcessingCV" class="analysis-loading">
+            <div class="spinner"></div>
+            <p>Analyse du CV</p>
+            <p class="small">Cette opération peut prendre quelques instants</p>
+          </div>
+          
+          <!-- File info and actions (visible when a file is selected) -->
+          <div *ngIf="(selectedFile || fileName) && !isLoadingAnalysis && !isProcessingCV" class="selected-file-container">
+            <div class="selected-file">
+              <div class="file-info">
+                <i class="fas fa-file-alt file-icon"></i>
+                <span class="file-name">{{ selectedFile?.name || fileName }}</span>
+              </div>
+              <div class="file-actions">
+                <button type="button" class="download-file-btn" *ngIf="fileUrl" (click)="downloadFile()">
+                  <i class="fas fa-download"></i> Télécharger
+                </button>
+                <button type="button" class="remove-file-btn" (click)="removeFile()">
+                  <i class="fas fa-times"></i> Supprimer
+                </button>
+                <button type="button" class="download-file-btn" *ngIf="fileUrl" (click)="processCv()">
+                  <i class="fas fa-magic"></i> Remplir
+                </button>
+              </div>
+            </div>
+            
+            <!-- Button to change file -->
+            <button type="button" class="change-file-btn" (click)="triggerFileInput()">
+              <i class="fas fa-sync-alt"></i> Changer de fichier
+            </button>
+            <input type="file" id="hiddenFileInput" (change)="onFileSelected($event)" accept=".doc,.docx,.pdf,.ppt,.pptx" class="hidden-file-input">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_user">Profil</label>
+          <select id="id_user" formControlName="id_user" class="form-control" [disabled]="isLoading">
+            <option value="">Sélectionner un utilisateur</option>
+            <option *ngFor="let user of users" [value]="user.id">
+              {{user.prenom}} {{user.nom}}
+            </option>
+          </select>
+          <div *ngIf="isLoading" class="loading-indicator">Chargement des utilisateurs...</div>
+          <div *ngIf="cvForm.get('id_user')?.invalid && cvForm.get('id_user')?.touched" class="error-message">
+            L'utilisateur est requis
+          </div>
+        </div>        <div class="form-group">
+          <label for="presentation">Présentation</label>
+          <textarea 
+            id="presentation" 
+            formControlName="presentation" 
+            class="form-control" 
+            placeholder="Écrivez une brève présentation professionnelle..."
+            rows="5"></textarea>
+          <div *ngIf="cvForm.get('presentation')?.invalid && cvForm.get('presentation')?.touched" class="error-message">
+            La présentation est requise
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="section-header" (click)="toggleSection('experiences')">
+            <div class="section-title">
+              <i [class]="sectionIcons['experiences']"></i>
+              <h2>Expériences</h2>
+            </div>
+            <div class="section-controls">
+              <i class="arrow" [ngClass]="expandedSections['experiences'] ? 'up' : 'down'"></i>
+            </div>
+          </div>
+          
+          <div class="section-content" [class.expanded]="expandedSections['experiences']" formArrayName="experiences">
+            <div class="item-list">
+              <div *ngFor="let exp of experiencesArray.controls; let i = index" class="list-item" [formGroupName]="i">
+                <div class="item-content">
+                  <div class="item-title">{{ exp.get('poste')?.value }}</div>
+                  <div class="item-subtitle">
+                    {{ exp.get('employer')?.value }} | 
+                    {{ getYearFromDate(exp.get('dateDebut')?.value) }} - 
+                    {{ exp.get('isPresent')?.value ? 'Présent' : getYearFromDate(exp.get('dateFin')?.value) }}
+                  </div>
+                </div>
+                <div class="item-actions">
+                  <button type="button" class="edit-button" (click)="editItem('experience', i)">
+                    <span class="edit-icon"></span>
+                  </button>
+                  <button type="button" class="remove-button" (click)="deleteExperience(i)">
+                    <span class="remove-icon"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="plus-button-container">
+              <button type="button" class="plus-button" (click)="addExperience()">
+                + Expériences
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="section-header" (click)="toggleSection('formations')">
+            <div class="section-title">
+              <i [class]="sectionIcons['formations']"></i>
+              <h2>Formations</h2>
+            </div>
+            <div class="section-controls">
+              <i class="arrow" [ngClass]="expandedSections['formations'] ? 'up' : 'down'"></i>
+            </div>
+          </div>
+          
+          <div class="section-content" [class.expanded]="expandedSections['formations']" formArrayName="formations">
+            <div class="item-list">
+              <div *ngFor="let formation of formationsArray.controls; let i = index" class="list-item" [formGroupName]="i">
+                <div class="item-content">
+                  <div class="item-title">{{ formation.get('diplome')?.value }}</div>
+                  <div class="item-subtitle">
+                    {{ formation.get('institution')?.value }} | 
+                    {{ getYearFromDate(formation.get('dateDebut')?.value) }} - 
+                    {{ formation.get('dateFin')?.value ? getYearFromDate(formation.get('dateFin')?.value) : 'Présent' }}
+                  </div>
+                </div>
+                <div class="item-actions">
+                  <button type="button" class="edit-button" (click)="editItem('formation', i)">
+                    <span class="edit-icon"></span>
+                  </button>
+                  <button type="button" class="remove-button" (click)="deleteFormation(i)">
+                    <span class="remove-icon"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="plus-button-container">
+              <button type="button" class="plus-button" (click)="addFormation()">
+                + Formations
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="section-header" (click)="toggleSection('langues')">
+            <div class="section-title">
+              <i [class]="sectionIcons['langues']"></i>
+              <h2>Langues Pratiquées</h2>
+            </div>
+            <div class="section-controls">
+              <i class="arrow" [ngClass]="expandedSections['langues'] ? 'up' : 'down'"></i>
+            </div>
+          </div>
+          
+          <div class="section-content" [class.expanded]="expandedSections['langues']" formArrayName="langues">
+            <div class="item-list" cdkDropList (cdkDropListDropped)="onLangueDrop($event)">
+              <div *ngFor="let langue of languesArray.controls; let i = index" 
+                   class="list-item" 
+                   [formGroupName]="i" 
+                   cdkDrag
+                   [cdkDragDisabled]="editingLangueIndex === i">
+                <div class="drag-handle" cdkDragHandle>
+                  <div class="drag-icon">
+                    <span></span><span></span>
+                    <span></span><span></span>
+                    <span></span><span></span>
+                  </div>
+                </div>
+                <div class="item-content">                  <div class="item-title">{{ langue.get('langue')?.value }}</div>
+                  <div class="item-subtitle">{{ getLanguageLevel(langue.get('niveau')?.value) }}</div>
+                </div>
+                <div class="item-actions">
+                  <button type="button" class="edit-button" (click)="editLangueInline(i)">
+                    <span class="edit-icon"></span>
+                  </button>
+                  <button type="button" class="remove-button" (click)="deleteLangue(i)">
+                    <span class="remove-icon"></span>
+                  </button>
+                </div>
+                <div *cdkDragPlaceholder class="drag-placeholder"></div>
+              </div>
+            </div>
+            
+            <div class="inline-form-container">
+              <form [formGroup]="langueInlineForm" (ngSubmit)="saveLangueInline()" class="inline-form">
+                <div class="inline-form-group">
+                  <input type="text" formControlName="langue" placeholder="Langue" class="inline-form-control">
+                  <div *ngIf="langueInlineForm.get('langue')?.invalid && langueInlineForm.get('langue')?.touched" class="error-message">
+                    Requis
+                  </div>
+                </div>
+                <div class="inline-form-group">
+                  <select formControlName="niveau" class="inline-form-control">
+                    <option value="" disabled selected>Niveau</option>
+                    <option *ngFor="let niveau of niveauxLangue" [value]="niveau.value">
+                      {{ niveau.label }}
+                    </option>
+                  </select>
+                  <div *ngIf="langueInlineForm.get('niveau')?.invalid && langueInlineForm.get('niveau')?.touched" class="error-message">
+                    Requis
+                  </div>
+                </div>
+                <div class="inline-form-actions">
+                  <button type="submit" class="add-inline-button" [disabled]="langueInlineForm.invalid">
+                    {{ editingLangueIndex !== null ? 'Modifier' : 'Ajouter' }}
+                  </button>
+                  <button *ngIf="editingLangueIndex !== null" type="button" class="cancel-inline-button" (click)="cancelEditLangue()">
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="section-header" (click)="toggleSection('certifications')">
+            <div class="section-title">
+              <i [class]="sectionIcons['certifications']"></i>
+              <h2>Certifications</h2>
+            </div>
+            <div class="section-controls">
+              <i class="arrow" [ngClass]="expandedSections['certifications'] ? 'up' : 'down'"></i>
+            </div>
+          </div>
+          
+          <div class="section-content" [class.expanded]="expandedSections['certifications']" formArrayName="certifications">
+            <div class="item-list" cdkDropList (cdkDropListDropped)="onCertificationDrop($event)">
+              <div *ngFor="let cert of certificationsArray.controls; let i = index" 
+                   class="list-item" 
+                   [formGroupName]="i"
+                   cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <div class="drag-icon">
+                    <span></span><span></span>
+                    <span></span><span></span>
+                    <span></span><span></span>
+                  </div>
+                </div>
+                <div class="item-content">
+                  <div class="item-title">{{ cert.get('nom')?.value }}</div>
+                </div>
+                <div class="item-actions">
+                  <button type="button" class="edit-button" (click)="editCertificationInline(i)">
+                    <span class="edit-icon"></span>
+                  </button>
+                  <button type="button" class="remove-button" (click)="deleteCertification(i)">
+                    <span class="remove-icon"></span>
+                  </button>
+                </div>
+                <div *cdkDragPlaceholder class="drag-placeholder"></div>
+              </div>
+            </div>
+            
+            <div class="inline-form-container">
+              <form [formGroup]="certificationInlineForm" (ngSubmit)="saveCertificationInline()" class="inline-form">
+                <div class="inline-form-group">
+                  <input type="text" formControlName="nom" placeholder="Nom de la certification" class="inline-form-control">
+                  <div *ngIf="certificationInlineForm.get('nom')?.invalid && certificationInlineForm.get('nom')?.touched" class="error-message">
+                    Requis
+                  </div>
+                </div>
+                <div class="inline-form-actions">
+                  <button type="submit" class="add-inline-button" [disabled]="certificationInlineForm.invalid">
+                    {{ editingCertificationIndex !== null ? 'Modifier' : 'Ajouter' }}
+                  </button>
+                  <button *ngIf="editingCertificationIndex !== null" type="button" class="cancel-inline-button" (click)="cancelEditCertification()">
+                    Annuler
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="cv-section">
+          <div class="section-header" (click)="toggleSection('projets')">
+            <div class="section-title">
+              <i [class]="sectionIcons['projets']"></i>
+              <h2>Projets</h2>
+            </div>
+            <div class="section-controls">
+              <i class="arrow" [ngClass]="expandedSections['projets'] ? 'up' : 'down'"></i>
+            </div>
+          </div>
+          
+          <div class="section-content" [class.expanded]="expandedSections['projets']" formArrayName="projets">
+            <div class="item-list">
+              <div *ngFor="let project of projetsArray.controls; let i = index" 
+                   class="list-item" 
+                   [formGroupName]="i"
+                   [id]="'projet-' + project.get('id')?.value">
+                <div class="item-content">
+                  <div class="item-title">
+                    {{ project.get('nom')?.value }}
+                    <span *ngIf="project.get('client')?.value"> - {{ project.get('client')?.value }}</span>
+                    <span> - {{ project.get('year')?.value }}</span>
+                  </div>
+                  <div class="item-subtitle">
+                    <span>{{ project.get('domaine')?.value }}</span>
+                  </div>
+                  <div class="item-role">{{ project.get('role')?.value }}</div>
+                </div>                <div class="item-actions">
+                  <button type="button" class="visibility-button" (click)="toggleProjectVisibility(i)" [title]="project.get('hide')?.value ? 'Show project' : 'Hide project'">
+                    <i class="fas" [class.fa-eye]="!project.get('hide')?.value" [class.fa-eye-slash]="project.get('hide')?.value"></i>
+                  </button>
+                  <button type="button" class="edit-button" (click)="editItem('projet', i)">
+                    <span class="edit-icon"></span>
+                  </button>
+                  <button type="button" class="remove-button" (click)="deleteProjet(i)">
+                    <span class="remove-icon"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="plus-button-container">
+              <button type="button" class="plus-button" (click)="addProjet()">
+                + Projets
+              </button>
+            </div>
+          </div>
+        </div>        <div class="form-actions">
+          <button type="button" class="icon-button" (click)="navigateToAuditLog()" title="Afficher l'historique des modifications" *ngIf="cvForm.get('id')?.value">
+            <i class="fas fa-history"></i>
+            Historique
+          </button>
+          <button type="button" class="search-button" (click)="navigateToSearchCvs()">Chercher un CV</button>
+          <button type="submit" class="save-button" [disabled]="cvForm.invalid || isLoading">Enregistrer le CV</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="dialog-overlay" *ngIf="showExperienceDialog">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3>{{ editingExperienceIndex !== null ? 'Modifier' : 'Ajouter' }} une Expérience</h3>
+          <button type="button" class="close-button" (click)="closeExperienceDialog()">×</button>
+        </div>
+        <div class="dialog-content">
+          <form [formGroup]="experienceForm" (ngSubmit)="saveExperience()">
+            <div class="form-group">
+              <label for="employer">Employeur</label>
+              <input type="text" id="employer" formControlName="employer" class="form-control">
+              <div *ngIf="experienceForm.get('employer')?.invalid && experienceForm.get('employer')?.touched" class="error-message">
+                L'employeur est requis
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="poste">Poste</label>
+              <input type="text" id="poste" formControlName="poste" class="form-control">
+              <div *ngIf="experienceForm.get('poste')?.invalid && experienceForm.get('poste')?.touched" class="error-message">
+                Le poste est requis
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="dateDebut">Année de début</label>
+              <input type="number" id="dateDebut" formControlName="dateDebut" class="form-control" min="1900" max="2099" step="1" placeholder="YYYY">
+              <div *ngIf="experienceForm.get('dateDebut')?.invalid && experienceForm.get('dateDebut')?.touched" class="error-message">
+                L'année de début est requise
+              </div>
+            </div>
+            
+            <div class="form-group checkbox-group">
+              <label class="checkbox-container">
+                <input type="checkbox" id="isPresent" formControlName="isPresent">
+                <span class="checkbox-text">Poste actuel</span>
+              </label>
+            </div>
+            
+            <div class="form-group" *ngIf="!experienceForm.get('isPresent')?.value">
+              <label for="dateFin">Année de fin</label>
+              <input type="number" id="dateFin" formControlName="dateFin" class="form-control" min="1900" max="2099" step="1" placeholder="YYYY">
+            </div>
+            
+            <div class="dialog-actions">
+              <button type="button" class="cancel-button" (click)="closeExperienceDialog()">Annuler</button>
+              <button type="submit" class="save-button" [disabled]="experienceForm.invalid">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-overlay" *ngIf="showFormationDialog">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3>{{ editingFormationIndex !== null ? 'Modifier' : 'Ajouter' }} une Formation</h3>
+          <button type="button" class="close-button" (click)="closeFormationDialog()">×</button>
+        </div>
+        <div class="dialog-content">
+          <form [formGroup]="formationForm" (ngSubmit)="saveFormation()">
+            <div class="form-group">
+              <label for="diplome">Diplôme</label>
+              <input type="text" id="diplome" formControlName="diplome" class="form-control">
+              <div *ngIf="formationForm.get('diplome')?.invalid && formationForm.get('diplome')?.touched" class="error-message">
+                Le diplôme est requis
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="institution">Institution</label>
+              <input type="text" id="institution" formControlName="institution" class="form-control">
+              <div *ngIf="formationForm.get('institution')?.invalid && formationForm.get('institution')?.touched" class="error-message">
+                L'institution est requise
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="dateDebut">Année de début</label>
+              <input type="number" id="dateDebut" formControlName="dateDebut" class="form-control" min="1900" max="2099" step="1" placeholder="YYYY">
+              <div *ngIf="formationForm.get('dateDebut')?.invalid && formationForm.get('dateDebut')?.touched" class="error-message">
+                L'année de début est requise
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="dateFin">Année de fin (facultatif)</label>
+              <input type="number" id="dateFin" formControlName="dateFin" class="form-control" min="1900" max="2099" step="1" placeholder="YYYY">
+            </div>
+            
+            <div class="dialog-actions">
+              <button type="button" class="cancel-button" (click)="closeFormationDialog()">Annuler</button>
+              <button type="submit" class="save-button" [disabled]="formationForm.invalid">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-overlay" *ngIf="showProjetDialog">
+      <div class="dialog-container">
+        <div class="dialog-header">
+          <h3>{{ editingProjetIndex !== null ? 'Modifier' : 'Ajouter' }} un Projet</h3>
+          <button type="button" class="close-button" (click)="closeProjetDialog()">×</button>
+        </div>
+        <div class="dialog-content">
+          <form [formGroup]="projetForm" (ngSubmit)="saveProjet()">
+            <div class="form-group">
+              <label for="nom">Nom du projet</label>
+              <input type="text" id="nom" formControlName="nom" class="form-control">
+              <div *ngIf="projetForm.get('nom')?.invalid && projetForm.get('nom')?.touched" class="error-message">
+                Le nom du projet est requis
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="year">Année</label>
+              <input type="number" id="year" formControlName="year" class="form-control" min="1900" max="2099" step="1" placeholder="YYYY">
+              <div *ngIf="projetForm.get('year')?.invalid && projetForm.get('year')?.touched" class="error-message">
+                L'année est requise
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="client">Client</label>
+              <input type="text" id="client" formControlName="client" class="form-control">
+            </div>
+            
+            <div class="form-group">
+              <label for="domaine">Domaine</label>
+              <input type="text" id="domaine" formControlName="domaine" class="form-control" placeholder="Entrez le domaine du projet">
+              <div *ngIf="projetForm.get('domaine')?.invalid && projetForm.get('domaine')?.touched" class="error-message">
+                Le domaine est requis
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="role">Rôle</label>
+              <input type="text" id="role" formControlName="role" class="form-control">
+              <div *ngIf="projetForm.get('role')?.invalid && projetForm.get('role')?.touched" class="error-message">
+                Le rôle est requis
+              </div>
+            </div>
+
+            <div class="form-group perimetre-section">
+              <label>Périmètre du Projet</label>
+              <div class="perimetre-list" formArrayName="perimetre" cdkDropList (cdkDropListDropped)="onPerimetreDrop($event)">
+                <div *ngFor="let perimetreGroup of perimetreArray.controls; let perimetreIndex = index" 
+                     class="perimetre-item" 
+                     [formGroupName]="perimetreIndex"
+                     cdkDrag
+                     [cdkDragDisabled]="perimetreEditModes[perimetreIndex] || perimetreExpandStates[perimetreIndex]">
+                  
+                  <div *ngIf="perimetreEditModes[perimetreIndex]" class="perimetre-edit-mode" (clickOutside)="handleClickOutside(perimetreIndex)">
+                    <div class="perimetre-sentence">
+                      <textarea formControlName="sentence" class="form-control" rows="2"></textarea>
+                      <button type="button" class="remove-button" (click)="removePerimetre(perimetreIndex)">
+                        <span class="remove-icon"></span>
+                      </button>
+                    </div>
+
+                    <div class="ramifications-container" formArrayName="ramifications" cdkDropList (cdkDropListDropped)="onRamificationDrop($event, perimetreIndex)">
+                      <div *ngFor="let ramification of getRamificationsArray(perimetreIndex).controls; let ramificationIndex = index" 
+                           class="ramification-item"
+                           cdkDrag>
+                        <div class="drag-handle" cdkDragHandle>
+                          <div class="drag-icon">
+                            <span></span><span></span>
+                            <span></span><span></span>
+                            <span></span><span></span>
+                          </div>
+                        </div>
+                        <textarea [formControlName]="ramificationIndex" class="form-control" rows="2" 
+                          (blur)="onRamificationBlur(perimetreIndex, ramificationIndex)"></textarea>
+                        <button type="button" class="remove-button" (click)="removeRamification(perimetreIndex, ramificationIndex)">
+                          <span class="remove-icon"></span>
+                        </button>
+                        <div *cdkDragPlaceholder class="drag-placeholder"></div>
+                      </div>
+                      
+                      <button type="button" class="add-ramification-button" (click)="addRamification(perimetreIndex)">
+                        + Ajouter un détail
+                      </button>
+                    </div>
+                  </div>
+
+                  <div *ngIf="!perimetreEditModes[perimetreIndex]" class="perimetre-display-mode">
+                    <div class="perimetre-sentence-display" (click)="togglePerimetreExpand(perimetreIndex, $event)">
+                      <div class="perimetre-drag-handle" cdkDragHandle>
+                        <div class="drag-icon">
+                          <span></span><span></span>
+                          <span></span><span></span>
+                          <span></span><span></span>
+                        </div>
+                      </div>
+                      <span class="perimetre-text">{{ perimetreGroup.get('sentence')?.value }}</span>
+                      
+                      <div class="perimetre-actions">
+                        <button type="button" class="edit-button" (click)="editPerimetre(perimetreIndex, $event)">
+                          <span class="edit-icon"></span>
+                        </button>
+                        <button type="button" class="remove-button" (click)="removePerimetre(perimetreIndex)">
+                          <span class="remove-icon"></span>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div *ngIf="perimetreExpandStates[perimetreIndex]" class="ramifications-display" formArrayName="ramifications">
+                      <div *ngFor="let ramification of getRamificationsArray(perimetreIndex).controls; let ramificationIndex = index" class="ramification-display-item">
+                        <span class="ramification-bullet">•</span>
+                        <span class="ramification-text">{{ ramification.value }}</span>
+                      </div>
+                    </div>
+                    
+                    <div *cdkDragPlaceholder class="perimetre-drag-placeholder"></div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="button" class="add-perimetre-button" (click)="addPerimetre()">
+                + Ajouter
+              </button>
+            </div>
+            
+            <div class="dialog-actions">
+              <button type="button" class="cancel-button" (click)="closeProjetDialog()">Annuler</button>
+              <button type="submit" class="save-button" [disabled]="projetForm.invalid">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="cv-preview-container" *ngIf="cvForm.get('id')?.value">
+    <app-display-cv [cvId]="cvForm.get('id')?.value"></app-display-cv>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+<div class="task-assignment-dialog">
+  <div class="dialog-header">
+    <h3><i class="fas fa-users"></i> Assignation de la tâche: {{ getTaskDisplayName(data.task) }}</h3>
+    <button type="button" class="close-button" (click)="close()">×</button>
+  </div>
+    
+    <div class="dialog-content">
+      <div *ngIf="!data.canAssign" class="view-only-message">
+        Seul le manager en charge peut assigner des membres à cette tâche.
+      </div>
+      
+      <div class="assign-section" *ngIf="data.canAssign">
+        <div class="form-group">
+          <label>Rechercher des membres</label>
+          <div class="user-input-container">
+            <i class="fas fa-user search-icon"></i>
+            <input 
+              type="text"
+              class="form-input"
+              placeholder="Rechercher un membre..."
+              [formControl]="userControl"
+              (click)="showMemberSuggestions()"
+              (input)="filterMembers(userControl.value)"
+              (clickOutside)="closeUserDropdown()"
+            >
+            <div class="user-dropdown" *ngIf="showUserDropdown">
+              <div 
+                class="user-option" 
+                *ngFor="let member of filteredMembers"
+                (click)="selectMember(member)"
+              >
+                {{ member.prenom }} {{ member.nom }}{{ getRoleSuffix(member.id) }}
+              </div>
+              <div *ngIf="filteredMembers.length === 0" class="no-results">
+                Aucun membre trouvé
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" *ngIf="selectedMembers.length > 0">
+          <label>Membres sélectionnés</label>
+          <div class="selected-members">
+            <div class="member-chip" *ngFor="let memberId of selectedMembers">
+              {{ getMemberName(memberId) }}
+              <button class="remove-member-button" (click)="removeMember(memberId)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="deadline">Échéance</label>
+          <input 
+            type="date" 
+            id="deadline"
+            class="form-input"
+            [formControl]="deadlineControl"
+            [min]="minDate"
+          >
+        </div>
+      </div>      <div class="assigned-members" *ngIf="!data.canAssign && getAssignedMemberIds().length > 0">
+        <div class="form-group">
+          <label>Membres assignés</label>
+          <div class="selected-members">
+            <div class="member-chip disabled" *ngFor="let memberId of getAssignedMemberIds()">
+              {{ getMemberName(memberId) }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-actions">    <button class="btn-secondary" (click)="close()">Annuler</button>
+      <button class="btn-primary" (click)="save()" *ngIf="data.canAssign">Sauvegarder</button>
+    </div>
+  </div>

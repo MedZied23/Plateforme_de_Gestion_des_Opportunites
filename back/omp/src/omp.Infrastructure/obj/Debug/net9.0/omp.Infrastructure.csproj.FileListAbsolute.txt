@@ -1,0 +1,40 @@
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.deps.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.runtimeconfig.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Application.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Domain.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Application.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Domain.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.csproj.AssemblyReference.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.AssemblyInfoInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.AssemblyInfo.cs
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.csproj.CoreCompileInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.sourcelink.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infr.88CC6C53.Up2Date
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\refint\omp.Infrastructure.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.genruntimeconfig.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Infrastructure\obj\Debug\net9.0\ref\omp.Infrastructure.dll
+C:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.deps.json
+C:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.runtimeconfig.json
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.dll
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Infrastructure.pdb
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Application.dll
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Domain.dll
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Application.pdb
+c:\omp\back\omp\src\omp.Infrastructure\bin\Debug\net9.0\omp.Domain.pdb
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.csproj.AssemblyReference.cache
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.AssemblyInfoInputs.cache
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.AssemblyInfo.cs
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.csproj.CoreCompileInputs.cache
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.sourcelink.json
+C:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infr.88CC6C53.Up2Date
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.dll
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\refint\omp.Infrastructure.dll
+c:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.pdb
+C:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\omp.Infrastructure.genruntimeconfig.cache
+C:\omp\back\omp\src\omp.Infrastructure\obj\Debug\net9.0\ref\omp.Infrastructure.dll

@@ -1,0 +1,106 @@
+<div class="notification-list-container">
+  <div class="notification-header">
+    <h2>Notifications</h2>
+    <div class="notification-filters">      <label class="filter-checkbox">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="showUnreadOnly" 
+          (change)="onFilterChange()">
+        <span>Afficher seulement les non lues</span>
+      </label>
+    </div>
+  </div>
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Chargement des notifications...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <div class="error-message">
+      <i class="material-icons">error</i>
+      <span>{{ error }}</span>
+    </div>    <button class="retry-button" (click)="loadNotifications()">
+      <i class="material-icons">refresh</i>
+      Réessayer
+    </button>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!isLoading && !error && notifications.length === 0" class="empty-state">
+    <div class="empty-icon">
+      <i class="material-icons">notifications_none</i>
+    </div>    <h3>{{ showUnreadOnly ? 'Aucune notification non lue' : 'Aucune notification' }}</h3>
+    <p>{{ showUnreadOnly ? 'Toutes vos notifications ont été lues.' : 'Vous n\'avez aucune notification pour le moment.' }}</p>
+  </div>
+
+  <!-- Notifications list -->
+  <div *ngIf="!isLoading && !error && notifications.length > 0" class="notifications-content">
+    <div class="notifications-list">      <div 
+        *ngFor="let notification of notifications" 
+        class="notification-item"
+        [class.unread]="!notification.read"
+        (click)="onNotificationClick(notification)">
+        
+        <div class="notification-indicator">
+          <div class="notification-dot" *ngIf="!notification.read"></div>
+        </div>
+        
+        <div class="notification-content">
+          <div class="notification-header-item">
+            <h4 class="notification-title">{{ notification.title }}</h4>
+            <div class="notification-actions">              <button 
+                class="action-button delete-button" 
+                (click)="deleteNotification(notification); $event.stopPropagation()"
+                title="Supprimer la notification">
+                <i class="material-icons">delete</i>
+              </button>
+            </div>
+          </div>
+          
+          <p class="notification-body">{{ notification.body }}</p>
+          
+          <div class="notification-meta">
+            <span class="notification-time">{{ getRelativeTime(notification.dateSent) }}</span>            <span *ngIf="notification.read && notification.dateRead" class="read-status">
+              Lu {{ getRelativeTime(notification.dateRead) }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <div class="pagination">
+        <!-- Previous button -->
+        <button 
+          class="pagination-button" 
+          [disabled]="currentPage === 1"
+          (click)="onPageChange(currentPage - 1)">
+          <i class="material-icons">chevron_left</i>
+        </button>
+
+        <!-- Page numbers -->
+        <button 
+          *ngFor="let page of getPaginationArray()" 
+          class="pagination-button"
+          [class.active]="page === currentPage"
+          (click)="onPageChange(page)">
+          {{ page }}
+        </button>
+
+        <!-- Next button -->
+        <button 
+          class="pagination-button" 
+          [disabled]="currentPage === totalPages"
+          (click)="onPageChange(currentPage + 1)">
+          <i class="material-icons">chevron_right</i>
+        </button>
+      </div>
+        <div class="pagination-info">
+        Affichage de {{ (currentPage - 1) * pageSize + 1 }} à {{ Math.min(currentPage * pageSize, totalCount) }} sur {{ totalCount }} notifications
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="phase-dialog">  <div class="dialog-header">
+    <h3><i class="fas fa-layer-group"></i> Nouvelle Phase</h3>
+    <button type="button" class="close-button" (click)="onCancel()">×</button>
+  </div>
+  
+  <div class="dialog-content">
+    <div class="form-group">
+      <label for="phaseName">Nom de la phase</label>
+      <input 
+        type="text" 
+        id="phaseName" 
+        [(ngModel)]="phaseName" 
+        placeholder="Entrez le nom de la phase" 
+        required>
+    </div>
+  </div>
+    <div class="dialog-actions">
+    <button class="btn-secondary" [disabled]="isCreatingPhase" (click)="onCancel()">
+      Annuler
+    </button>
+    <button class="btn-primary" [disabled]="isCreatingPhase || !phaseName.trim()" (click)="onSave()">
+      <span>Ajouter</span>
+      <span class="spinner-border spinner-border-sm" *ngIf="isCreatingPhase" role="status" aria-hidden="true"></span>
+    </button>
+  </div>
+</div>

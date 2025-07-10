@@ -1,0 +1,15 @@
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\bin\Debug\net8.0\omp.Domain.deps.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\bin\Debug\net8.0\omp.Domain.runtimeconfig.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\bin\Debug\net8.0\omp.Domain.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\bin\Debug\net8.0\omp.Domain.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.csproj.AssemblyReference.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.AssemblyInfoInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.AssemblyInfo.cs
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.csproj.CoreCompileInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.sourcelink.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\refint\omp.Domain.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\omp.Domain.genruntimeconfig.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Domain\obj\Debug\net8.0\ref\omp.Domain.dll

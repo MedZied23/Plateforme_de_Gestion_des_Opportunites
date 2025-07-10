@@ -1,0 +1,219 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Dylan Font Family */
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-normal.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-bold.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-xlight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-xbold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-normalitalic.otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-bolditalic.otf') format('opentype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-lightitalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-mediumitalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-thinitalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-xlightitalic.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: url('./assets/fonts/dylan-xbolditalic.otf') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dylan';
+  src: local('Arial');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Dylan'; /* Changed to Dylan font with fallbacks */
+}
+
+/* Global container styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%; /* Ensure full width */
+}
+
+:root {
+  --ey-yellow: #FFE600;
+  --ey-black: #000000;
+  --ey-dark-gray: #2E2E38;
+  --ey-light-gray: #F0F0F0;
+  --sidebar-width: 260px; /* Added variable for sidebar width */
+  --sidebar-collapsed-width: 70px; /* Added variable for collapsed sidebar width */
+}
+
+body {
+  min-height: 100vh;
+  font-family: 'Dylan', Arial, sans-serif;
+  color: var(--ey-dark-gray);
+  width: 100%; /* Ensure full width */
+}
+
+.container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  max-width: none; /* Remove any max-width constraints */
+}
+
+/* Force all components to respect container width */
+.row {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Ensure all cards and panels fill their containers */
+.card, .panel {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ensure all content areas adjust with zoom */
+.content-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Material Icons fallback */
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Add a subtle yellow accent to scrollbars for a cohesive EY look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ey-yellow);
+}
+
+/* EY specific button styling */
+button, 
+.btn {
+  transition: all 0.3s ease;
+}
+
+button:focus, 
+.btn:focus {
+  outline: 2px solid var(--ey-yellow);
+  outline-offset: 2px;
+}
+
+/* Add an EY-styled selection highlight */
+::selection {
+  background-color: rgba(255, 230, 0, 0.3);
+  color: var(--ey-dark-gray);
+}

@@ -1,0 +1,36 @@
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.csproj.AssemblyReference.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.AssemblyInfoInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.AssemblyInfo.cs
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.csproj.CoreCompileInputs.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.sourcelink.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.deps.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.runtimeconfig.json
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Domain.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\bin\Debug\net9.0\omp.Domain.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Appl.74C7640F.Up2Date
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\refint\omp.Application.dll
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.pdb
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.genruntimeconfig.cache
+C:\plateforme gestion des opportunités\backend 2.0\omp\src\omp.Application\obj\Debug\net9.0\ref\omp.Application.dll
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.deps.json
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.runtimeconfig.json
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.dll
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Application.pdb
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Domain.dll
+C:\omp\back\omp\src\omp.Application\bin\Debug\net9.0\omp.Domain.pdb
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.csproj.AssemblyReference.cache
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.AssemblyInfoInputs.cache
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.AssemblyInfo.cs
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.csproj.CoreCompileInputs.cache
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.sourcelink.json
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Appl.74C7640F.Up2Date
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.dll
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\refint\omp.Application.dll
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.pdb
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\omp.Application.genruntimeconfig.cache
+C:\omp\back\omp\src\omp.Application\obj\Debug\net9.0\ref\omp.Application.dll

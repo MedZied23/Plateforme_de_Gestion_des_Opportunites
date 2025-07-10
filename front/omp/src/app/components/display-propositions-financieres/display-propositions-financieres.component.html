@@ -1,0 +1,183 @@
+<div class="container">
+  <div class="main-content">
+    <div class="page-header">
+      <h1>Propositions Financières</h1>
+      <p class="subtitle">Consultez et gérez les propositions financières de vos opportunités</p>
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading-container" *ngIf="loading">
+      <div class="custom-spinner"></div>
+      <p>Chargement des propositions financières...</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="error-container" *ngIf="error">
+      <i class="fas fa-exclamation-circle"></i>
+      <p class="error-message">{{ error }}</p>
+      <button class="custom-button primary-button" (click)="loadPropositionsFinancieres()">
+        <i class="fas fa-sync-alt"></i> Réessayer
+      </button>
+    </div>    <!-- Improved empty state with call-to-action -->
+    <div class="empty-state" *ngIf="!loading && !error && propositions.length === 0">
+      <div class="empty-state-content">
+        <i class="fas fa-clipboard-list empty-icon"></i>
+        <h2>Aucune proposition financière</h2>
+        <p>Vous n'avez pas encore créé de proposition financière pour cette opportunité.</p>
+        <button class="custom-button primary-button" 
+                *ngIf="canCreateProposition"
+                (click)="navigateToCreateProposition()">
+          <i class="fas fa-plus"></i> Créer une proposition
+        </button>
+        <p *ngIf="!canCreateProposition" class="permission-message">
+          Vous n'avez pas les autorisations nécessaires pour créer une proposition financière.
+        </p>
+      </div>
+    </div>
+
+    <!-- Display propositions in improved card format -->
+    <div class="propositions-container" *ngIf="!loading && !error && propositions.length > 0">
+      <div class="actions-bar">
+        <div class="filter-section">
+          <i class="fas fa-filter filter-icon"></i>
+          <span class="total-count">{{ totalCount }} proposition(s) trouvée(s)</span>
+        </div>
+      </div>        
+      <div class="propositions-grid">
+        <div class="proposition-card" *ngFor="let proposition of propositions">
+          <div class="card-header">
+            <h3 class="card-title">{{ proposition.nom || 'Proposition #' + proposition.id }}</h3>
+            <div class="card-subtitle" *ngIf="proposition.nbrSemaines">
+              <i class="fas fa-calendar-alt card-icon"></i>
+              {{ proposition.nbrSemaines }} semaine<span *ngIf="proposition.nbrSemaines > 1">s</span>
+            </div>
+          </div>
+          
+          <div class="card-content">            <div class="proposition-details">
+              <div class="detail-badge price" *ngIf="proposition.totalCost">
+                <i class="fas fa-money-bill-wave"></i> {{ proposition.totalCost.toLocaleString() }}
+              </div>
+              <div class="detail-badge days" *ngIf="proposition.sumHJ">
+                <i class="fas fa-clock"></i> {{ proposition.sumHJ }} HJ
+              </div>              <div class="detail-badge avg-price" *ngIf="proposition.averageTJM">
+                <i class="fas fa-chart-line"></i> {{ proposition.averageTJM.toLocaleString() }} TJM
+              </div>
+            </div>
+          </div>
+            <div class="card-actions">
+            <button class="delete-button" 
+                    *ngIf="canDeleteProposition(proposition.id)"
+                    (click)="deleteProposition($event, proposition.id)">
+              <i class="fas fa-trash-alt"></i> Supprimer
+            </button>
+            
+            <div class="action-right">
+              <button class="view-button" 
+                      *ngIf="canViewProposition(proposition.id)"
+                      (click)="$event.stopPropagation(); toggleOptionsMenu($event, proposition.id)">
+                <i class="fas fa-eye"></i> Voir
+              </button>
+              
+              <div class="no-access-message" *ngIf="!canViewProposition(proposition.id)">
+                <i class="fas fa-lock"></i> Accès restreint
+              </div>
+                <div class="options-menu" *ngIf="openOptionsMenuId === proposition.id && canViewProposition(proposition.id)">
+                <div class="sheet-options">
+                  <!-- Reset Scope button renamed to Modifier la portée -->
+                  <div class="reset-scope-container" *ngIf="canEditProposition(proposition.id)">
+                    <button class="reset-scope-button" (click)="navigateToScopeSetup($event, proposition.id)">
+                      <i class="fas fa-sync-alt"></i>
+                      Modifier la portée
+                    </button>
+                  </div>
+                  
+                  <!-- Separator line -->
+                  <div class="option-separator" *ngIf="canEditProposition(proposition.id)"></div>
+                    <!-- Feuille options -->
+                  <div class="sheet-option-container">
+                    <button class="sheet-option" (click)="navigateToFeuilleComponent($event, proposition.id, 1)">
+                      Répartition des charges
+                    </button>
+                    <button class="sheet-edit-button" 
+                            *ngIf="canEditProposition(proposition.id)"
+                            (click)="$event.stopPropagation(); editSheet($event, proposition.id, 1)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                  <div class="sheet-option-container">
+                    <button class="sheet-option" (click)="navigateToFeuilleComponent($event, proposition.id, 2)">
+                      Répartition Siège/Terrain
+                    </button>
+                    <button class="sheet-edit-button" 
+                            *ngIf="canEditProposition(proposition.id)"
+                            (click)="$event.stopPropagation(); editSheet($event, proposition.id, 2)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                  <div class="sheet-option-container">
+                    <button class="sheet-option" (click)="navigateToFeuilleComponent($event, proposition.id, 3)">
+                      Coûts du Projet
+                    </button>
+                    <button class="sheet-edit-button" 
+                            *ngIf="canEditProposition(proposition.id)"
+                            (click)="$event.stopPropagation(); editSheet($event, proposition.id, 3)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Custom pagination controls -->
+      <div class="paginator-container">
+        <div class="paginator-wrapper">
+          <div class="pagination-controls">
+            <div class="page-info">
+              <span>Page {{ pageIndex + 1 }} sur {{ totalPages || 1 }}</span>
+            </div>            <div class="custom-paginator">              <div class="page-size-selector">
+                <label for="pageSize">Éléments par page:</label>
+                <select id="pageSize" [value]="pageSize" (change)="onPageChange(pageIndex, $event)">
+                  <option [value]="6">6</option>
+                  <option [value]="12">12</option>
+                  <option [value]="24">24</option>
+                  <option [value]="48">48</option>
+                </select>
+              </div>
+              
+              <div class="page-navigation">
+                <button class="page-nav-button" 
+                  [disabled]="pageIndex === 0" 
+                  (click)="onPageChange(0, pageSize)">
+                  <i class="fas fa-angle-double-left"></i>
+                </button>
+                <button class="page-nav-button" 
+                  [disabled]="pageIndex === 0" 
+                  (click)="onPageChange(pageIndex - 1, pageSize)">
+                  <i class="fas fa-angle-left"></i>
+                </button>
+                
+                <span class="page-range">
+                  {{ pageIndex * pageSize + 1 }} - {{ pageIndex * pageSize + propositions.length }} sur {{ totalCount }}
+                </span>
+                
+                <button class="page-nav-button" 
+                  [disabled]="pageIndex >= totalPages - 1" 
+                  (click)="onPageChange(pageIndex + 1, pageSize)">
+                  <i class="fas fa-angle-right"></i>
+                </button>
+                <button class="page-nav-button" 
+                  [disabled]="pageIndex >= totalPages - 1" 
+                  (click)="onPageChange(totalPages - 1, pageSize)">
+                  <i class="fas fa-angle-double-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

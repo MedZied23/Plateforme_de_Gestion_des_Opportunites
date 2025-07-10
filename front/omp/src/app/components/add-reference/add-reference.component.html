@@ -1,0 +1,251 @@
+<div class="page-container" [class.nouveau]="isNouveauMode">
+  <div class="reference-container" [class.with-preview]="referenceForm.get('id')?.value && !isNouveauMode">
+    <!-- File Import Area -->
+    <div class="file-import-area">
+      <!-- File upload zone (only visible when no file is selected) -->
+      <div class="file-upload-zone" *ngIf="!selectedFile && !fileName && !isLoading">
+        <input type="file" id="referenceFile" (change)="onFileSelected($event)" accept=".doc,.docx,.pdf,.ppt,.pptx" class="file-input">
+        <label for="referenceFile" class="file-label">
+          <div class="file-text">
+            <span class="file-title">Importer une référence</span>
+            <span class="file-subtitle">Glissez-déposez ou cliquez pour sélectionner</span>
+            <span class="file-formats">Formats acceptés: .doc, .docx, .pdf, .ppt, .pptx</span>
+          </div>
+        </label>
+      </div>
+
+      <!-- Show loading spinner while uploading -->
+      <div class="loading-indicator" *ngIf="isLoading">
+        <span class="spinner"></span>
+        <span>Téléchargement en cours...</span>
+      </div>
+
+      <!-- Selected file display -->
+      <div class="selected-file-container" *ngIf="selectedFile || (fileName && !isLoading)">
+        <div class="selected-file">
+          <div class="file-info">
+            <i class="fas fa-file-alt file-icon"></i>
+            <span class="file-name">{{ selectedFile?.name || fileName }}</span>
+          </div>
+          <div class="file-actions">
+            <a *ngIf="fileUrl" [href]="fileUrl" target="_blank" class="download-file-btn">
+              <i class="fas fa-download"></i> Télécharger
+            </a>
+            <button type="button" class="remove-file-btn" (click)="removeFile()">
+              <i class="fas fa-times"></i> Supprimer
+            </button>
+          </div>
+        </div>
+        
+        <!-- Button to change file -->
+        <button type="button" class="change-file-btn" (click)="triggerFileInput()">          <i class="fas fa-sync-alt"></i> Changer de fichier
+        </button>
+      </div>
+    </div>
+
+    <!-- Reference Form -->
+    <form [formGroup]="referenceForm" (ngSubmit)="onSubmit()" class="reference-form">
+      <div class="form-section">
+        <div class="form-group">
+          <label for="nom">Nom de la référence</label>
+          <input type="text" id="nom" formControlName="nom" class="form-control" placeholder="Entrez le nom de la référence">
+          <div *ngIf="referenceForm.get('nom')?.invalid && referenceForm.get('nom')?.touched" class="error-message">
+            Le nom de la référence est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" 
+                    formControlName="description" 
+                    class="form-control" 
+                    placeholder="Entrez la description de la référence"
+                    rows="4"></textarea>
+          <div *ngIf="referenceForm.get('description')?.invalid && referenceForm.get('description')?.touched" class="error-message">
+            La description est requise
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="country">Pays</label>
+          <div class="country-input-container">
+            <input type="text" 
+                   id="country"
+                   [formControl]="countryControl"
+                   placeholder="Rechercher un pays..."
+                   (focus)="showCountrySuggestions()"
+                   (blur)="hideCountrySuggestions()"
+                   (keydown)="handleCountryKeydown($event)"
+                   class="form-control"
+                   [disabled]="isLoadingCountries">
+            
+            <div class="country-dropdown" *ngIf="showCountryDropdown && !isLoadingCountries">
+              <div *ngFor="let country of filteredCountries | async"
+                   class="country-option"
+                   (mousedown)="selectCountry(country)">
+                {{country}}
+              </div>
+              <div *ngIf="(filteredCountries | async)?.length === 0" class="no-results">
+                Aucun pays trouvé
+              </div>
+            </div>
+            
+            <div *ngIf="isLoadingCountries" class="loading-countries">
+              Chargement des pays...
+            </div>
+          </div>
+          <div *ngIf="referenceForm.get('country')?.invalid && referenceForm.get('country')?.touched" class="error-message">
+            Le pays est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="offre">Offre</label>
+          <select id="offre" formControlName="offre" class="form-control">
+            <option value="">Sélectionnez une offre</option>
+            <option *ngFor="let offre of offreOptions" [value]="offre">{{offre}}</option>
+          </select>
+          <div *ngIf="referenceForm.get('offre')?.invalid && referenceForm.get('offre')?.touched" class="error-message">
+            L'offre est requise
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="client">Client</label>
+          <input type="text" id="client" formControlName="client" class="form-control" placeholder="Entrez le client">
+          <div *ngIf="referenceForm.get('client')?.invalid && referenceForm.get('client')?.touched" class="error-message">
+            Le client est requis
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="budget">Budget</label>
+          <input type="number" id="budget" formControlName="budget" class="form-control" placeholder="Entrez le budget">
+          <div *ngIf="referenceForm.get('budget')?.invalid && referenceForm.get('budget')?.touched" class="error-message">
+            Le budget est requis et doit être supérieur à 0
+          </div>
+        </div>
+
+        <div class="date-inputs-container">
+          <div class="form-group date-input">
+            <label for="dateDebut">Date de début</label>
+            <input type="date" id="dateDebut" formControlName="dateDebut" class="form-control">
+            <div *ngIf="referenceForm.get('dateDebut')?.invalid && referenceForm.get('dateDebut')?.touched" class="error-message">
+              La date de début est requise
+            </div>
+          </div>
+
+          <div class="form-group date-input">
+            <label for="dateFin">Date de fin</label>
+            <input type="date" id="dateFin" formControlName="dateFin" class="form-control">
+            <div *ngIf="referenceForm.get('dateFin')?.invalid && referenceForm.get('dateFin')?.touched" class="error-message">
+              La date de fin est requise
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Members Section -->        <div class="form-group team-section">
+          <label>Équipe</label>
+          <div class="team-input-container">
+            <div class="input-section">
+              <input type="text" 
+                     [formControl]="userControl"
+                     placeholder="Rechercher un membre..."
+                     (focus)="showUserDropdown = true"
+                     (keydown)="handleUserKeydown($event)"
+                     class="form-control">
+              
+              <div class="user-dropdown" *ngIf="showUserDropdown">
+                <div *ngFor="let user of filteredUsers | async"
+                     class="user-option"
+                     (click)="selectUser(user)">
+                  {{user.prenom}} {{user.nom}}
+                </div>
+              </div>
+            </div>
+
+            <div class="role-input-section" *ngIf="showRoleInput">
+              <input type="text" 
+                     [formControl]="roleControl"
+                     placeholder="Rôle..."
+                     (keydown)="handleRoleKeydown($event)"
+                     class="form-control">
+              <div class="role-buttons">
+                <button type="button" 
+                        class="add-member-btn"
+                        (click)="addTeamMember()">
+                  Ajouter
+                </button>
+                <button type="button" 
+                        class="cancel-member-btn"
+                        (click)="cancelTeamMemberSelection()">
+                  Annuler
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="team-members-list">
+            <div *ngFor="let member of teamMembers" class="team-member">
+              <span>{{member.name}} - {{member.role}}</span>
+              <button type="button" 
+                      class="remove-member-btn"
+                      (click)="removeTeamMember(member.id)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Services Section -->
+      <div class="cv-section">
+        <div class="section-header" (click)="toggleSection('services')">
+          <div class="section-title">
+            <i class="fas fa-cogs"></i>
+            <h2>Descriptif des services rendus</h2>
+          </div>
+          <div class="section-controls">
+            <i class="arrow" [ngClass]="expandedSections['services'] ? 'up' : 'down'"></i>
+          </div>
+        </div>
+        
+        <div class="section-content" [class.expanded]="expandedSections['services']" formArrayName="services">
+          <div class="item-list">
+            <div *ngFor="let service of servicesArray.controls; let i = index" class="list-item" [formGroupName]="i">
+              <div class="item-content">
+                <div class="item-title">{{ service.get('category')?.value }}</div>
+                <div *ngIf="serviceExpandStates[i]" class="item-subtitle">
+                  <div *ngFor="let subservice of getSubservicesArray(i).controls" class="subservice-item">
+                    {{ subservice.value }}
+                  </div>
+                </div>
+              </div>
+              <div class="item-actions">
+                <button type="button" class="edit-button" (click)="openBulletsDialog(i)">
+                  <i class="edit-icon"></i>
+                </button>
+                <button type="button" class="remove-button" (click)="removeServiceCategory(i)">
+                  <i class="remove-icon"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="plus-button-container">
+            <button type="button" class="plus-button" (click)="openBulletsDialog()">
+              + Phase
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="save-button" [disabled]="referenceForm.invalid">Enregistrer</button>      </div>
+    </form>
+  </div>
+  
+  <div class="reference-preview-container" *ngIf="referenceForm.get('id')?.value">
+    <app-display-reference [referenceId]="referenceForm.get('id')?.value"></app-display-reference>
+  </div>
+</div>

@@ -1,0 +1,1262 @@
+/* Clean CV form styling */
+.cv-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cv-header {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  position: relative; /* Added for absolute positioning of actions */
+}
+
+/* Header actions */
+.cv-header-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: #f5f5f5;
+  color: #4285F4;
+}
+
+.icon-button.active {
+  background-color: #e3f2fd;
+  color: #4285F4;
+}
+
+.icon-button i {
+  font-size: 16px;
+}
+
+/* Form controls */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+textarea.form-control {
+  resize: vertical;
+}
+
+/* Section styling */
+.cv-section {
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid #e0e0e0; /* Changed from box-shadow to thin border */
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.2s;
+}
+
+.section-header:hover {
+  background-color: #f5f5f5;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-title i {
+  font-size: 18px;
+  color: #4285F4; /* Changed from black to Google blue */
+  width: 24px;
+  text-align: center;
+}
+
+/* Section-specific icon colors */
+.section-title i.fa-briefcase {
+  color: #EA4335; /* Red for experiences */
+}
+
+.section-title i.fa-graduation-cap {
+  color: #FBBC05; /* Yellow for education */
+}
+
+.section-title i.fa-language {
+  color: #34A853; /* Green for languages */
+}
+
+.section-title i.fa-certificate {
+  color: #8C44F7; /* Purple for certifications */
+}
+
+.section-title i.fa-project-diagram {
+  color: #00ACC1; /* Cyan for projects */
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Custom arrow */
+.arrow {
+  border: solid #666;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transition: transform 0.2s;
+}
+
+.arrow.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
+.arrow.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+/* Section content */
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.section-content.expanded {
+  max-height: 2000px;
+  padding: 15px 20px;
+}
+
+/* Item list */
+.item-list {
+  margin-bottom: 15px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0; /* Changed from border-left to full thin border */
+  transition: background-color 0.2s;
+}
+
+.list-item:hover {
+  background-color: #f0f0f0;
+}
+
+.item-content {
+  flex: 1;
+}
+
+.item-title {
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+
+.item-subtitle, .item-description, .item-role, .item-client {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+/* Action buttons */
+.item-actions {
+  display: flex;
+  gap: 10px; /* Increased gap between buttons */
+  align-items: center;
+}
+
+.edit-button, .remove-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  margin-left: 5px;
+}
+
+.edit-button:hover {
+  background-color: rgba(0, 120, 212, 0.1);
+}
+
+.remove-button:hover {
+  background-color: rgba(232, 17, 35, 0.1);
+}
+
+.edit-icon::before {
+  content: '\f044';
+  font-family: 'Font Awesome 5 Free';
+  color: #4285F4; /* Changed to Google blue for edit icons */
+  font-size: 16px;
+}
+
+.remove-icon::before {
+  content: '\f2ed';
+  font-family: 'Font Awesome 5 Free';
+  color: #EA4335; /* Changed to Google red for delete icons */
+  font-size: 16px;
+}
+
+.add-button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.add-button:hover {
+  background-color: #303f9f;
+}
+
+/* Plus button style - centered with + label */
+.plus-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 15px 0;
+}
+
+.plus-button {
+  background-color: #e7f3ff;
+  color: #0077cc;
+  border: 1px dashed #0077cc;
+  border-radius: 4px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal; /* Changed from 600 to normal */
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.plus-button:hover {
+  background-color: #d0e6f7;
+  color: #0077cc;
+}
+
+/* Form actions */
+.form-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.form-actions .icon-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent;
+  color: #757575;
+  border: 1px solid #757575;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: auto;
+  height: auto;
+}
+
+.form-actions .icon-button:hover {
+  background-color: rgba(117, 117, 117, 0.1);
+}
+
+.form-actions .icon-button i {
+  font-size: 14px;
+}
+
+.save-button {
+  background-color: transparent;
+  color: #3f51b5;
+  border: 1px solid #3f51b5;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600; /* Changed from 500 to 600 for extra bold text */
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-button:hover {
+  background-color: rgba(63, 81, 181, 0.1);
+}
+
+.save-button:disabled {
+  background-color: transparent;
+  border-color: #c5cae9;
+  border-width: 1px; /* Changed from 2px to 1px */
+  color: #c5cae9;
+  cursor: not-allowed;
+}
+
+/* Error messages */
+.error-message {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Loading indicator */
+.loading-indicator {
+  font-size: 14px;
+  color: #666;
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Dialog styles */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-container {
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0; /* Changed from box-shadow to thin border */
+  width: 95%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.dialog-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.dialog-content {
+  padding: 20px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.cancel-button {
+  background-color: transparent;
+  color: #757575;
+  border: 1px solid #757575; /* Changed from 2px to 1px for thinner border */
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: rgba(117, 117, 117, 0.1);
+}
+
+/* Checkbox styles */
+.checkbox-group {
+  margin-bottom: 15px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+  margin-right: 8px;
+  width: 18px;
+  height: 18px;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Inline form styles */
+.inline-form-container {
+  margin-top: 15px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 4px;
+  border: none; /* Removed border from inline form containers only */
+}
+
+.inline-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.inline-form-group {
+  flex: 1;
+  min-width: 150px;
+  position: relative;
+}
+
+.inline-form-control {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.inline-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.add-inline-button {
+  background-color: #e7f3ff;
+  color: #0077cc;
+  border: 1px dashed #0077cc;
+  border-radius: 4px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal; /* Changed from 600 to normal */
+  transition: all 0.2s ease;
+}
+
+.add-inline-button:hover {
+  background-color: #d0e6f7;
+  color: #0077cc;
+}
+
+.add-inline-button:disabled {
+  background-color: rgba(224, 242, 254, 0.7);
+  border-color: rgba(0, 119, 204, 0.4);
+  color: rgba(0, 119, 204, 0.5);
+  cursor: not-allowed;
+}
+
+.cancel-inline-button {
+  background-color: #f5f5f5;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Drag and drop styling */
+.drag-handle {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  color: #888;
+}
+
+.drag-icon {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-template-rows: repeat(3, 3px);
+  gap: 2px;
+  width: 8px;
+  height: 13px;
+}
+
+.drag-icon::before {
+  content: none;
+}
+
+.drag-icon::after {
+  content: none;
+}
+
+.drag-icon span {
+  width: 3px;
+  height: 3px;
+  background-color: #777;
+  border-radius: 50%;
+}
+
+/* Rest of the drag and drop styles */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.item-list.cdk-drop-list-dragging .list-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Custom styling for drag placeholder */
+.drag-placeholder {
+  height: 60px;
+  background-color: #e8eaf6;
+  border: 1px dashed #3f51b5;
+  border-radius: 4px;
+}
+
+/* Perimetre section styles */
+.perimetre-section {
+  margin-top: 25px;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.perimetre-list {
+  margin-top: 15px;
+}
+
+.perimetre-item {
+  background-color: #ffffff;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.perimetre-item:hover {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.perimetre-sentence {
+  margin-bottom: 15px;
+  position: relative;
+  display: flex;
+  align-items: center; /* Changed from flex-start to center for vertical alignment */
+  gap: 10px;
+}
+
+.perimetre-sentence textarea {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.perimetre-sentence textarea:focus {
+  border-color: #409eff;
+  outline: none;
+}
+
+.perimetre-edit-mode {
+  background-color: #ffffff;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* In display mode, position the actions inside */
+.perimetre-sentence-display {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.perimetre-sentence-display:hover {
+  background-color: #f0f0f0;
+}
+
+.perimetre-text {
+  flex: 1;
+  margin-left: 10px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* Drag handle for perimetre items */
+.perimetre-drag-handle {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  color: #888;
+}
+
+.perimetre-drag-handle .drag-icon {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-template-rows: repeat(3, 3px);
+  gap: 2px;
+  width: 8px;
+  height: 13px;
+}
+
+.perimetre-drag-handle .drag-icon span {
+  width: 3px;
+  height: 3px;
+  background-color: #777;
+  border-radius: 50%;
+}
+
+/* Custom styling for perimetre drag placeholder */
+.perimetre-drag-placeholder {
+  height: 50px;
+  background-color: #e0f0ff;
+  border: 1px dashed #409eff;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.perimetre-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Added gap to prevent overlapping */
+  margin-left: 10px;
+}
+
+.edit-perimetre-button, .remove-perimetre-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.edit-perimetre-button:hover {
+  background-color: rgba(0, 120, 212, 0.1);
+}
+
+.remove-perimetre-button:hover {
+  background-color: rgba(232, 17, 35, 0.1);
+}
+
+.edit-perimetre-button i {
+  color: #0078d4;
+  font-size: 16px;
+}
+
+.edit-perimetre-button i::before {
+  content: '\f044';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  font-size: 16px;
+}
+
+/* Simplified ramifications container */
+.ramifications-container {
+  padding-left: 15px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.ramification-item {
+  position: relative;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center; /* Changed from flex-start to center for vertical alignment */
+  gap: 10px;
+}
+
+.ramification-item textarea {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  transition: border-color 0.2s;
+}
+
+.ramification-item textarea:focus {
+  border-color: #409eff;
+  outline: none;
+}
+
+.ramification-item .drag-handle {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #888;
+}
+
+.ramification-item .drag-icon {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-template-rows: repeat(3, 3px);
+  gap: 2px;
+  width: 8px;
+  height: 13px;
+}
+
+.ramification-item .drag-icon span {
+  width: 3px;
+  height: 3px;
+  background-color: #777;
+  border-radius: 50%;
+}
+
+/* Custom styling for ramification drag placeholder */
+.ramification-item .drag-placeholder {
+  height: 40px;
+  background-color: #e0f0ff;
+  border: 1px dashed #409eff;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.ramifications-display {
+  background-color: #ffffff;
+  margin-left: 25px;
+  padding: 5px 0 5px 10px;
+}
+
+.ramification-display-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  padding: 5px 0;
+}
+
+.ramification-bullet {
+  margin-right: 8px;
+  color: #409eff;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ramification-text {
+  flex: 1;
+  color: #606266;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Buttons styling */
+.add-ramification-button {
+  background-color: #f0f7ff;
+  border: 1px dashed #c2e0ff;
+  border-radius: 4px;
+  padding: 6px 12px;
+  color: #409eff;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.add-ramification-button:hover {
+  background-color: #e0f0ff;
+}
+
+.add-perimetre-button {
+  margin-top: 15px;
+  background-color: #f0f7ff;
+  color: #409eff;
+  border: 1px dashed #c2e0ff;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.add-perimetre-button:hover {
+  background-color: #e0f0ff;
+}
+
+/* Search button styles */
+.search-button {
+  background-color: transparent;
+  color: #4caf50;
+  border: 1px solid #4caf50;
+  border-radius: 4px;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600; /* Changed from 500 to 600 for extra bold text */
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-right: 10px;
+}
+
+/* Perimetre controls */
+.perimetre-controls {
+  display: flex;
+  align-items: center;
+  width: 24px;
+  margin-right: 5px;
+  position: relative;
+}
+
+/* Arrow styling in the controls */
+.perimetre-controls .arrow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center;
+  z-index: 2;
+}
+
+/* Add new styles for the layout with CV preview */
+.page-container {
+  display: flex;
+  gap: 20px;
+  max-width: 100%;
+  height: calc(100vh - 80px); /* Adjust based on your layout */
+  overflow: hidden;
+}
+
+.cv-container {
+  flex: 1 1 60%;
+  overflow-y: auto;
+  max-height: 100%;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cv-container.with-preview {
+  flex: 1 1 60%;
+}
+
+.cv-preview-container {
+  flex: 1 1 40%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: flex 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .page-container {
+    flex-direction: column;
+    height: auto;
+  }
+  
+  .cv-container, 
+  .cv-container.with-preview,
+  .cv-preview-container {
+    flex: 1 1 100%;
+    max-height: 50vh;
+  }
+}
+
+/* File Import Area Styles */
+.file-import-area {
+  margin-bottom: 24px;
+}
+
+/* Upload zone styles */
+.file-upload-zone {
+  border: 2px dashed #FFD500;
+  border-radius: 8px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: rgba(255, 229, 0, 0.07); /* Light EY yellow background */
+}
+
+.file-upload-zone:hover {
+  border-color: #FFE600;
+  background-color: rgba(255, 229, 0, 0.15); /* Slightly darker on hover */
+}
+
+.file-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.file-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.file-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.file-title {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.file-subtitle {
+  color: #333333;
+  font-size: 0.95rem;
+}
+
+.file-formats {
+  font-size: 0.85rem;
+  color: #666666;
+  margin-top: 5px;
+}
+
+/* Selected file container styling */
+.selected-file-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  margin-top: 15px;
+  transition: box-shadow 0.2s;
+}
+
+.selected-file-container:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+/* Selected file display */
+.selected-file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 12px;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1; /* Allow file info to grow and take available space */
+  min-width: 0; /* Important for text-overflow to work */
+}
+
+.file-icon {
+  color: #4285F4; /* Changed from black to Google blue */
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+  /* Add ellipsis for long file names */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px; /* Limit width to ensure buttons are visible */
+}
+
+/* File actions styling */
+.file-actions {
+  display: flex;
+  gap: 8px; /* Reduced gap between buttons */
+  flex-wrap: wrap; /* Allow buttons to wrap if needed */
+  justify-content: flex-end; /* Keep buttons aligned to the right */
+}
+
+.download-file-btn, .remove-file-btn {
+  background: none;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 6px 10px; /* Slightly reduced padding */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  transition: all 0.2s;
+  font-weight: normal; /* Changed from 500 to normal */
+  white-space: nowrap; /* Prevent button text from wrapping */
+  min-width: fit-content; /* Ensure buttons don't shrink too much */
+}
+
+.download-file-btn {
+  background-color: transparent;
+  color: #0077cc;
+  border-color: #0077cc;
+}
+
+.download-file-btn:hover {
+  background-color: rgba(0, 119, 204, 0.1);
+}
+
+.remove-file-btn {
+  background-color: transparent;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.remove-file-btn:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+}
+
+.download-file-btn i, .remove-file-btn i {
+  font-size: 14px;
+}
+
+/* Change file button */
+.change-file-btn {
+  width: 100%;
+  border: none;
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-top: 1px solid #e0e0e0;
+}
+
+.change-file-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.change-file-btn i {
+  margin-right: 5px;
+}
+
+/* Responsive adjustments for file info and actions */
+@media (max-width: 576px) {
+  .selected-file {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .file-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .file-name {
+    max-width: 100%; /* Full width on small screens */
+  }
+}
+
+/* Loading indicator styles */
+.analysis-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.analysis-loading p {
+  margin: 10px 0 0;
+  font-weight: 500;
+}
+
+.analysis-loading p.small {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border-left-color: #007bff;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Material icons for close button */
+.material-icons {
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* Highlight styling for projects when navigated from search-cvs */
+.highlighted-project {
+  border: 2px solid #3f51b5;
+  background-color: #f5f7ff;
+  padding: 15px;
+  margin: -3px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(63, 81, 181, 0.1);
+  animation: highlight-pulse 2s ease-in-out;
+}
+
+@keyframes highlight-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(63, 81, 181, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(63, 81, 181, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(63, 81, 181, 0); }
+}
+
+/* Visibility button styles */
+.visibility-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+  color: #333;
+}
+
+.visibility-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.visibility-button .fas {
+  font-size: 16px;
+}
+
+/* Style for the crossed eye */
+.visibility-button .fa-eye-slash {
+  color: #666;
+}

@@ -1,0 +1,144 @@
+<div class="main-container">
+  <!-- Financial Navigation Sidebar -->
+  <app-financial-navigation [propositionId]="propositionId || ''" [activeSheet]="3"></app-financial-navigation>
+  <div class="matrix-container">
+    <div class="header-container">
+      <button class="back-button" (click)="goBack()">
+        <span class="back-icon">&#8592;</span> Retour
+      </button>
+      <h1>Gestion des Dépenses</h1>
+    </div>
+
+    <div class="loading-container"*ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Chargement des données...</p>
+    </div>
+
+    <div class="error-container" *ngIf="!isLoading && !proposition">
+      <div class="error-icon">&#9888;</div>
+      <p>Impossible de charger les données de la proposition.</p>
+      <button class="btn btn-primary" (click)="loadDepensesData()">
+        <span class="icon">&#8635;</span> Réessayer
+      </button>
+    </div>
+
+    <!-- Notification area -->
+    <div class="notification" *ngIf="notificationMessage" [ngClass]="{'success': notificationType === 'success', 'error': notificationType === 'error'}">
+      <span>{{ notificationMessage }}</span>
+      <span class="close-button" (click)="notificationMessage = null">&times;</span>
+    </div>
+
+    <div class="content-container" *ngIf="!isLoading && proposition">
+      <!-- Prix des dépenses -->
+      <div class="expense-card">
+        <div class="card-header">
+          <h3>Coûts Unitaires des Dépenses</h3>
+        </div>
+
+        <div class="expense-form">
+          <div class="expense-items">
+            <div class="expense-item" *ngFor="let typeItem of typeDepenseValues">
+              <div class="form-group">
+                <label for="expense-{{typeItem.type}}">{{ formatTypeName(typeItem.name) }}</label>
+                <input 
+                  type="number" 
+                  id="expense-{{typeItem.type}}" 
+                  class="form-control"                  [(ngModel)]="expensePrices[typeItem.type]" 
+                  [readonly]="!isPricesEditing" 
+                  [disabled]="!isPricesEditing" 
+                  placeholder="Prix unitaire" 
+                  min="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-actions">
+          <button 
+            class="btn btn-primary" 
+            *ngIf="!isPricesEditing" 
+            (click)="togglePricesEditMode()">
+            <span class="icon">&#9998;</span> Modifier
+          </button>
+          <button 
+            class="btn btn-success" 
+            *ngIf="isPricesEditing" 
+            (click)="saveExpenses()" 
+            [disabled]="isSaving">
+            <span class="icon">&#128190;</span> Enregistrer
+            <div class="button-spinner" *ngIf="isSaving"></div>
+          </button>
+          <button 
+            class="btn btn-secondary" 
+            *ngIf="isPricesEditing" 
+            (click)="togglePricesEditMode()" 
+            [disabled]="isSaving">
+            Annuler
+          </button>
+        </div>
+      </div>
+
+      <!-- Unités des dépenses par profil -->
+      <div class="expense-card" *ngIf="profilesWithTerrain.length > 0">
+        <div class="card-header">
+          <h3>Unités des Dépenses par Profil</h3>
+        </div>
+
+        <div class="units-form">
+          <table class="units-table">
+            <thead>
+              <tr>
+                <th>Profil</th>
+                <th *ngFor="let typeItem of typeDepenseValues">{{ formatTypeName(typeItem.name) }}</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let profile of profilesWithTerrain">
+                <td>{{ profile.nomPrenom || 'Profile #' + profile.numero }}</td>
+                <td *ngFor="let typeItem of typeDepenseValues">
+                  <input 
+                    type="number" 
+                    class="form-control units-input"                    [(ngModel)]="profileExpenseUnits[profile.id][typeItem.type]" 
+                    [readonly]="!isUnitsEditing" 
+                    [disabled]="!isUnitsEditing" 
+                    (ngModelChange)="calculateProfileExpenseTotal(profile.id)"
+                    placeholder="Unités" 
+                    min="0">
+                </td>
+                <td class="total-column">{{ getProfileExpenseTotal(profile.id) | number:'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-actions">          <button 
+            class="btn btn-primary" 
+            *ngIf="!isUnitsEditing" 
+            (click)="toggleUnitsEditMode()">
+            <span class="icon">&#9998;</span> Modifier
+          </button>
+          <button 
+            class="btn btn-success" 
+            *ngIf="isUnitsEditing" 
+            (click)="saveExpenses()" 
+            [disabled]="isSaving">
+            <span class="icon">&#128190;</span> Enregistrer
+            <div class="button-spinner" *ngIf="isSaving"></div>
+          </button>
+          <button 
+            class="btn btn-secondary" 
+            *ngIf="isUnitsEditing" 
+            (click)="toggleUnitsEditMode()" 
+            [disabled]="isSaving">
+            Annuler
+          </button>        </div>
+        
+        <!-- Total des dépenses moved under the table -->
+        <div class="total-expenses-row" *ngIf="proposition.totalExpenses != null">
+          <strong>Montant total des dépenses:</strong> <span class="total-expense">{{ proposition.totalExpenses }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

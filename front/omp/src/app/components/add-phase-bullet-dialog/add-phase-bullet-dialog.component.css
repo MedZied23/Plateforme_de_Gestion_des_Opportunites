@@ -1,0 +1,376 @@
+.dialog-container {
+  padding: 24px;
+  width: 100%;
+  min-width: 500px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.dialog-title {
+  margin: 0 0 24px 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+  width: 100%;
+}
+
+/* Form styling */
+.bullet-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.bullet-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Button styling */
+.add-bullet-button,
+.add-sub-bullet-button {
+  background-color: #e7f3ff;
+  color: #0077cc;
+  border: 1px dashed #0077cc;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: normal;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+  display: block;
+  width: auto;
+  min-width: 120px;
+}
+
+.add-bullet-button:hover,
+.add-sub-bullet-button:hover {
+  background-color: #d0e6f7;
+}
+
+/* List styling */
+.bullet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.bullet-item {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  transition: box-shadow 0.2s;
+  width: 100%;
+}
+
+.bullet-item:hover {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+/* Edit mode styling */
+.bullet-edit-mode {
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bullet-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.bullet-text textarea {
+  flex: 1;
+  width: calc(100% - 40px); /* Account for the remove button */
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+/* Display mode styling */
+.bullet-text-display {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bullet-text-display:hover {
+  background-color: #f0f0f0;
+}
+
+.bullet-text {
+  flex: 1;
+  margin: 0 12px;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* Sub-bullets styling */
+.sub-bullets-container {
+  width: 100%;
+  padding-left: 24px;
+  box-sizing: border-box;
+}
+
+.sub-bullet-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.sub-bullet-item textarea {
+  flex: 1;
+  width: calc(100% - 40px);
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+/* Action buttons */
+.bullet-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.bullet-text-display:hover .bullet-actions {
+  opacity: 1;
+}
+
+/* Sub-bullets display when not expanded */
+.sub-bullets-display {
+  margin-left: 25px;
+  padding: 5px 0 5px 10px;
+}
+
+.sub-bullet-display-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  padding: 5px 0;
+}
+
+.sub-bullet-bullet {
+  margin-right: 8px;
+  color: #409eff;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.sub-bullet-text {
+  flex: 1;
+  color: #606266;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.edit-button,
+.remove-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.edit-button:hover {
+  background-color: rgba(0, 120, 212, 0.1);
+}
+
+.remove-button:hover {
+  background-color: rgba(232, 17, 35, 0.1);
+}
+
+.edit-icon {
+  color: #0078d4;
+  font-size: 16px;
+}
+
+.edit-icon::before {
+  content: '\f044';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+.remove-icon {
+  color: #d83933;
+  font-size: 16px;
+}
+
+.remove-icon::before {
+  content: '\f2ed';
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+
+/* Drag and drop styling */
+.drag-handle {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: #888;
+}
+
+.drag-icon {
+  display: grid;
+  grid-template-columns: repeat(2, 3px);
+  grid-template-rows: repeat(3, 3px);
+  gap: 2px;
+  width: 8px;
+  height: 13px;
+}
+
+.drag-icon span {
+  width: 3px;
+  height: 3px;
+  background-color: #777;
+  border-radius: 50%;
+}
+
+.bullet-drag-handle {
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+  width: 24px;
+  height: 24px;
+  color: #888;
+}
+
+/* Dialog actions */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.save-button,
+.cancel-button {
+  padding: 8px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-button {
+  background-color: #0077cc;
+  color: white;
+  border: none;
+}
+
+.save-button:hover {
+  background-color: #0066b3;
+}
+
+.save-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: white;
+  color: #333;
+  border: 1px solid #e0e0e0;
+}
+
+.cancel-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Drag and drop placeholders */
+.drag-placeholder {
+  background-color: #e8f4ff;
+  border: 1px dashed #409eff;
+  border-radius: 4px;
+  margin: 8px 0;
+  height: 40px;
+}
+
+.bullet-drag-placeholder {
+  background-color: #e8f4ff;
+  border: 1px dashed #409eff;
+  border-radius: 4px;
+  margin: 8px 0;
+  height: 60px;
+}
+
+/* Drag and drop animation */
+.cdk-drag-preview {
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.bullet-list.cdk-drop-list-dragging .bullet-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.sub-bullets-container.cdk-drop-list-dragging .sub-bullet-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Phase Name Section */
+.phase-name-section {
+  margin-bottom: 24px;
+}
+
+.phase-name-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.phase-name-input:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.phase-name-input::placeholder {
+  color: #909399;
+}

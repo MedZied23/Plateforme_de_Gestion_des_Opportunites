@@ -1,0 +1,148 @@
+<div class="cv-display-container" *ngIf="cvId && !loading" #cvContainer>
+  <div class="cv-actions no-print">
+    <button class="download-pdf-btn" (click)="generatePDF()">
+      <i class="fas fa-file-pdf"></i> Télécharger PDF
+    </button>
+  </div>
+  
+  <!-- Display CV data -->
+  <div class="cv-section" *ngIf="cv && user">
+    <!-- Name -->
+    <div class="cv-name">
+      <h1>{{ user.prenom }} {{ user.nom }}</h1>
+    </div>
+
+    <!-- Presentation -->
+    <div class="cv-presentation" *ngIf="cv.presentation">
+      <div class="section-header">Présentation</div>
+      <p>{{ cv.presentation }}</p>
+    </div>
+
+    <!-- Formation - full width, not in column -->
+    <div class="cv-formations" *ngIf="formations && formations.length > 0">
+      <div class="section-header">Formation</div>
+      <table class="formation-table">
+        <thead>
+          <tr>
+            <th>Diplôme</th>
+            <th>Nom de l'institution</th>
+            <th>Période</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let formation of formations">
+            <td>{{ formation.diplome }}</td>
+            <td>{{ formation.institution }}</td>
+            <td>{{ getYearFromDate(formation.dateDebut) }} - {{ formation.dateFin ? getYearFromDate(formation.dateFin) : 'Présent' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Langues Pratiquées - full width, not in column -->
+    <div class="cv-langues" *ngIf="langues && langues.length > 0">
+      <div class="section-header">Langues Pratiquées</div>
+      <table class="langues-table">
+        <thead>
+          <tr>
+            <th>Langue</th>
+            <th>Niveau</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let langue of langues">
+            <td>{{ langue.langue }}</td>
+            <td>{{ getLanguageLevel(langue.niveau) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Certifications -->
+    <div class="cv-certifications" *ngIf="certifications && certifications.length > 0">
+      <div class="section-header">Certifications</div>
+      <ul class="certifications-list">
+        <li *ngFor="let certification of certifications">{{ certification }}</li>
+      </ul>
+    </div>
+
+    <!-- Expérience Professionnelle - Now in table format -->
+    <div class="cv-experiences" *ngIf="experiences && experiences.length > 0">
+      <div class="section-header">Expérience Professionnelle</div>
+      <table class="experience-table">
+        <thead>
+          <tr>
+            <th>Poste</th>
+            <th>Employeur</th>
+            <th>Période</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let experience of experiences">
+            <td>{{ experience.poste }}</td>
+            <td>{{ experience.employer }}</td>
+            <td>{{ getYearFromDate(experience.dateDebut) }} - {{ experience.dateFin ? getYearFromDate(experience.dateFin) : 'Présent' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Principaux Projets -->
+    <div class="cv-projets" *ngIf="projets && projets.length > 0">
+      <div class="section-header">Principaux Projets</div>
+      
+      <!-- Projects grouped by domain -->
+      <div *ngFor="let domaine of getDomaines()" class="domaine-section">
+        <div class="domaine-header">{{ domaine }}</div>
+        
+        <div class="projet-container" *ngFor="let projet of getProjetsByDomaine(domaine)">
+          <div class="projet-item" 
+               [id]="'project-' + projet.id"
+               [class.highlighted-project]="isHighlightedProject(projet.id)">
+            <div class="projet-header">
+              <div class="projet-title-line">
+                <span class="projet-title" [innerHTML]="highlightText(projet.nom)"></span>
+                <ng-container *ngIf="projet.client">
+                  <span class="projet-separator"> - </span>
+                  <span class="projet-client" [innerHTML]="highlightText(projet.client)"></span>
+                </ng-container>
+                <span class="projet-year">  ({{ projet.year }})</span>
+              </div>
+            </div>
+            <span class="projet-role" [innerHTML]="'Rôle : ' + highlightText(projet.role)"></span>
+
+            <!-- Périmètre section -->
+            <div class="projet-perimetre" *ngIf="projet.perimetre && getPerimetreKeys(projet.perimetre).length > 0">
+              <div class="perimetre-title">Périmètre du projet:</div>
+              <ul class="perimetre-list">
+                <li *ngFor="let sentence of getPerimetreKeys(projet.perimetre)" class="perimetre-sentence">
+                  <span [innerHTML]="highlightText(sentence)"></span>
+                  <ul class="ramifications-list" *ngIf="projet.perimetre[sentence]?.length">
+                    <li *ngFor="let ramification of projet.perimetre[sentence]" class="ramification-item" 
+                        [innerHTML]="highlightText(ramification)">
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-state" *ngIf="loading">
+    <p>Chargement du CV...</p>
+  </div>
+
+  <!-- Error state -->
+  <div class="error-state" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" *ngIf="!cvId">
+    <p>Aucun CV sélectionné</p>
+  </div>
+</div>
